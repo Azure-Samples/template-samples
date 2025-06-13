@@ -1,0 +1,11 @@
+# Azure Pipelines starter pipeline
+# This pipeline simply prints Hello, World!
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: echo "Hello, World!"
+  displayName: 'Run Hello World script'
