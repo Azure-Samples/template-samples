@@ -1,0 +1,10 @@
+useTokenCredentials: false
+endpoint: <%= endpoint %>
+apiKey: <some-api-key>
+deploymentName: <some-deployment-name>
+useEnvVars: false
+extraParams:
+  tokens:
+    python_name: max_completion_tokens
+    csharp_name: MaxCompletionTokens
+    value: 2000
