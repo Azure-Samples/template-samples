@@ -6,5 +6,5 @@ useEnvVars: false
 extraParams:
   tokens:
     python_name: max_tokens
-    csharp_name: MaxTokens
+    csharp_name: MaxOutputTokenCount
     value: 2000

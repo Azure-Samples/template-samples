@@ -1,4 +1,4 @@
-template: sample.template
+template: sample.csharp.template
 type: csharp
 dependencies:
   - name: OpenAI

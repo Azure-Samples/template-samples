@@ -26,9 +26,10 @@ ChatCompletion completion = await chatClient.CompleteChatAsync(
     ],
     new ChatCompletionOptions
     {
-      <% if (extraParams.tokens) { %>
+      <% if (extraParams.tokens.csharp_name) { %>
       <%= extraParams.tokens.csharp_name %> = <%= extraParams.tokens.value %>
       <% } %>
+
       <% if (extraParams.temperature) { %>
       Temperature = <%= extraParams.temperature %>f,
       <% } %>
