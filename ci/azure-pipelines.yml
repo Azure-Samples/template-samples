@@ -16,7 +16,7 @@ variables:
     value: '8.x'
   # Variable to force a specific sample for testing
   - name: targetSample
-    value: 'generated-samples/csharp/chat-with-vision'
+    value: 'generated-samples/csharp/chat-with-vision-reasoning'
 
 stages:
 - stage: ValidateSamples
@@ -75,6 +75,7 @@ stages:
     
     - script: |
         chmod +x scripts/validate-samples.sh
+        chmod +x scripts/validate-single-sample.sh
         ./scripts/validate-samples.sh csharp $(Pipeline.Workspace)
       displayName: 'Run C# sample validation'
 
