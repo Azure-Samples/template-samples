@@ -18,16 +18,13 @@ BUILD_COMMAND=$(jq -r '.buildCommand' "$CONFIG_FILE")
 
 cd "$SAMPLE_DIR"
 
-# Step 1: Update dependencies to latest versions
-echo "Updating dependencies to latest versions..."
+# Step 1: Check for outdated dependencies (informational only)
+echo "Checking for outdated dependencies..."
 case $LANGUAGE in
     "csharp")
-        # Get all PackageReference items and update them
-        dotnet list package --outdated --format json > outdated.json
-        if [ -s outdated.json ] && [ "$(jq '.projects | length' outdated.json)" -gt 0 ]; then
-            jq -r '.projects[].frameworks[].topLevelPackages[]? | select(.latestVersion) | "dotnet add package \(.id) --version \(.latestVersion)"' outdated.json | bash
-        fi
-        rm -f outdated.json
+        # Check for outdated packages but don't update them
+        echo "Running: dotnet list package --outdated"
+        dotnet list package --outdated || echo "Warning: Could not check for outdated packages"
         ;;
 esac
 
