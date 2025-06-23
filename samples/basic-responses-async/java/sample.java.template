@@ -1,0 +1,49 @@
+import com.openai.azure.AzureOpenAIServiceVersion;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+
+<% if (useTokenCredentials) { %>import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.openai.credential.BearerTokenCredential; <% 
+} else { %>import com.openai.azure.credential.AzureApiKeyCredential; 
+<% } %>
+
+public class Sample {
+    public static void main(String[] args) {
+        String endpoint = System.getenv("AZURE_OPENAI_ENDPOINT");
+        <%if (!useTokenCredentials) { %>
+        String azureOpenaiKey = System.getenv("AZURE_OPENAI_API_KEY");
+        <%}%>
+        String deploymentName = System.getenv("AZURE_OPENAI_DEPLOYMENT");        
+
+        OpenAIOkHttpClient.Builder clientBuilder = OpenAIOkHttpClient.builder();
+        clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());
+        <% if (!useTokenCredentials) { %>
+        clientBuilder
+                .baseUrl(endpoint)
+                .credential(AzureApiKeyCredential.create(azureOpenaiKey));        
+        <% 
+        } else { %>
+        clientBuilder
+                .baseUrl(endpoint)
+                .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                        new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+        <%} %>
+        OpenAIClientAsync client = clientBuilder.build().async();
+
+        ResponseCreateParams createParams = ResponseCreateParams.builder()
+            .input("What is tango? Answer in 30 words or less")
+            .model(deploymentName)
+            .build();
+
+        client.responses()
+            .create(createParams)
+            .thenAccept(response -> response.output().forEach(item ->
+                item.message().ifPresent(message ->
+                    message.content().forEach(content ->
+                        content.outputText().ifPresent(
+                            outputText -> System.out.println(outputText.text()))))))
+            .join();          
+    }
+}

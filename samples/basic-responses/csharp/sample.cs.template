@@ -1,0 +1,35 @@
+<%= csharp.usings(
+    { namespace: "System.ClientModel", condition: !useTokenCredentials },
+    "Azure.AI.OpenAI",
+    { namespace: "Azure.Identity", condition: useTokenCredentials },
+    "OpenAI.Responses",
+) %>
+                  
+<%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>;
+<% if (!useTokenCredentials) { %>
+<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
+<% } %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
+<% if (useTokenCredentials) { %>
+AzureOpenAIClient client = new(new(endpoint), new DefaultAzureCredential());
+<% } else { %>
+AzureOpenAIClient client = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
+<% } %>
+OpenAIResponseClient responseClient = azureClient.GetOpenAIResponseClient(deploymentName);
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new AzureKeyCredential(apiKey));
+
+OpenAIResponse response = responseClient.CreateResponse(
+  inputItems: [
+    ResponseItem.CreateSystemMessageItem("You are an assistant expert in regional dances"),
+    ResponseItem.CreateUserMessageItem("What is tango? Answer in 30 words or less"),
+  <% if (extraParams) { %>
+  ], new ResponsesOptions
+  {<% if (extraParams.temperature) { %>
+    Temperature = <%= extraParams.temperature %>f,<% }
+  %>
+  });
+  <% } else { %>
+  ]);
+<% } %>
+
+Console.WriteLine($"{response.Id}: {((MessageResponseItem)response.OutputItems[0]).Content[0].Text}");
