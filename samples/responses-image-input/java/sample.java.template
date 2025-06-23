@@ -37,7 +37,7 @@ public static void main(String[] args) {
                 new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
     <%} %>
     OpenAIClient client = clientBuilder.build();
-        String logoUrl = "https://th.bing.com/th/id/R.565799473e5e4ffb1d36bb3b5fc0400c?rik=HWolfL7xZmcc3g&pid=ImgRaw&r=0";
+        String logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png";
 
         ResponseInputImage logoInputImage = ResponseInputImage.builder()
                 .detail(ResponseInputImage.Detail.AUTO)
