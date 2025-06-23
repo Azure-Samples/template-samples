@@ -13,7 +13,7 @@ variables:
   - name: targetLanguage
     value: 'csharp'
   - name: dotnetVersion
-    value: '8.x'
+    value: '9.x'
   # Variable to force a specific sample for testing
   - name: targetSample
     value: 'generated-samples/csharp/chat-with-vision-reasoning'
