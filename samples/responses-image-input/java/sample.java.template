@@ -1,0 +1,62 @@
+import com.openai.azure.AzureOpenAIServiceVersion;
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputImage;
+import com.openai.models.responses.ResponseInputItem;
+import java.util.Collections;
+<% if (useTokenCredentials) { %>
+import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.openai.credential.BearerTokenCredential; 
+<% } else { %>
+import com.openai.azure.credential.AzureApiKeyCredential; 
+<% } %>
+
+public class Sample {
+public static void main(String[] args) {
+    String endpoint = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_ENDPOINT", endpoint)%>;
+    <%if (!useTokenCredentials) { %>
+    String azureOpenaiKey = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_API_KEY", apiKey)%>;
+    <%}%>
+    String deploymentName = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>;        
+
+    OpenAIOkHttpClient.Builder clientBuilder = OpenAIOkHttpClient.builder();
+    clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());
+    <% if (!useTokenCredentials) { %>
+    clientBuilder
+                .baseUrl(endpoint)
+                .azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion())
+                .credential(AzureApiKeyCredential.create(azureOpenaiKey));        
+    <% 
+    } else { %>
+    clientBuilder
+                .baseUrl(endpoint)
+                .azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion())
+                .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+    <%} %>
+    OpenAIClient client = clientBuilder.build();
+        String logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png";
+
+        ResponseInputImage logoInputImage = ResponseInputImage.builder()
+                .detail(ResponseInputImage.Detail.AUTO)
+                .imageUrl(logoUrl)
+                .build();
+        ResponseInputItem messageInputItem = ResponseInputItem.ofMessage(ResponseInputItem.Message.builder()
+                .role(ResponseInputItem.Message.Role.USER)
+                .addInputTextContent("Describe this image.")
+                .addContent(logoInputImage)
+                .build());
+        ResponseCreateParams createParams = ResponseCreateParams.builder()
+                .inputOfResponse(Collections.singletonList(messageInputItem))
+                .model(deploymentName)
+                .build();
+
+        client.responses().create(createParams).output().stream()
+                .forEach(item -> item.message().ifPresent(
+                        message -> message.content().stream()
+                                .forEach(content -> content.outputText().ifPresent(
+                                        outputText -> System.out.println(outputText.text())))));
+        }
+}
