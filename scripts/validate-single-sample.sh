@@ -2,9 +2,11 @@
 set -e
 
 SAMPLE_DIR=$1
-CONFIG_FILE="$SAMPLE_DIR/.sample-config.json"
+CONFIG_FILE=".sample-config.json"
 
 echo "Validating sample in: $SAMPLE_DIR"
+
+cd "$SAMPLE_DIR"
 
 # Check if config file exists
 if [ ! -f "$CONFIG_FILE" ]; then
@@ -15,8 +17,6 @@ fi
 # Parse config file
 LANGUAGE=$(jq -r '.language' "$CONFIG_FILE")
 BUILD_COMMAND=$(jq -r '.buildCommand' "$CONFIG_FILE")
-
-cd "$SAMPLE_DIR"
 
 # Step 1: Check for outdated dependencies (informational only)
 echo "Checking for outdated dependencies..."
