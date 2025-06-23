@@ -75,10 +75,11 @@ stages:
     
     - script: |
         chmod +x scripts/validate-samples.sh
-        ./scripts/validate-samples.sh csharp
+        ./scripts/validate-samples.sh csharp $(Pipeline.Workspace)
       displayName: 'Run C# sample validation'
 
   - job: ReportResults
+    dependsOn: ValidateCSharp
     steps:
     - script: |
         # Generate validation report

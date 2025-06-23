@@ -2,13 +2,14 @@
 set -e
 
 LANGUAGE=$1
-CHANGED_SAMPLES_FILE="$(Pipeline.Workspace)/ChangedSamples/changed_samples.txt"
+PIPELINE_WORKSPACE=$2
+CHANGED_SAMPLES_FILE="$PIPELINE_WORKSPACE/ChangedSamples/changed_samples.txt"
 
 echo "Validating $LANGUAGE samples..."
 
 if [ ! -f "$CHANGED_SAMPLES_FILE" ]; then
     echo "No changed samples file found. Validating all samples."
-    find samples/$LANGUAGE -name "*.csproj" -exec dirname {} \; > all_samples.txt
+    find generated-samples/$LANGUAGE -name "*.csproj" -exec dirname {} \; > all_samples.txt
     SAMPLES_FILE="all_samples.txt"
 else
     SAMPLES_FILE="$CHANGED_SAMPLES_FILE"
