@@ -1,11 +1,100 @@
-# Azure Pipelines starter pipeline
-# This pipeline simply prints Hello, World!
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - generated-samples/csharp/**
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo "Hello, World!"
-  displayName: 'Run Hello World script'
+variables:
+  - name: targetLanguage
+    value: 'csharp'
+  - name: dotnetVersion
+    value: '8.x'
+  # Variable to force a specific sample for testing
+  - name: targetSample
+    value: 'samples/csharp/chat-with-vision'
+
+stages:
+- stage: ValidateSamples
+  displayName: 'Validate Code Samples'
+  jobs:
+  - job: DetectChanges
+    displayName: 'Detect Changed Samples'
+    # steps:
+    # - script: |
+    #     # Script to detect which samples changed
+    #     git diff --name-only HEAD~1 HEAD | grep "generated-samples/csharp" | cut -d'/' -f1-3 | sort | uniq > changed_samples.txt
+    #     echo "Changed samples:"
+    #     cat changed_samples.txt
+    #   displayName: 'Detect changed C# samples'
+    # - publish: changed_samples.txt
+    #   artifact: ChangedSamples
+
+    steps:
+    - script: |
+        echo "Targeted sample mode enabled"
+        echo "Forcing validation of: $(targetSample)"
+        
+        # Create the changed samples file with just the targeted samples
+        echo "$(targetSample)" > changed_samples.txt
+        
+        # Verify the sample directory exists
+        if [ -d "$(targetSample)" ]; then
+          echo "✅ Sample directory exists: $(targetSample)"
+          echo "Contents of sample directory:"
+          ls -la "$(targetSample)"
+        else
+          echo "❌ Sample directory not found: $(targetSample)"
+          echo "Available C# samples:"
+          find generated-samples/csharp -type d -name "*" | head -10
+          exit 1
+        fi
+        
+        echo "Samples to validate:"
+        cat changed_samples.txt
+      displayName: 'Target specific sample validation'
+
+    - publish: changed_samples.txt
+      artifact: ChangedSamples
+
+  - job: ValidateCSharp
+    displayName: 'Validate C# Samples'
+    dependsOn: DetectChanges
+    steps:
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        version: $(dotnetVersion)
+    
+    - download: current
+      artifact: ChangedSamples
+    
+    - script: |
+        chmod +x scripts/validate-samples.sh
+        ./scripts/validate-samples.sh csharp
+      displayName: 'Run C# sample validation'
+
+  - job: ReportResults
+    steps:
+    - script: |
+        # Generate validation report
+        echo "## Sample Validation Report" > validation-report.md
+        echo "Date: $(date)" >> validation-report.md
+        echo "" >> validation-report.md
+        
+        if [ -f "validation-errors.log" ]; then
+            echo "### ❌ Failed Samples:" >> validation-report.md
+            cat validation-errors.log >> validation-report.md
+        else
+            echo "### ✅ All Samples Passed" >> validation-report.md
+        fi
+  displayName: 'Generate validation report'
+  condition: always()
+
+- publish: validation-report.md
+  artifact: ValidationReport
+  condition: always()
