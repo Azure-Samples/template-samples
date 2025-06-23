@@ -92,9 +92,9 @@ stages:
         else
             echo "### ✅ All Samples Passed" >> validation-report.md
         fi
-  displayName: 'Generate validation report'
-  condition: always()
+    displayName: 'Generate validation report'
+    condition: always()
 
-- publish: validation-report.md
-  artifact: ValidationReport
-  condition: always()
+  - publish: validation-report.md
+    artifact: ValidationReport
+    condition: always()
