@@ -16,7 +16,7 @@ variables:
     value: '8.x'
   # Variable to force a specific sample for testing
   - name: targetSample
-    value: 'samples/csharp/chat-with-vision'
+    value: 'generated-samples/csharp/chat-with-vision'
 
 stages:
 - stage: ValidateSamples
