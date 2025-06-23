@@ -1,0 +1,25 @@
+<%= csharp.usings(
+    { namespace: "System.ClientModel", condition: !useTokenCredentials },
+    "Azure.AI.OpenAI",
+    { namespace: "Azure.Identity", condition: useTokenCredentials },
+    "OpenAI.Audio"
+) %>
+
+<%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>;
+<% if (!useTokenCredentials) { %>
+<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
+<% } %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
+
+<% if (useTokenCredentials) { %>
+AzureOpenAIClient client = new(new(endpoint), new DefaultAzureCredential());
+<% } else { %>
+AzureOpenAIClient client = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
+<% } %>
+AudioClient chatClient = client.GetAudioClient(deploymentName);
+
+string fileName = "batman.wav";
+string audioFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Samples", "Resources", fileName);
+var transcriptionResult = chatClient.TranscribeAudio(audioFilePath);
+
+Console.WriteLine(transcriptionResult.Value.Text.ToString());
