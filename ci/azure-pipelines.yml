@@ -22,12 +22,15 @@ stages:
     displayName: 'Detect Changed Samples'
     steps:
     - checkout: self
-      fetchDepth: 2
+      fetchDepth: 0
       
     - script: |
-        # Get changed sample directories
-        git diff --name-only origin/main HEAD | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        # Ensure we have the main branch reference
+        git fetch origin main:main || git fetch origin main
         
+        # Get changed sample directories (use main instead of origin/main)
+        git diff --name-only main HEAD | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+
         # Split by language
         grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
         grep "^generated-samples/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
