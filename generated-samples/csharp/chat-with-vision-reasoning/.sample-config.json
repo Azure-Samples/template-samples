@@ -1,10 +1,4 @@
 {
   "name": "chat-with-vision-reasoning",
-  "language": "csharp",
-  "framework": "net9.0",
-  "dependencies": {
-    "Azure.AI.OpenAI": "latest"
-  },
-  "buildCommand": "dotnet build",
-  "validationLevel": "compile-only"
+  "someCustomProperty": ""
 }

@@ -17,7 +17,7 @@ ChatCompletion completion = await chatClient.CompleteChatAsync(
     new ChatCompletionOptions
     {
       MaxOutputTokenCount = 2000
-
+afasfasfd
     });
 
 Console.WriteLine(completion.Content[0].Text);
