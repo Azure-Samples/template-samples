@@ -18,6 +18,13 @@ stages:
   displayName: 'Validate Code Samples'
   jobs:
   
+  - job: PublishConfigs
+    displayName: 'Publish build configurations for samples'
+    steps:
+    - script: |
+        # Publish configs to generated directories
+        ./scripts/publish-configs.sh
+
   - job: DetectChanges
     displayName: 'Detect Changed Samples'
     steps:

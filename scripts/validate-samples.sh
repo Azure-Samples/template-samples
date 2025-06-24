@@ -1,5 +1,4 @@
 #!/bin/bash
-# scripts/validate-samples.sh
 set -e
 
 LANGUAGE=$1

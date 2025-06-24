@@ -1,5 +1,4 @@
 #!/bin/bash
-# scripts/validate-single-sample.sh
 set -e
 
 SAMPLE_DIR=$1

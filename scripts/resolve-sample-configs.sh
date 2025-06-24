@@ -1,5 +1,4 @@
 #!/bin/bash
-# scripts/resolve-sample-configs.sh
 set -e
 
 SAMPLE_DIR=$1
