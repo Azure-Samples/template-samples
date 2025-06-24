@@ -1,23 +1,49 @@
 #!/bin/bash
+# scripts/validate-samples.sh
 set -e
 
 LANGUAGE=$1
-PIPELINE_WORKSPACE=$2
-CHANGED_SAMPLES_FILE="$PIPELINE_WORKSPACE/ChangedSamples/changed_samples.txt"
+CHANGED_SAMPLES_FILE=$2
 
 echo "Validating $LANGUAGE samples..."
 
-if [ ! -f "$CHANGED_SAMPLES_FILE" ]; then
-    echo "No changed samples file found. Validating all samples."
-    find generated-samples/$LANGUAGE -name "*.csproj" -exec dirname {} \; > all_samples.txt
-    SAMPLES_FILE="all_samples.txt"
-else
+# Determine which samples to validate
+if [ -n "$CHANGED_SAMPLES_FILE" ] && [ -f "$CHANGED_SAMPLES_FILE" ] && [ -s "$CHANGED_SAMPLES_FILE" ]; then
+    echo "Using changed samples: $CHANGED_SAMPLES_FILE"
     SAMPLES_FILE="$CHANGED_SAMPLES_FILE"
+else
+    echo "No $LANGUAGE samples changes found."
+    SAMPLES_FILE=""
 fi
+
+# Validate each sample
+> validation-success.log
+> validation-errors.log
 
 while IFS= read -r sample_dir; do
     if [ -d "$sample_dir" ]; then
-        echo "Validating sample: $sample_dir"
-        ./scripts/validate-single-sample.sh "$sample_dir"
+        echo ""
+        echo "=== Validating: $sample_dir ==="
+        if ./scripts/validate-single-sample.sh "$sample_dir"; then
+            echo "✅ $sample_dir" >> validation-success.log
+        else
+            echo "❌ $sample_dir" >> validation-errors.log
+        fi
     fi
 done < "$SAMPLES_FILE"
+
+# Report results
+echo ""
+echo "=== Results ==="
+if [ -s validation-success.log ]; then
+    echo "Passed $(wc -l < validation-success.log) samples:"
+    cat validation-success.log
+fi
+
+if [ -s validation-errors.log ]; then
+    echo "Failed $(wc -l < validation-errors.log) samples:"
+    cat validation-errors.log
+    exit 1
+fi
+
+echo "All $LANGUAGE samples passed!"

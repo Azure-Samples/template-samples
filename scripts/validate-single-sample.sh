@@ -1,50 +1,41 @@
 #!/bin/bash
+# scripts/validate-single-sample.sh
 set -e
 
 SAMPLE_DIR=$1
-CONFIG_FILE=".sample-config.json"
 
-echo "Validating sample in: $SAMPLE_DIR"
+# Resolve configuration
 
+CONFIG=$(./scripts/resolve-sample-configs.sh "$SAMPLE_DIR")
+LANGUAGE=$(echo "$CONFIG" | jq -r '.language')
+
+echo "Language: $LANGUAGE"
+
+# Save current directory and change to sample directory
+ORIGINAL_DIR=$(pwd)
 cd "$SAMPLE_DIR"
 
-# Check if config file exists
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Error: No .sample-config.json found in $SAMPLE_DIR"
-    exit 1
-fi
+# Execute build steps
+echo ""
+echo "--- Build Steps ---"
+echo "$CONFIG" | jq -r '.buildSteps[]?' | while IFS= read -r step; do
+    if [ -n "$step" ] && [ "$step" != "null" ]; then
+        echo "Executing: $step"
+        eval "$step"
+    fi
+done
 
-# Parse config file
-LANGUAGE=$(jq -r '.language' "$CONFIG_FILE")
-BUILD_COMMAND=$(jq -r '.buildCommand' "$CONFIG_FILE")
+# Execute validation steps
+echo ""
+echo "--- Validation Steps ---"
+echo "$CONFIG" | jq -r '.validateSteps[]?' | while IFS= read -r step; do
+    if [ -n "$step" ] && [ "$step" != "null" ]; then
+        echo "Executing: $step"
+        eval "$step"
+    fi
+done
 
-# Step 1: Check for outdated dependencies (informational only)
-echo "Checking for outdated dependencies..."
-case $LANGUAGE in
-    "csharp")
-        # Check for outdated packages but don't update them
-        echo "Running: dotnet list package --outdated"
-        dotnet list package --outdated || echo "Warning: Could not check for outdated packages"
-        ;;
-esac
+# Return to original directory
+cd "$ORIGINAL_DIR"
 
-# Step 2: Restore dependencies
-echo "Restoring dependencies..."
-case $LANGUAGE in
-    "csharp")
-        dotnet restore
-        ;;
-esac
-
-# Step 3: Build/Compile
-echo "Building sample..."
-eval "$BUILD_COMMAND"
-
-# Step 4: Run basic validation (if specified)
-TEST_COMMAND=$(jq -r '.testCommand // empty' "$CONFIG_FILE")
-if [ -n "$TEST_COMMAND" ]; then
-    echo "Running test command..."
-    eval "$TEST_COMMAND"
-fi
-
-echo "✅ Sample validation completed successfully: $SAMPLE_DIR"
+echo "✅ Validation completed"
