@@ -1,0 +1,35 @@
+<%= csharp.usings(
+    { namespace: "System.ClientModel", condition: !useTokenCredentials },
+    "System.ClientModel.Primitives",
+    { namespace: "Azure.Identity", condition: useTokenCredentials },
+    "Azure.AI.OpenAI",
+    "OpenAI.Responses",
+) %>
+
+<%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>;
+<% if (!useTokenCredentials) { %>
+<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
+<% } %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
+
+<% if (useTokenCredentials) { %>
+AzureOpenAIClient azureClient = new(new(endpoint), new DefaultAzureCredential());
+<% } else { %>
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
+<% } %>
+OpenAIResponseClient client = azureClient.GetOpenAIResponseClient(deploymentName);
+
+Uri imageUri = new("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png");
+ResponseContentPart imagePart = ResponseContentPart.CreateInputImagePart(imageUri);
+ResponseContentPart textPart = ResponseContentPart.CreateInputTextPart("Describe this image");
+
+List<ResponseContentPart> contentParts = [imagePart, textPart];
+
+OpenAIResponse response = client.CreateResponse(
+            inputItems:
+            [
+                ResponseItem.CreateSystemMessageItem("You are a helpful assistant that describes images"),
+                        ResponseItem.CreateUserMessageItem(contentParts)
+            ]);
+
+Console.WriteLine($"{response.Id}: {((MessageResponseItem)response.OutputItems[0]).Content[0].Text}");

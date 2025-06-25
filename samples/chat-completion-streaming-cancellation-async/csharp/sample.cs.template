@@ -1,0 +1,43 @@
+<% if (useTokenCredentials) { %>
+using Azure.Identity; 
+<%} else { %>using Azure; 
+<% } %>
+using Azure.AI.OpenAI;
+using OpenAI.Chat;
+
+<%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>;
+<%if (useTokenCredentials) { %>
+<% } else { %>
+<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
+<% } %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
+<% if (useTokenCredentials) { %>
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new DefaultAzureCredential());
+<% } else { %> 
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new AzureKeyCredential(apiKey));
+<% } %>ChatClient chatClient = azureClient.GetChatClient(deploymentName);
+
+using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+AsyncCollectionResult<StreamingChatCompletionUpdate> completionUpdates = chatClient.CompleteChatStreamingAsync(
+    [
+    new SystemChatMessage("You are a helpful assistant that talks like a pirate."),
+    new UserChatMessage("Hi, can you help me?"),
+    new AssistantChatMessage("Arrr! Of course, me hearty! What can I do for ye?"),
+    new UserChatMessage("What's the best way to train a parrot?"),
+    ],
+    cancellationToken: cts.Token // Pass the cancellation token here
+    );
+
+await foreach (StreamingChatCompletionUpdate completionUpdate in completionUpdates.WithCancellation(cts.Token))
+{
+    foreach (ChatMessageContentPart contentPart in completionUpdate.ContentUpdate)
+    {
+        Console.Write(contentPart.Text);
+        // Replace with your own logic to cancel the operation
+        if (contentPart.Text != null && contentPart.Text.Contains("*", StringComparison.OrdinalIgnoreCase))
+        {
+            cts.Cancel();
+            break;
+        }
+    }
+}

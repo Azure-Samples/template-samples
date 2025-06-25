@@ -1,0 +1,74 @@
+package main
+
+<%= go.includes(
+	"context",
+	"fmt",
+	"os",
+	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
+	"github.com/openai/openai-go",
+	"github.com/openai/openai-go/azure",
+	"github.com/openai/openai-go/responses",
+) %>
+
+func main() {
+	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+	<%= go.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
+	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+	<% if (!useTokenCredentials) { %>
+	<%= go.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
+	<% } %>
+
+	<% if (useTokenCredentials) { %>
+	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		fmt.Println("Error creating credential:", err)
+		os.Exit(1)
+	}
+
+	<% } %>
+	client := openai.NewClient(
+		azure.WithEndpoint(endpoint, api_version),
+		<% if (useTokenCredentials) { %>
+		azure.WithTokenCredential(token_credential),
+		<% } else { %>
+		azure.WithAPIKey(api_key),
+		<% } %>
+	)
+
+	response, err := client.Responses.New(
+		context.TODO(),
+		responses.ResponseNewParams{
+			Model: model,
+			Input: responses.ResponseNewParamsInputUnion{
+				OfString: openai.String("What is tango? Answer in 30 words or less"),
+			},
+		<% if (extraParams) { %>
+		<% if (extraParams.temperature) {%>
+		Temperature: openai.Float(0.7),
+		<% } %>
+		<% } %>
+		},
+	)
+
+	done := make(chan struct{})
+	
+	go func() {
+		defer close(done)
+		for _, output := range response.Output {
+			if output.Type == "message" {
+				for _, content := range output.Content {
+					if content.Type == "output_text" {
+						fmt.Fprintf(os.Stderr, content.Text)
+					}
+				}
+			}
+		}
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "\nResponse error: %s\n", err)
+		} else {
+			fmt.Fprintln(os.Stderr, "\nDone.")
+		}
+	}()
+
+	<-done
+}
