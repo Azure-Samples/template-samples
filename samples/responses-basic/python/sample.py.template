@@ -1,0 +1,38 @@
+<% if (useEnvVars) { %>
+import os
+<% } %>
+from openai import AzureOpenAI
+<% if (useTokenCredentials) { %>
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+<% } %>
+
+<%= python.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+<%= python.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
+<%= python.valueOrEnvironment(useEnvVars, "deployment_name", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+<% if (useTokenCredentials) { %>
+token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
+<% } else { %>
+<%= python.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
+<% } %>
+
+client = AzureOpenAI(
+    api_version=api_version,
+    azure_endpoint=endpoint,
+    <% if (useTokenCredentials) { %>
+    azure_ad_token_provider=token_provider,
+    <% } else { %>
+    api_key=api_key,
+    <% } %>
+)
+
+response = client.responses.create(
+    model=deployment_name,
+    input="What is tango?",
+    <% if (extraParams) { %>
+    <% if (extraParams.temperature) { %>
+    temperature=<%= extraParams.temperature %>,
+    <% } %>
+    <% } %>
+)
+
+print(response)

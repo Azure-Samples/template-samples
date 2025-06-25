@@ -1,0 +1,37 @@
+<%= csharp.usings(
+    { namespace: "System.ClientModel", condition: !useTokenCredentials },
+    "Azure.AI.OpenAI",
+    { namespace: "Azure.Identity", condition: useTokenCredentials },
+    "OpenAI.Responses",
+    "System",
+) %>
+
+string endpoint = <%= csharp.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_ENDPOINT", endpoint) %>;
+<% if (!useTokenCredentials) { %>
+string apiKey = <%= csharp.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_API_KEY", apiKey) %>;
+<% } %>
+string deploymentName = <%= csharp.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
+<% if (useTokenCredentials) { %>
+AzureOpenAIClient client = new(new(endpoint), new DefaultAzureCredential());
+<% } else { %>
+AzureOpenAIClient client = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
+<% } %>
+OpenAIResponseClient client = client.GetOpenAIResponseClient(deploymentName);
+
+OpenAIResponse response = await client.CreateResponseAsync(
+[
+    ResponseItem.CreateUserMessageItem(
+        [
+            ResponseContentPart.CreateInputTextPart("What is tango? Answer in 30 words or less")
+        ]),
+  <% if (extraParams) { %>
+  ], new ResponsesOptions
+  {<% if (extraParams.temperature) { %>
+    Temperature = <%= extraParams.temperature %>f,<% }
+  %>
+  });
+  <% } else { %>
+  ]);
+<% } %>
+
+Console.WriteLine($"{response.Id}: {((MessageResponseItem)response.OutputItems[0]).Content[0].Text}");
