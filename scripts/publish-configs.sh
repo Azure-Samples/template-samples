@@ -3,8 +3,8 @@
 set -e
 
 GENERATED_SAMPLES_DIR="generated-samples"
-CONFIG_DEFAULTS_DIR="config-defaults"
-SAMPLE_TEMPLATES_DIR="sample-templates"
+CONFIG_DEFAULTS_DIR="validation-config-defaults"
+SAMPLE_TEMPLATES_DIR="samples"
 
 echo "Publishing configuration files..."
 
@@ -29,14 +29,14 @@ for sample_dir in "$SAMPLE_TEMPLATES_DIR"/*; do
         for lang_template_dir in "$sample_dir"/*; do
             if [[ -d "$lang_template_dir" ]]; then
                 language=$(basename "$lang_template_dir")
-                sample_config="$lang_template_dir/.sample-config.json"
+                sample_config="$lang_template_dir/.validation-config.json"
                 
                 if [[ -f "$sample_config" ]]; then
                     target_dir="$GENERATED_SAMPLES_DIR/$language/$sample_name"
                     mkdir -p "$target_dir"
                     if [[ -d "$target_dir" ]]; then
                         echo "Publishing sample config for $sample_name ($language)"
-                        cp "$sample_config" "$target_dir/.sample-config.json"
+                        cp "$sample_config" "$target_dir/.validation-config.json"
                     fi
                 fi
             fi

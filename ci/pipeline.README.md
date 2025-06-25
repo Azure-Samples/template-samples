@@ -54,7 +54,7 @@ Validates an individual sample by:
 ### `resolve-sample-configs.sh`
 Handles the configuration hierarchy:
 - Loads language defaults from `generated-samples/{language}/.config-defaults.json`
-- Optionally merges with sample-specific overrides from `.sample-config.json`
+- Optionally merges with sample-specific overrides from `.validation-config.json`
 - Uses `jq` to merge JSON configurations
 - Returns the final merged configuration
 
@@ -74,11 +74,11 @@ The configuration system uses a two-level hierarchy that allows for flexible sam
     /chat-with-vision/
       - Program.cs
       - ChatWithVision.csproj
-      - .sample-config.json   # Override only what's different
+      - .validation-config.json   # Override only what's different
     /streaming-example/
       - Program.cs
       - StreamingExample.csproj
-      - .sample-config.json   # Special streaming configuration
+      - .validation-config.json   # Special streaming configuration
   /python
     /.config-defaults.json  # Python language defaults
     /basic-completion/
@@ -87,7 +87,7 @@ The configuration system uses a two-level hierarchy that allows for flexible sam
     /async-complex/
       - main.py
       - requirements.txt
-      - .sample-config.json   # Special async handling
+      - .validation-config.json   # Special async handling
 ```
 
 ### Configuration Files
@@ -118,7 +118,7 @@ Example C# defaults:
 }
 ```
 
-#### Sample Overrides (`.sample-config.json`)
+#### Sample Overrides (`.validation-config.json`)
 Optional file in individual sample directories that can override or extend defaults:
 - Only needs to specify properties that differ from defaults
 - Can add custom properties for special handling
@@ -142,8 +142,8 @@ The pipeline generates several artifacts for debugging and reporting:
 
 ## Adding New Samples
 
-To add a new sample, see the directions in `sample-templates`.
-- (Optional) Create `.sample-config.json` if you need to override language defaults
+To add a new sample, see the directions in `./samples`.
+- (Optional) Create `.validation-config.json` if you need to override language defaults
 
 The configuration system ensures that most samples can rely on sensible language defaults, while complex samples can customize their build and validation process as needed.
 

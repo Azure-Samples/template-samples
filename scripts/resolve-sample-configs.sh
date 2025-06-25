@@ -12,7 +12,7 @@ if [ ! -f "$LANGUAGE_DEFAULTS" ]; then
 fi
 
 # Optional sample overrides
-SAMPLE_CONFIG="$SAMPLE_DIR/.sample-config.json"
+SAMPLE_CONFIG="$SAMPLE_DIR/.validation-config.json"
 
 if [ -f "$SAMPLE_CONFIG" ]; then
     # Merge language defaults with sample overrides
