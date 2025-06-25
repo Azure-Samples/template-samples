@@ -12,7 +12,7 @@ if [ -n "$CHANGED_SAMPLES_FILE" ] && [ -f "$CHANGED_SAMPLES_FILE" ] && [ -s "$CH
     SAMPLES_FILE="$CHANGED_SAMPLES_FILE"
 else
     echo "No $LANGUAGE samples changes found."
-    SAMPLES_FILE=""
+    exit 0
 fi
 
 # Validate each sample
