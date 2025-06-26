@@ -14,7 +14,7 @@ for config_file in "$CONFIG_DEFAULTS_DIR"/*.json; do
         language=$(basename "$config_file" .json)
         lang_dir="$GENERATED_SAMPLES_DIR/$language"
         
-        echo "Publishing default config for $language"
+        echo "Publishing default config, filename $config_file, for $language to $lang_dir"
         mkdir -p "$lang_dir"
         cp "$config_file" "$lang_dir/.config-defaults.json"
     fi
