@@ -36,6 +36,7 @@ stages:
     steps:
     - script: |
         # Publish configs to generated directories
+        chmod +x scripts/publish-configs.sh
         ./scripts/publish-configs.sh
 
   - job: DetectChanges
