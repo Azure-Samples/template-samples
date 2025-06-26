@@ -1,0 +1,10 @@
+{
+  "language": "python",
+  "preBuildSteps": [
+    "pip install -r requirements.txt"
+  ],
+  "validateSteps": [
+    "python -m py_compile *.py"
+  ],
+  "dependencyUpdateCommand": "pip list --outdated"
+}
