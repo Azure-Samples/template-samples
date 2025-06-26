@@ -1,0 +1,82 @@
+import com.openai.azure.AzureOpenAIServiceVersion;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.responses.ResponseInputFile;
+import com.openai.models.responses.ResponseInputItem;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.Response;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
+import java.util.Collections;
+
+<% if (useTokenCredentials) { %>import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.openai.credential.BearerTokenCredential; <% 
+} else { %>import com.openai.azure.credential.AzureApiKeyCredential; 
+<% } %>
+
+public class Sample {
+    public static void main(String[] args) {
+        <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+        <%if (!useTokenCredentials) { %>
+        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", azureOpenaiKey)%>
+        <%}%>
+        <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>     
+
+        OpenAIOkHttpClient.Builder clientBuilder = OpenAIOkHttpClient.builder();
+        <% if (!useTokenCredentials) { %>
+        clientBuilder
+                .baseUrl(endpoint)
+                .credential(AzureApiKeyCredential.create(azureOpenaiKey));        
+        <% 
+        } else { %>
+        clientBuilder
+                .baseUrl(endpoint)
+                .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                        new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+        <%} %>
+        OpenAIClientAsync client = clientBuilder.build().async();
+
+        String base64File = null;
+        try {
+            String fileName = "ovenbird-tale.txt";
+            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            Path path = Paths.get(classloader.getResource(fileName).toURI());
+            
+            byte[] fileBytes = Files.readAllBytes(path);
+            base64File = Base64.getEncoder().encodeToString(fileBytes);
+        } catch (IOException | URISyntaxException e) {
+            fail("Failed to read the file: " + e.getMessage(), e);
+        }
+
+        String fileBase64 = "data:text/plain;base64," + base64File;
+
+        ResponseInputFile inputFile = ResponseInputFile.builder()
+            .filename("ovenbird-tale.txt")
+            .fileData(fileBase64)
+            .build();
+        ResponseInputItem messageInputItem = ResponseInputItem.ofMessage(ResponseInputItem.Message.builder()
+            .role(ResponseInputItem.Message.Role.USER)
+            .addInputTextContent("Can you add a paragraph for this story? Use less than 30 words")
+            .addContent(inputFile)
+            .build());
+        ResponseCreateParams createParams = ResponseCreateParams.builder()
+            .inputOfResponse(Collections.singletonList(messageInputItem))
+            .model(deploymentName)
+            .build();
+
+        client.responses()
+            .create(createParams)
+            .thenAccept(response -> response.output().forEach(item ->
+                item.message().ifPresent(message ->
+                    message.content().forEach(content ->
+                        content.outputText().ifPresent(
+                            outputText -> System.out.println(outputText.text()))))))
+            .join();  
+    }
+}
