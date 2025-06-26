@@ -6,21 +6,21 @@ variants:
     apiKey: <some-api-key>
 
 samples:
-- templatePath: ./chat-completion-with-vision/csharp
-  variants:
-    - output: ../generated-samples/csharp/chat-completion-with-vision
-      data: "./chat-completion-with-vision/chat-with-vision.yaml"
-    - output: ../generated-samples/csharp/chat-completion-with-vision-reasoning
-      data: "./chat-completion-with-vision/chat-with-vision-reasoning.yaml"
-    - output: ../generated-samples/csharp/chat-completion-with-vision-TEST
-      data: 
-        endpoint: <%= endpoint %>
-        deploymentName: <some-deployment-name>
-        extraParams:
-          tokens:
-            python_name: max_completion_tokens
-            csharp_name: MaxOutputTokenCount
-            value: 2000
+# - templatePath: ./chat-completion-with-vision/csharp
+#   variants:
+#     - output: ../generated-samples/csharp/chat-completion-with-vision
+#       data: "./chat-completion-with-vision/chat-with-vision.yaml"
+#     - output: ../generated-samples/csharp/chat-completion-with-vision-reasoning
+#       data: "./chat-completion-with-vision/chat-with-vision-reasoning.yaml"
+#     - output: ../generated-samples/csharp/chat-completion-with-vision-TEST
+#       data: 
+#         endpoint: <%= endpoint %>
+#         deploymentName: <some-deployment-name>
+#         extraParams:
+#           tokens:
+#             python_name: max_completion_tokens
+#             csharp_name: MaxOutputTokenCount
+#             value: 2000
 - templatePath: ./audio-transcription-async/csharp
   variants: 
     - output: ../generated-samples/csharp/audio-transcription-async
