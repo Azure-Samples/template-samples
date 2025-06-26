@@ -1,10 +1,9 @@
 import com.openai.azure.AzureOpenAIServiceVersion;
-import com.openai.client.OpenAIClient;
-import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
+import com.openai.core.http.StreamResponse;
+import com.openai.models.ChatModel;
 import com.openai.models.responses.ResponseCreateParams;
-import com.openai.models.responses.ResponseInputImage;
-import com.openai.models.responses.ResponseInputItem;
-import java.util.Collections;
 <% if (useTokenCredentials) { %>
 import com.azure.identity.AuthenticationUtil;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -12,6 +11,7 @@ import com.openai.credential.BearerTokenCredential;
 <% } else { %>
 import com.openai.azure.credential.AzureApiKeyCredential; 
 <% } %>
+import com.openai.models.responses.ResponseStreamEvent;
 
 public class Sample {
 public static void main(String[] args) {
@@ -19,24 +19,22 @@ public static void main(String[] args) {
     <%if (!useTokenCredentials) { %>
     <%= java.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
     <%}%>
-    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>     
 
-    OpenAIOkHttpClient.Builder clientBuilder = OpenAIOkHttpClient.builder();
+    OpenAIOkHttpClientAsync.Builder clientBuilder = OpenAIOkHttpClientAsync.builder();
     clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());
     <% if (!useTokenCredentials) { %>
     clientBuilder
-                .baseUrl(endpoint)
-                .azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion())
-                .credential(AzureApiKeyCredential.create(apiKey));        
+            .baseUrl(endpoint)
+            .credential(AzureApiKeyCredential.create(apiKey));        
     <% 
     } else { %>
     clientBuilder
-                .baseUrl(endpoint)
-                .azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion())
-                .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
-                new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+            .baseUrl(endpoint)
+            .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                    new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
     <%} %>
-    OpenAIClient client = clientBuilder.build();
+        OpenAIClientAsync client = clientBuilder.build();
         String logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png";
 
         ResponseInputImage logoInputImage = ResponseInputImage.builder()
@@ -53,10 +51,11 @@ public static void main(String[] args) {
                 .model(deploymentName)
                 .build();
 
-        client.responses().create(createParams).output().stream()
-                .forEach(item -> item.message().ifPresent(
-                        message -> message.content().stream()
-                                .forEach(content -> content.outputText().ifPresent(
-                                        outputText -> System.out.println(outputText.text())))));
+        client.responses()
+	    .createStreaming(createParams)
+	    .subscribe(event -> event.outputTextDelta().ifPresent(
+                    textEvent -> System.out.print(textEvent.delta())))
+	    .onCompleteFuture()
+	    .join();
         }
 }
