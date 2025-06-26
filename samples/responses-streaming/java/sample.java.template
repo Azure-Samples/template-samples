@@ -13,13 +13,13 @@ import com.openai.azure.credential.AzureApiKeyCredential;
 <% } %>
 import com.openai.models.responses.ResponseStreamEvent;
 
-public class Main {
+public class Sample {
 public static void main(String[] args) {
-    String endpoint = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_ENDPOINT", endpoint)%>;
+    <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>;
     <%if (!useTokenCredentials) { %>
-    String azureOpenaiKey = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_API_KEY", apiKey)%>;
+    <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>;
     <%}%>
-    String deploymentName = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>;        
+    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>;      
 
     OpenAIOkHttpClient.Builder clientBuilder = OpenAIOkHttpClient.builder();
     clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());

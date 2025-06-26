@@ -2,9 +2,9 @@ template: sample.cs.template
 type: csharp
 dependencies:
   - name: OpenAI
-    version: 2.1.0
+    version: 2.2.0-beta.4
   - name: Azure.AI.OpenAI
-    version: 2.1.0
+    version: 2.2.0-beta.4
   - name: Azure.Identity
     version: 1.14.0
 input:
