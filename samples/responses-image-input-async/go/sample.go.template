@@ -1,0 +1,101 @@
+package main
+
+<%= go.includes(
+	"context",
+	"fmt",
+	"os",
+	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
+	"github.com/openai/openai-go",
+	"github.com/openai/openai-go/azure",
+	"github.com/openai/openai-go/responses",
+) %>
+
+func main() {
+	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+	<%= go.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
+	<% if (!useTokenCredentials) { %>
+	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
+	<% } %>
+	
+	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+
+	<% if (useTokenCredentials) { %>
+	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		fmt.Println("Error creating credential:", err)
+		os.Exit(1)
+	}
+	client := openai.NewClient(
+		azure.WithEndpoint(endpoint, api_version),
+		azure.WithTokenCredential(token_credential),
+	)
+	<% } else { %>
+	client := openai.NewClient(
+		azure.WithEndpoint(endpoint, api_version),
+		azure.WithAPIKey(apiKey),
+		)
+	<% } %>
+
+	// Create channels to receive the result or error
+	done := make(chan *responses.Response)
+	errChan := make(chan error)
+
+	// Launch goroutine for the async call
+	go func() {
+		defer close(done)
+		defer close(errChan)
+
+		imageURL := "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png"
+
+		resp, err := client.Responses.New(
+			context.TODO(),
+			responses.ResponseNewParams{
+				Model: deploymentName,
+				Input: responses.ResponseNewParamsInputUnion{
+					OfInputItemList: []responses.ResponseInputItemUnionParam{
+						{
+							OfInputMessage: &responses.ResponseInputItemMessageParam{
+								Role: "user",
+								Content: []responses.ResponseInputContentUnionParam{
+									{
+										OfInputText: &responses.ResponseInputTextParam{
+											Text: "Describe this image.",
+										},
+									},
+									{
+										OfInputImage: &responses.ResponseInputImageParam{
+											ImageURL: openai.String(imageURL),
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		)
+
+		if err != nil {
+			errChan <- err
+			return
+		}
+		done <- resp
+	}()
+
+	select {
+	case resp := <-done:
+		// Print the text content from the output
+		for _, output := range resp.Output {
+			if output.Type == "message" {
+				for _, content := range output.Content {
+					if content.Type == "output_text" {
+						fmt.Fprintf(os.Stderr, "Model's description of the image: %s\n", content.Text)
+					}
+				}
+			}
+		}
+	case err := <-errChan:
+		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
+		return
+	}
+}
