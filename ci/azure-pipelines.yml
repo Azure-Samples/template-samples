@@ -15,11 +15,21 @@ variables:
 
 stages:
 - stage: ValidateSamples
-  displayName: 'Validate Code Samples'
+  displayName: 'Generate and Validate Code Samples'
   jobs:
-  
+
+  - job: GenerateSamples
+    displayName: 'Generate Code Samples'
+    steps:
+    - checkout: self
+    - script: |
+        # Generate samples using che batch command
+        che batch samples/input-data.yaml
+      displayName: 'Generate samples'
+
   - job: PublishConfigs
     displayName: 'Publish build configurations for samples'
+    dependsOn: GenerateSamples
     steps:
     - script: |
         # Publish configs to generated directories
@@ -27,6 +37,7 @@ stages:
 
   - job: DetectChanges
     displayName: 'Detect Changed Samples'
+    dependsOn: GenerateSamples
     steps:
     - checkout: self
       fetchDepth: 0
