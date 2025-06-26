@@ -23,6 +23,9 @@ stages:
     steps:
     - checkout: self
     - script: |
+        npm install -g @caleuche/cli
+      displayName: 'Install Caleuche CLI'
+    - script: |
         # Generate samples using che batch command
         che batch samples/input-data.yaml
       displayName: 'Generate samples'
