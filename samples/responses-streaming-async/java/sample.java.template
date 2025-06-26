@@ -18,7 +18,7 @@ public static void main(String[] args) {
     <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>;
     <%}%>
     <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>;
-    
+
     OpenAIOkHttpClientAsync.Builder clientBuilder = OpenAIOkHttpClientAsync.builder();
     clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());
     <% if (!useTokenCredentials) { %>
