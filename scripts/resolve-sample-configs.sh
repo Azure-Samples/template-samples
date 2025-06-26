@@ -5,7 +5,7 @@ SAMPLE_DIR=$1
 LANGUAGE=$(echo "$SAMPLE_DIR" | cut -d'/' -f2)
 
 # Required language defaults
-LANGUAGE_DEFAULTS="generated-samples/$LANGUAGE/.config-defaults.json"
+LANGUAGE_DEFAULTS="generated-samples/$LANGUAGE/validation-config-defaults.json"
 if [ ! -f "$LANGUAGE_DEFAULTS" ]; then
     echo "Error: Missing $LANGUAGE_DEFAULTS" >&2
     exit 1

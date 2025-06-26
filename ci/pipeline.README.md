@@ -53,8 +53,8 @@ Validates an individual sample by:
 
 ### `resolve-sample-configs.sh`
 Handles the configuration hierarchy:
-- Loads language defaults from `generated-samples/{language}/.config-defaults.json`
-- Optionally merges with sample-specific overrides from `.validation-config.json`
+- Loads language defaults from `generated-samples/{language}/validation-config-defaults.json`
+- Optionally merges with sample-specific overrides from `.sample-config.json`
 - Uses `jq` to merge JSON configurations
 - Returns the final merged configuration
 
@@ -66,7 +66,7 @@ The configuration system uses a two-level hierarchy that allows for flexible sam
 ```
 /generated-samples
   /csharp
-    /.config-defaults.json  # C# language defaults
+    /validation-config-defaults.json  # C# language defaults
     /chat-completion/
       - Program.cs
       - ChatCompletion.csproj
@@ -80,7 +80,7 @@ The configuration system uses a two-level hierarchy that allows for flexible sam
       - StreamingExample.csproj
       - .validation-config.json   # Special streaming configuration
   /python
-    /.config-defaults.json  # Python language defaults
+    /validation-config-defaults.json  # Python language defaults
     /basic-completion/
       - main.py
       - requirements.txt
@@ -92,8 +92,8 @@ The configuration system uses a two-level hierarchy that allows for flexible sam
 
 ### Configuration Files
 
-#### Language Defaults (`.config-defaults.json`)
-Located at `generated-samples/{language}/.config-defaults.json`, this file contains:
+#### Language Defaults (`validation-config-defaults.json`)
+Located at `generated-samples/{language}/validation-config-defaults.json`, this file contains:
 - **language**: Programming language identifier
 - **framework**: Target framework/version (e.g., "net9.0", "python3.11")
 - **dependencies**: Common packages/libraries needed for all samples
