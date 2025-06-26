@@ -38,7 +38,7 @@ func main() {
 	response, err := client.Responses.New(
 		context.TODO(),
 		responses.ResponseNewParams{
-			Model: model,
+			Model: deploymentName,
 			Input: responses.ResponseNewParamsInputUnion{
 				OfString: openai.String("What is tango? Answer in 30 words or less"),
 			},
