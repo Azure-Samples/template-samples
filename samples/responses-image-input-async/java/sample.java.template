@@ -1,0 +1,61 @@
+import com.openai.azure.AzureOpenAIServiceVersion;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
+import com.openai.core.http.StreamResponse;
+import com.openai.models.ChatModel;
+import com.openai.models.responses.ResponseCreateParams;
+<% if (useTokenCredentials) { %>
+import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.openai.credential.BearerTokenCredential; 
+<% } else { %>
+import com.openai.azure.credential.AzureApiKeyCredential; 
+<% } %>
+import com.openai.models.responses.ResponseStreamEvent;
+
+public class Sample {
+public static void main(String[] args) {
+    <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+    <%if (!useTokenCredentials) { %>
+    <%= java.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
+    <%}%>
+    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>     
+
+    OpenAIOkHttpClientAsync.Builder clientBuilder = OpenAIOkHttpClientAsync.builder();
+    clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());
+    <% if (!useTokenCredentials) { %>
+    clientBuilder
+            .baseUrl(endpoint)
+            .credential(AzureApiKeyCredential.create(apiKey));        
+    <% 
+    } else { %>
+    clientBuilder
+            .baseUrl(endpoint)
+            .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                    new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+    <%} %>
+        OpenAIClientAsync client = clientBuilder.build();
+        String logoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png";
+
+        ResponseInputImage logoInputImage = ResponseInputImage.builder()
+                .detail(ResponseInputImage.Detail.AUTO)
+                .imageUrl(logoUrl)
+                .build();
+        ResponseInputItem messageInputItem = ResponseInputItem.ofMessage(ResponseInputItem.Message.builder()
+                .role(ResponseInputItem.Message.Role.USER)
+                .addInputTextContent("Describe this image.")
+                .addContent(logoInputImage)
+                .build());
+        ResponseCreateParams createParams = ResponseCreateParams.builder()
+                .inputOfResponse(Collections.singletonList(messageInputItem))
+                .model(deploymentName)
+                .build();
+
+        client.responses()
+	    .createStreaming(createParams)
+	    .subscribe(event -> event.outputTextDelta().ifPresent(
+                    textEvent -> System.out.print(textEvent.delta())))
+	    .onCompleteFuture()
+	    .join();
+        }
+}
