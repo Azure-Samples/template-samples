@@ -36,7 +36,7 @@ func main() {
 		)
 	<% } %>
 
-	file, err := os.Open("resources/speech.wav")
+	file, err := os.Open("resources/batman.wav")
 	if err != nil {
 		panic(err)
 	}
