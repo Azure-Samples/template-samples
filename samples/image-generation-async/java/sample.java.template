@@ -9,7 +9,7 @@ import com.openai.credential.BearerTokenCredential; <%
 } else { %>import com.openai.azure.credential.AzureApiKeyCredential; 
 <% } %>
 
-public class Main {
+public class Sample {
     public static void main(String[] args) {
 
         <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
