@@ -106,7 +106,12 @@ stages:
         chmod +x scripts/*.sh
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
       displayName: 'Validate C# samples'
-    - publish: validation-*.log
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+    - publish: validation-results/
       artifact: CSharpResults
       condition: always()
 
@@ -135,6 +140,11 @@ stages:
         chmod +x scripts/*.sh
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
       displayName: 'Validate Python samples'
-    - publish: validation-*.log
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+    - publish: validation-results/
       artifact: PythonResults
       condition: always()
