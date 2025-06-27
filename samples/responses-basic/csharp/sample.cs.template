@@ -11,12 +11,11 @@
 <% } %>
 <%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
 <% if (useTokenCredentials) { %>
-AzureOpenAIClient client = new(new(endpoint), new DefaultAzureCredential());
+AzureOpenAIClient azureClient = new(new(endpoint), new DefaultAzureCredential());
 <% } else { %>
-AzureOpenAIClient client = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
 <% } %>
 OpenAIResponseClient responseClient = azureClient.GetOpenAIResponseClient(deploymentName);
-AzureOpenAIClient azureClient = new(new Uri(endpoint), new AzureKeyCredential(apiKey));
 
 OpenAIResponse response = responseClient.CreateResponse(
   inputItems: [

@@ -3,17 +3,20 @@ package main
 <%= go.includes(
 	"context",
 	"fmt",
+	"encoding/base64",
 	"os",
+
 	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
 	"github.com/openai/openai-go",
 	"github.com/openai/openai-go/azure",
+	"github.com/openai/openai-go/packages/param",
 	"github.com/openai/openai-go/responses",
 ) %>
 
 func main() {
 	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
 	<%= go.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
-	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+	<%= go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
 	<% if (!useTokenCredentials) { %>
 	<%= go.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
 	<% } %>
@@ -24,8 +27,8 @@ func main() {
 		fmt.Println("Error creating credential:", err)
 		os.Exit(1)
 	}
-
 	<% } %>
+
 	client := openai.NewClient(
 		azure.WithEndpoint(endpoint, api_version),
 		<% if (useTokenCredentials) { %>
@@ -35,18 +38,47 @@ func main() {
 		<% } %>
 	)
 
+	filePath := "resources/ovenbird-tale.txt"
+
+	// Read the file content
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
+		return
+	}
+
+	// Convert the file content to a base64-encoded string
+	base64Data := fmt.Sprintf("data:text/plain;base64,%s", base64.StdEncoding.EncodeToString(data))
+	// If you want to use a different file type, you can change the MIME type accordingly
+	// For example, for a PDF file, you might use "data:application/pdf"
+
+	// Create a response with the file input
 	response, err := client.Responses.New(
 		context.TODO(),
 		responses.ResponseNewParams{
 			Model: deploymentName,
 			Input: responses.ResponseNewParamsInputUnion{
-				OfString: openai.String("What is tango? Answer in 30 words or less"),
+				OfInputItemList: []responses.ResponseInputItemUnionParam{
+					{
+						OfInputMessage: &responses.ResponseInputItemMessageParam{
+							Role: "user",
+							Content: []responses.ResponseInputContentUnionParam{
+								{
+									OfInputText: &responses.ResponseInputTextParam{
+										Text: "Can you add a paragraph for this story? Use less than 30 words",
+									},
+								},
+								{
+									OfInputFile: &responses.ResponseInputFileParam{
+										FileData: param.NewOpt[string](base64Data),
+										Filename: param.NewOpt[string]("ovenbird-tale.txt"),
+									},
+								},
+							},
+						},
+					},
+				},
 			},
-		<% if (extraParams) { %>
-		<% if (extraParams.temperature) {%>
-		Temperature: openai.Float(0.7),
-		<% } %>
-		<% } %>
 		},
 	)
 
