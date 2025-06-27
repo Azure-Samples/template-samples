@@ -28,7 +28,7 @@ func main() {
 		os.Exit(1)
 	}
 	<% } %>
-	
+
 	client := openai.NewClient(
 		azure.WithEndpoint(endpoint, api_version),
 		<% if (useTokenCredentials) { %>
@@ -53,7 +53,7 @@ func main() {
 	// For example, for a PDF file, you might use "data:application/pdf"
 
 	// Create a response with the file input
-	resp, err := client.Responses.New(
+	response, err := client.Responses.New(
 		context.TODO(),
 		responses.ResponseNewParams{
 			Model: deploymentName,
@@ -82,18 +82,25 @@ func main() {
 		},
 	)
 
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
-		return
-	}
-
-	for _, output := range resp.Output {
-		if output.Type == "message" {
-			for _, content := range output.Content {
-				if content.Type == "output_text" {
-					fmt.Fprintf(os.Stderr, "New paragraph: %s\n", content.Text)
+	done := make(chan struct{})
+	
+	go func() {
+		defer close(done)
+		for _, output := range response.Output {
+			if output.Type == "message" {
+				for _, content := range output.Content {
+					if content.Type == "output_text" {
+						fmt.Fprintf(os.Stderr, content.Text)
+					}
 				}
 			}
 		}
-	}
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "\nResponse error: %s\n", err)
+		} else {
+			fmt.Fprintln(os.Stderr, "\nDone.")
+		}
+	}()
+
+	<-done
 }
