@@ -98,7 +98,7 @@ stages:
       artifact: GeneratedConfigs
       displayName: 'Download generated configurations'
     - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Restore generated configurations'
     - script: sudo apt-get update && sudo apt-get install -y jq
       displayName: 'Install jq'
@@ -127,7 +127,7 @@ stages:
       artifact: GeneratedConfigs
       displayName: 'Download generated configurations'
     - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Restore generated configurations'
     - script: sudo apt-get update && sudo apt-get install -y jq
       displayName: 'Install jq'
