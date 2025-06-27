@@ -21,10 +21,10 @@ import com.openai.credential.BearerTokenCredential; <%
 <% } %>
 
 public class Sample {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
         <%if (!useTokenCredentials) { %>
-        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", azureOpenaiKey)%>
+        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
         <%}%>
         <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>     
 
@@ -32,26 +32,27 @@ public class Sample {
         <% if (!useTokenCredentials) { %>
         clientBuilder
                 .baseUrl(endpoint)
-                .credential(AzureApiKeyCredential.create(azureOpenaiKey));        
+                .credential(AzureApiKeyCredential.create(azureOpenaiKey))
+                .azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());  
         <% 
         } else { %>
         clientBuilder
                 .baseUrl(endpoint)
                 .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
-                        new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+                        new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")))
+                .azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion()); 
         <%} %>
         OpenAIClient client = clientBuilder.build();
 
         String base64File = null;
         try {
-            String fileName = "ovenbird-tale.txt";
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            Path path = Paths.get(classloader.getResource(fileName).toURI());
-            
-            byte[] fileBytes = Files.readAllBytes(path);
+            Path filePath = Paths.get("resources\\ovenbird-tale.txt");
+
+            byte[] fileBytes = Files.readAllBytes(filePath);
             base64File = Base64.getEncoder().encodeToString(fileBytes);
-        } catch (IOException | URISyntaxException e) {
-            fail("Failed to read the file: " + e.getMessage(), e);
+        } catch (IOException e) {
+            System.err.println("Failed to read file: " + e.getMessage());
+            throw e;
         }
 
         String fileBase64 = "data:text/plain;base64," + base64File;

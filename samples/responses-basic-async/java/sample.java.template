@@ -13,7 +13,7 @@ public class Sample {
     public static void main(String[] args) {
         <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
         <%if (!useTokenCredentials) { %>
-        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", azureOpenaiKey)%>
+        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
         <%}%>
         <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>       
 
