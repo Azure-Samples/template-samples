@@ -23,8 +23,9 @@ stages:
     steps:
     - checkout: self
     - script: |
-        npm install -g @caleuche/cli
-      displayName: 'Install Caleuche CLI'
+        npm install -g @caleuche/cli@0.2.4
+      displayName: 'WARNING Install Caleuche CLI'
+      # This is a temporary workaround until the batch feature is updated.
     - script: |
         # Generate samples using che batch command
         che batch samples/input-data.yaml
