@@ -38,6 +38,12 @@ stages:
         # Publish configs to generated directories
         chmod +x scripts/publish-configs.sh
         ./scripts/publish-configs.sh
+      displayName: 'Publish configurations'
+    
+    # Publish the generated config files as artifacts so we can access them in validation jobs
+    - publish: generated-samples/
+      artifact: GeneratedConfigs
+      displayName: 'Publish generated configurations'
 
   - job: DetectChanges
     displayName: 'Detect Changed Samples'
@@ -77,7 +83,9 @@ stages:
 
   - job: ValidateCSharp
     displayName: 'Validate C# Samples'
-    dependsOn: DetectChanges
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'], 'true')
     steps:
     - checkout: self
@@ -86,6 +94,12 @@ stages:
         version: $(dotnetVersion)
     - download: current
       artifact: ChangedCSharp
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./
+      displayName: 'Restore generated configurations'
     - script: sudo apt-get update && sudo apt-get install -y jq
       displayName: 'Install jq'
     - script: |
@@ -98,7 +112,9 @@ stages:
 
   - job: ValidatePython
     displayName: 'Validate Python Samples'
-    dependsOn: DetectChanges
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'], 'true')
     steps:
     - checkout: self
@@ -107,6 +123,12 @@ stages:
         versionSpec: '3.11'
     - download: current
       artifact: ChangedPython
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./
+      displayName: 'Restore generated configurations'
     - script: sudo apt-get update && sudo apt-get install -y jq
       displayName: 'Install jq'
     - script: |
