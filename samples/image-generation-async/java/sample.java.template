@@ -16,7 +16,8 @@ public class Sample {
         <%if (!useTokenCredentials) { %>
         <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
         <%}%>
-        
+        <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+
         OpenAIOkHttpClientAsync.Builder clientBuilder = OpenAIOkHttpClientAsync.builder();
         <% if (!useTokenCredentials) { %>
         clientBuilder
@@ -37,7 +38,7 @@ public class Sample {
 
         ImageGenerateParams params = ImageGenerateParams.builder()
             .prompt(prompt)
-            .model(ImageModel.DALL_E_3)
+            .model(ChatModel.of(deploymentName))
             .n(numberOfImages)
             .quality(ImageGenerateParams.Quality.HD)
             .build();
