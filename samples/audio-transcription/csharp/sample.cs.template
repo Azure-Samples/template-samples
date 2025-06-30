@@ -19,7 +19,7 @@ AzureOpenAIClient client = new(new Uri(endpoint), new ApiKeyCredential(apiKey));
 AudioClient chatClient = client.GetAudioClient(deploymentName);
 
 string fileName = "batman.wav";
-string audioFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Samples", "Resources", fileName);
+string audioFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", fileName);
 var transcriptionResult = chatClient.TranscribeAudio(audioFilePath);
 
 Console.WriteLine(transcriptionResult.Value.Text.ToString());

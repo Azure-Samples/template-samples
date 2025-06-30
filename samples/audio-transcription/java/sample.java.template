@@ -4,6 +4,7 @@ import com.openai.azure.credential.AzureApiKeyCredential;
 import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.credential.BearerTokenCredential;
 import com.openai.models.audio.AudioModel;
+import com.openai.models.audio.transcriptions.Transcription;
 import com.openai.models.audio.transcriptions.TranscriptionCreateParams;
 <% if (useTokenCredentials) { %>import com.azure.core.credential.TokenCredential;
 import com.azure.identity.DefaultAzureCredentialBuilder; <% 
@@ -12,13 +13,13 @@ import com.azure.identity.DefaultAzureCredentialBuilder; <%
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Main {
+public class Sample {
     public static void main(String[] args) {
         
-        String endpoint = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_ENDPOINT", endpoint)%>;
+       <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>;
         <%if (useTokenCredentials) { %>
         <%} else {%>
-        String azureOpenaiKey = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_API_KEY", apiKey)%>;
+        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>;
         <%}%>
         
         OpenAIOkHttpClient.Builder clientBuilder = OpenAIOkHttpClient.builder();
@@ -46,7 +47,7 @@ public class Main {
             .model(AudioModel.of("whisper"))
             .build();
 
-        var result = client.audio()
+        Transcription result = client.audio()
             .transcriptions()
             .create(createParams)
             .asTranscription();
