@@ -56,8 +56,15 @@ stages:
     steps:
     - checkout: self
       fetchDepth: 0
+    # - task: DownloadBuildArtifacts@0
+    # inputs:
+    #   buildType: 'current'
+    #   downloadType: 'single'
+    #   artifactName: 'generated-samples'
+    #   downloadPath: 'generated-samples/'
     - download: current
       artifact: generated-samples
+      pattern: '**'
       displayName: 'Download generated samples'
       
     - script: |
