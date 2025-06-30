@@ -30,6 +30,12 @@ stages:
         # Generate samples using che batch command
         che batch samples/input-data.yaml
       displayName: 'Generate samples'
+    - script: |
+        echo "$(Pipeline.Workspace)"
+        echo "------------------------------------------"
+        echo "$(Pipeline.Workspace)/s"
+        echo "------------------------------------------"
+        echo "$(Pipeline.Workspace)/generated-samples"
 
     - publish: generated-samples/
       artifact: generated-samples
