@@ -121,6 +121,11 @@ stages:
     - download: current
       artifact: ChangedCSharp
     - download: current
+      artifact: GeneratedSamples
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied generated samples to ./generated-samples/"
+    - download: current
       artifact: GeneratedConfigs
       displayName: 'Download generated configurations'
     - script: |
