@@ -57,7 +57,7 @@ stages:
     - checkout: self
       fetchDepth: 0
     - download: current
-      artifact: GeneratedSamples
+      artifact: generated-samples
       displayName: 'Download generated samples'
       
     - script: |
