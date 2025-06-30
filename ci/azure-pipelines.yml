@@ -32,10 +32,11 @@ stages:
       displayName: 'Generate samples'
     - script: |
         echo "$(Pipeline.Workspace)"
+        tree $(Pipeline.Workspace)/s /f
         echo "------------------------------------------"
         echo $(Pipeline.Workspace)/s/**/*
         echo "------------------------------------------"
-        echo $(Pipeline.Workspace)/generated-samples/**/*
+        echo $(Pipeline.Workspace)/s/generated-samples/**/*
 
     - publish: generated-samples/
       artifact: generated-samples
@@ -72,6 +73,9 @@ stages:
       artifact: generated-samples
       patterns: '**'
       displayName: 'Download generated samples'
+
+    - script: |
+        ls $(Pipeline.Workspace)/s | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done
       
     - script: |
         # Ensure we have the main branch reference
