@@ -56,26 +56,15 @@ stages:
     steps:
     - checkout: self
       fetchDepth: 0
-    # - task: DownloadBuildArtifacts@0
-    # inputs:
-    #   buildType: 'current'
-    #   downloadType: 'single'
-    #   artifactName: 'generated-samples'
-    #   downloadPath: 'generated-samples/'
     - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
-    - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
-        echo "Copied generated samples to ./generated-samples/"
 
     - script: |
-        echo "find generated-samples/"
-        find generated-samples/ -type d | sort
-    - script: |
-        echo "$(Pipeline.Workspace)/s/generated-samples"
-        find $(Pipeline.Workspace)/s/generated-samples/ -type d | sort
-      
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+
     - script: |
         # Ensure we have the main branch reference
         git fetch origin main:main || git fetch origin main
@@ -103,9 +92,11 @@ stages:
       
     - publish: changed_csharp.txt
       artifact: ChangedCSharp
+      displayName: 'Publish C# changes'
       
     - publish: changed_python.txt
       artifact: ChangedPython
+      displayName: 'Publish Python changes'
 
   - job: ValidateCSharp
     displayName: 'Validate C# Samples'
@@ -120,19 +111,20 @@ stages:
         version: $(dotnetVersion)
     - download: current
       artifact: ChangedCSharp
+      displayName: 'Download list of changed C# samples'
     - download: current
       artifact: GeneratedSamples
+      displayName: 'Download generated samples'
     - script: |
         cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
-        echo "Copied generated samples to ./generated-samples/"
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
     - download: current
       artifact: GeneratedConfigs
       displayName: 'Download generated configurations'
     - script: |
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Restore generated configurations'
-    - script: sudo apt-get update && sudo apt-get install -y jq
-      displayName: 'Install jq'
+      displayName: 'Copy generated configurations to workspace'
     - script: |
         chmod +x scripts/*.sh
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
@@ -159,14 +151,13 @@ stages:
         versionSpec: '3.11'
     - download: current
       artifact: ChangedPython
+      displayName: 'Download list of changed Python samples'
     - download: current
       artifact: GeneratedConfigs
       displayName: 'Download generated configurations'
     - script: |
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Restore generated configurations'
-    - script: sudo apt-get update && sudo apt-get install -y jq
-      displayName: 'Install jq'
+      displayName: 'Copy generated configurations to workspace'
     - script: |
         chmod +x scripts/*.sh
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
