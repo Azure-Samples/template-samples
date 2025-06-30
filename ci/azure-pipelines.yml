@@ -32,7 +32,7 @@ stages:
       displayName: 'Generate samples'
 
     - publish: generated-samples/
-      artifact: GeneratedSamples
+      artifact: generated-samples
       displayName: 'Publish generated samples'
 
   - job: PublishConfigs
