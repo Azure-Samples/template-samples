@@ -75,7 +75,8 @@ stages:
       displayName: 'Download generated samples'
 
     - script: |
-        ls $(Pipeline.Workspace)/s | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done
+        echo $(Pipeline.Workspace)/s/generated-samples/**/*
+        ls $(Pipeline.Workspace)/s/generated-samples/**/* | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done
       
     - script: |
         # Ensure we have the main branch reference
