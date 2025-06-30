@@ -38,7 +38,7 @@ public class Sample {
 
         ImageGenerateParams params = ImageGenerateParams.builder()
             .prompt(prompt)
-            .model(ChatModel.of(deploymentName))
+            .model(ImageModel.of(deploymentName))
             .n(numberOfImages)
             .quality(ImageGenerateParams.Quality.HD)
             .build();
