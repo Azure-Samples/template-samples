@@ -1,4 +1,4 @@
-template: sample.template
+template: sample.go.template
 type: go
 dependencies:
   - name: github.com/Azure/azure-sdk-for-go/sdk/azidentity
