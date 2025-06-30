@@ -58,7 +58,6 @@ stages:
       fetchDepth: 0
     - download: current
       artifact: GeneratedSamples
-      path: $(Pipeline.Workspace)/generated-samples
       displayName: 'Download generated samples'
       
     - script: |
