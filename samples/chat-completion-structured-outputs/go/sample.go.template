@@ -1,0 +1,89 @@
+package main
+
+<%= go.includes(
+	"context",
+	"encoding/json",
+	"fmt",
+	"os",
+	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
+	"github.com/openai/openai-go",
+	"github.com/openai/openai-go/azure",
+	"github.com/invopop/jsonschema"
+) %>
+
+// Define the structured output model
+type WeightComparison struct {
+	Answer string   `json:"answer" jsonschema_description:"The final answer to the question"`
+	Steps  []string `json:"steps" jsonschema_description:"The reasoning steps that lead to the answer"`
+}
+
+func GenerateSchema[T any]() interface{} {
+	reflector := jsonschema.Reflector{
+		AllowAdditionalProperties: false,
+		DoNotReference:            true,
+	}
+	var v T
+	return reflector.Reflect(v)
+}
+
+var weightComparisonSchema = GenerateSchema[WeightComparison]()
+
+func main() {
+	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+	<%= go.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
+	<%	if (useTokenCredentials) { %>
+	<% } else { %>
+	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
+	<% } %>
+	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+
+	<% if (useTokenCredentials) { %>
+	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		fmt.Println("Error creating credential:", err)
+		os.Exit(1)
+	}
+	client := openai.NewClient(
+		azure.WithEndpoint(endpoint, api_version),
+		azure.WithTokenCredential(token_credential),
+	)
+	<% } else { %>
+	client := openai.NewClient(
+		azure.WithEndpoint(endpoint, api_version),
+		azure.WithAPIKey(apiKey),
+	)
+	<% } %>
+
+	question := "What's heavier, a pound of feathers or sixteen ounces of steel?"
+	fmt.Println("> " + question)
+
+	schemaParam := openai.ResponseFormatJSONSchemaJSONSchemaParam{
+		Name:        "test_schema",
+		Description: openai.String("a single final answer with a supporting collection of steps"),
+		Schema:      weightComparisonSchema,
+		Strict:      openai.Bool(true),
+	}
+
+	resp, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
+		Messages: []openai.ChatCompletionMessageParamUnion{
+			openai.UserMessage(question),
+		},
+		ResponseFormat: openai.ChatCompletionNewParamsResponseFormatUnion{
+			OfJSONSchema: &openai.ResponseFormatJSONSchemaParam{JSONSchema: schemaParam},
+		},
+		Model: openai.ChatModel(deploymentName),
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	// Parse the structured JSON into our Go struct
+	var result WeightComparison
+	err = json.Unmarshal([]byte(resp.Choices[0].Message.Content), &result)
+	if err != nil {
+		panic(err)
+	}
+
+	// Display the result
+	fmt.Println("Result:", result)
+}

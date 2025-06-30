@@ -9,14 +9,15 @@ import com.openai.credential.BearerTokenCredential; <%
 } else { %>import com.openai.azure.credential.AzureApiKeyCredential; 
 <% } %>
 
-public class Main {
+public class Sample {
     public static void main(String[] args) {
 
-        String endpoint = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_ENDPOINT", endpoint)%>;
+        <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
         <%if (!useTokenCredentials) { %>
-        String azureOpenaiKey = <%= java.valueOrEnvironment(useEnvVars, "AZURE_OPENAI_API_KEY", apiKey)%>;
+        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
         <%}%>
-        
+        <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+
         OpenAIOkHttpClientAsync.Builder clientBuilder = OpenAIOkHttpClientAsync.builder();
         <% if (!useTokenCredentials) { %>
         clientBuilder
@@ -37,7 +38,7 @@ public class Main {
 
         ImageGenerateParams params = ImageGenerateParams.builder()
             .prompt(prompt)
-            .model(ImageModel.DALL_E_3)
+            .model(ImageModel.of(deploymentName))
             .n(numberOfImages)
             .quality(ImageGenerateParams.Quality.HD)
             .build();
