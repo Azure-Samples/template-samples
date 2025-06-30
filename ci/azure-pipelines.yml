@@ -31,6 +31,10 @@ stages:
         che batch samples/input-data.yaml
       displayName: 'Generate samples'
 
+    - publish: generated-samples/
+      artifact: GeneratedSamples
+      displayName: 'Publish generated samples'
+
   - job: PublishConfigs
     displayName: 'Publish build configurations for samples'
     dependsOn: GenerateSamples
@@ -52,6 +56,9 @@ stages:
     steps:
     - checkout: self
       fetchDepth: 0
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
       
     - script: |
         # Ensure we have the main branch reference
@@ -59,6 +66,8 @@ stages:
         
         # Get changed sample directories (use main instead of origin/main)
         (git diff --name-only main HEAD; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        echo "Changed sample directories:"
+        cat changed_samples.txt
 
         # Split by language
         grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
