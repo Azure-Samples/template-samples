@@ -30,16 +30,9 @@ stages:
         # Generate samples using che batch command
         che batch samples/input-data.yaml
       displayName: 'Generate samples'
-    - script: |
-        echo "$(Pipeline.Workspace)"
-        tree $(Pipeline.Workspace)/s /f
-        echo "------------------------------------------"
-        echo $(Pipeline.Workspace)/s/**/*
-        echo "------------------------------------------"
-        echo $(Pipeline.Workspace)/s/generated-samples/**/*
 
     - publish: generated-samples/
-      artifact: generated-samples
+      artifact: GeneratedSamples
       displayName: 'Publish generated samples'
 
   - job: PublishConfigs
@@ -70,13 +63,18 @@ stages:
     #   artifactName: 'generated-samples'
     #   downloadPath: 'generated-samples/'
     - download: current
-      artifact: generated-samples
-      patterns: '**'
+      artifact: GeneratedSamples
       displayName: 'Download generated samples'
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied generated samples to ./generated-samples/"
 
     - script: |
-        echo $(Pipeline.Workspace)/s/generated-samples/**/*
-        ls $(Pipeline.Workspace)/s/generated-samples/**/* | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done
+        echo "find generated-samples/"
+        find generated-samples/ -type d | sort
+    - script: |
+        echo "$(Pipeline.Workspace)/s/generated-samples"
+        find $(Pipeline.Workspace)/s/generated-samples/ -type d | sort
       
     - script: |
         # Ensure we have the main branch reference
