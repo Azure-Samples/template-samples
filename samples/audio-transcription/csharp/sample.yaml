@@ -7,6 +7,11 @@ dependencies:
     version: 2.1.0
   - name: Azure.Identity
     version: 1.14.0
+csproj:
+  itemGroups:
+    - none:
+        update: "Resources\\batman.wav"
+        copyToOutputDirectory: "PreserveNewest"
 input:
   - name: useTokenCredentials
     type: boolean
