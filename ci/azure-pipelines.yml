@@ -64,7 +64,7 @@ stages:
     #   downloadPath: 'generated-samples/'
     - download: current
       artifact: generated-samples
-      pattern: '**'
+      patterns: '**'
       displayName: 'Download generated samples'
       
     - script: |
