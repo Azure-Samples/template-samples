@@ -33,9 +33,9 @@ stages:
     - script: |
         echo "$(Pipeline.Workspace)"
         echo "------------------------------------------"
-        echo "$(Pipeline.Workspace)/s"
+        echo "$(Pipeline.Workspace)/s/**/*"
         echo "------------------------------------------"
-        echo "$(Pipeline.Workspace)/generated-samples"
+        echo "$(Pipeline.Workspace)/generated-samples/**/*"
 
     - publish: generated-samples/
       artifact: generated-samples
