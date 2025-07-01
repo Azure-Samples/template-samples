@@ -20,12 +20,7 @@ echo "--- Build Steps ---"
 echo "$CONFIG" | jq -r '.buildSteps[]?' | while IFS= read -r step; do
     if [ -n "$step" ] && [ "$step" != "null" ]; then
         echo "Executing: $step"
-        if [[ "$step" =~ ^[a-zA-Z0-9_./-]+$ ]]; then
-            bash -c "$step"
-        else
-            echo "Invalid command: $step" >&2
-            exit 1
-        fi
+        eval "$step"
     fi
 done
 
