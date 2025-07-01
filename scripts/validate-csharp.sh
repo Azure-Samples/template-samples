@@ -36,7 +36,7 @@ validate_sample() {
     cd "$sample_dir"
     
     # Check for .csproj file
-    if [ ! -f *.csproj ]; then
+    if ! ls *.csproj >/dev/null 2>&1; then
         echo -e "${RED}❌ No .csproj file found in $sample_dir${NC}"
         cd - > /dev/null
         return 1
