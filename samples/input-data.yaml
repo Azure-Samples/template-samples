@@ -1,0 +1,351 @@
+variants:
+  # Define a reusable configuration object
+  - name: defaultConfiguration
+    input:
+      type: object
+      properties:
+        deploymentName: <some-deployment-name>
+        endpoint: <%= endpoint %>
+        apiKey: <some-api-key>
+
+samples:
+# - templatePath: ./chat-completion-with-vision/csharp
+#   variants:
+#     - output: ../generated-samples/csharp/chat-completion-with-vision
+#       data: "./chat-completion-with-vision/chat-with-vision.yaml"
+#     - output: ../generated-samples/csharp/chat-completion-with-vision-reasoning
+#       data: "./chat-completion-with-vision/chat-with-vision-reasoning.yaml"
+#     - output: ../generated-samples/csharp/chat-completion-with-vision-TEST
+#       data: 
+#         endpoint: <%= endpoint %>
+#         deploymentName: <some-deployment-name>
+#         extraParams:
+#           tokens:
+#             python_name: max_completion_tokens
+#             csharp_name: MaxOutputTokenCount
+#             value: 2000
+- templatePath: ./audio-transcription-async/csharp
+  variants: 
+    - output: ../generated-samples/csharp/audio-transcription-async
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: <some-deployment-name>
+# - templatePath: ./audio-transcription-async/java
+#   variants:
+#     - output: ../generated-samples/java/audio-transcription-async
+#       data: 
+#         endpoint: <%= endpoint %>
+#         apiKey: <some-key-value>
+#         deploymentName: <some-deployment-name>
+- templatePath: ./audio-transcription/csharp
+  variants:
+    - output: ../generated-samples/csharp/audio-transcription
+      input: defaultConfiguration
+# - templatePath: ./audio-transcription/java
+#   variants:
+#     - output: ../generated-samples/java/audio-transcription
+#       input:
+  # type: reference
+  # value: defaultConfiguration
+- templatePath: ./chat-completion-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-async
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-async/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-async/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-async
+#       input:
+  # type: reference
+  # value: defaultConfiguration
+- templatePath: ./chat-completion-conversation-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-conversation-async
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-conversation-async/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-conversation-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-conversation-async/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-conversation-async
+#       input:
+  # type: reference
+  # value: defaultConfiguration
+- templatePath: ./chat-completion-conversation/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-conversation
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-conversation/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-conversation
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-conversation/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-conversation
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./chat-completion/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion/go
+  variants:
+    - output: ../generated-samples/go/chat-completion
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./chat-completion-no-streaming/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-no-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-no-streaming/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-no-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-no-streaming/python
+  variants:
+    - output: ../generated-samples/python/chat-completion-no-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-streaming-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-streaming-async
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-streaming-async/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-streaming-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-streaming-async/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-streaming-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./chat-completion-streaming-cancellation-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-streaming-cancellation-async
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-streaming-cancellation-async/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-streaming-cancellation-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-streaming-cancellation-async/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-streaming-cancellation-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./chat-completion-streaming/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-streaming/go
+  variants:
+    - output: ../generated-samples/go/chat-completion-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-streaming/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-streaming
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./chat-completion-structured-outputs-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion-structured-outputs-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./chat-completion-structured-outputs-async/java
+#   variants:
+#     - output: ../generated-samples/java/chat-completion-structured-outputs-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./embeddings-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/embeddings-async
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./embeddings-async/go
+  variants:
+    - output: ../generated-samples/go/embeddings-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./embeddings-async/java
+#   variants:
+#     - output: ../generated-samples/java/embeddings-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./embeddings/csharp
+  variants:
+    - output: ../generated-samples/csharp/embeddings
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./embeddings/go
+  variants:
+    - output: ../generated-samples/go/embeddings
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./embeddings/java
+#   variants:
+#     - output: ../generated-samples/java/embeddings
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+# - templatePath: ./image-generation-async/java
+#   variants:
+#     - output: ../generated-samples/java/image-generation-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+# - templatePath: ./image-generation/java
+#   variants:
+#     - output: ../generated-samples/java/image-generation
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+# - templatePath: ./responses-basic-async/csharp
+#   variants:
+#     - output: ../generated-samples/csharp/responses-basic-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./responses-basic-async/go
+  variants:
+    - output: ../generated-samples/go/responses-basic-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./responses-basic-async/java
+#   variants:
+#     - output: ../generated-samples/java/responses-basic-async
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./responses-basic/csharp
+  variants:
+    - output: ../generated-samples/csharp/responses-basic
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./responses-basic/go
+  variants:
+    - output: ../generated-samples/go/responses-basic
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./responses-basic/java
+#   variants:
+#     - output: ../generated-samples/java/responses-basic
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./responses-basic/python
+  variants:
+    - output: ../generated-samples/python/responses-basic
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./responses-image-input/csharp
+  variants:
+    - output: ../generated-samples/csharp/responses-image-input
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./responses-image-input/go
+  variants:
+    - output: ../generated-samples/go/responses-image-input
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./responses-image-input/java
+#   variants:
+#     - output: ../generated-samples/java/responses-image-input
+#       input:
+#   type: reference
+#   value: defaultConfiguration
+- templatePath: ./responses-streaming-async/csharp
+  variants:
+    - output: ../generated-samples/csharp/responses-streaming-async
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./responses-streaming-async/go
+  variants:
+    - output: ../generated-samples/go/responses-streaming-async
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./responses-streaming-async/java
+#   variants:
+#     - output: ../generated-samples/java/responses-streaming-async
+#       input:
+  # type: reference
+  # value: defaultConfiguration
+- templatePath: ./responses-streaming/csharp
+  variants:
+    - output: ../generated-samples/csharp/responses-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./responses-streaming/go
+  variants:
+    - output: ../generated-samples/go/responses-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+# - templatePath: ./responses-streaming/java
+#   variants:
+#     - output: ../generated-samples/java/responses-streaming
+#       input:
+  # type: reference
+  # value: defaultConfiguration

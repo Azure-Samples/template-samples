@@ -1,11 +1,181 @@
-# Azure Pipelines starter pipeline
-# This pipeline simply prints Hello, World!
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - generated-samples/**
 
 pool:
   vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo "Hello, World!"
-  displayName: 'Run Hello World script'
+variables:
+  - name: dotnetVersion
+    value: '9.x'
+
+stages:
+- stage: ValidateSamples
+  displayName: 'Generate and Validate Code Samples'
+  jobs:
+
+  - job: GenerateSamples
+    displayName: 'Generate Code Samples'
+    steps:
+    - checkout: self
+    - script: |
+        npm install -g @caleuche/cli
+      displayName: 'Install Caleuche CLI'
+    - script: |
+        # Generate samples using che batch command
+        che batch samples/input-data.yaml
+      displayName: 'Generate samples'
+
+    - publish: generated-samples/
+      artifact: GeneratedSamples
+      displayName: 'Publish generated samples'
+
+  - job: PublishConfigs
+    displayName: 'Publish build configurations for samples'
+    dependsOn: GenerateSamples
+    steps:
+    - script: |
+        # Publish configs to generated directories
+        chmod +x scripts/publish-configs.sh
+        ./scripts/publish-configs.sh
+      displayName: 'Publish configurations'
+    
+    # Publish the generated config files as artifacts so we can access them in validation jobs
+    - publish: generated-samples/
+      artifact: GeneratedConfigs
+      displayName: 'Publish generated configurations'
+
+  - job: DetectChanges
+    displayName: 'Detect Changed Samples'
+    dependsOn: GenerateSamples
+    steps:
+    - checkout: self
+      fetchDepth: 0
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+
+    - script: |
+        # Ensure we have the main branch reference
+        git fetch origin main:main || git fetch origin main
+        
+        # Get changed sample directories (use main instead of origin/main)
+        (git diff --name-only main HEAD; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        echo "Changed sample directories:"
+        cat changed_samples.txt
+
+        # Split by language
+        grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
+        grep "^generated-samples/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
+        
+        echo "Changed C# samples:"
+        cat changed_csharp.txt
+        echo "Changed Python samples:"
+        cat changed_python.txt
+        
+        # Set variables for conditional jobs
+        echo "##vso[task.setvariable variable=hasCSharpChanges;isOutput=true]$([ -s changed_csharp.txt ] && echo 'true' || echo 'false')"
+        echo "##vso[task.setvariable variable=hasPythonChanges;isOutput=true]$([ -s changed_python.txt ] && echo 'true' || echo 'false')"
+        
+      displayName: 'Detect changes'
+      name: 'detectChanges'
+      
+    - publish: changed_csharp.txt
+      artifact: ChangedCSharp
+      displayName: 'Publish C# changes'
+      
+    - publish: changed_python.txt
+      artifact: ChangedPython
+      displayName: 'Publish Python changes'
+
+  - job: ValidateCSharp
+    displayName: 'Validate C# Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'], 'true')
+    steps:
+    - checkout: self
+    - task: UseDotNet@2
+      inputs:
+        version: $(dotnetVersion)
+    - download: current
+      artifact: ChangedCSharp
+      displayName: 'Download list of changed C# samples'
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
+      displayName: 'Copy generated configurations to workspace'
+    - script: |
+        chmod +x scripts/*.sh
+        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
+      displayName: 'Validate C# samples'
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+    - publish: validation-results/
+      artifact: CSharpResults
+      condition: always()
+
+  - job: ValidatePython
+    displayName: 'Validate Python Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'], 'true')
+    steps:
+    - checkout: self
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.11'
+    - download: current
+      artifact: ChangedPython
+      displayName: 'Download list of changed Python samples'
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
+      displayName: 'Copy generated configurations to workspace'
+    - script: |
+        chmod +x scripts/*.sh
+        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
+      displayName: 'Validate Python samples'
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+    - publish: validation-results/
+      artifact: PythonResults
+      condition: always()
