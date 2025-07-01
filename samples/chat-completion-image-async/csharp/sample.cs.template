@@ -1,0 +1,50 @@
+<% if (useTokenCredentials) { %>
+using Azure.Identity; 
+<%} else { %>using Azure; 
+<% } %>
+using Azure.AI.OpenAI;
+using OpenAI.Chat;
+
+<%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>;
+<%if (useTokenCredentials) { %>
+<% } else { %>
+<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
+<% } %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>;
+<% if (useTokenCredentials) { %>
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new DefaultAzureCredential());
+<% } else { %> 
+AzureOpenAIClient azureClient = new(new Uri(endpoint), new AzureKeyCredential(apiKey));
+<% } %>ChatClient chatClient = azureClient.GetChatClient(deploymentName);
+
+var useUri = true;
+var logoUri = new Uri("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/512px-Microsoft_logo.svg.png");
+
+ChatMessageContentPart imagePart;
+if (useUri)
+{
+    imagePart = ChatMessageContentPart.CreateImagePart(logoUri);
+}
+else
+{
+    using var stream = File.OpenRead("logo.png");
+    var imageData = BinaryData.FromStream(stream);
+
+    imagePart = ChatMessageContentPart.CreateImagePart(
+    imageData, "image/png", ChatImageDetailLevel.Low);
+}
+
+ChatCompletion completion = await chatClient.CompleteChatAsync(
+    [
+        new SystemChatMessage("You are a helpful assistant that helps describe images."),
+        new UserChatMessage(imagePart, ChatMessageContentPart.CreateTextPart("describe this image"))
+     ]);
+
+Console.WriteLine($"Model={completion.Model}");
+foreach (var choice in completion.Content)
+{
+    var message = choice.Text;
+    Console.WriteLine($"Chat Role: {completion.Role}");
+    Console.WriteLine("Message:");
+    Console.WriteLine(message);
+}
