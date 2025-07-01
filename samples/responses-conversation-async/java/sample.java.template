@@ -1,0 +1,81 @@
+import com.openai.azure.AzureOpenAIServiceVersion;
+import com.openai.client.OpenAIClientAsync;
+import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
+import com.openai.models.ChatModel;
+<% if (useTokenCredentials) { %>
+import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.openai.credential.BearerTokenCredential;
+<% } else { %>
+import com.openai.azure.credential.AzureApiKeyCredential;
+<% } %>
+import com.openai.models.responses.EasyInputMessage;
+import com.openai.models.responses.ResponseCreateParams;
+import com.openai.models.responses.ResponseInputItem;
+import com.openai.models.responses.ResponseOutputMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+public class Sample {
+    public static void main(String[] args) {
+        <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+        <%if (!useTokenCredentials) { %>
+        <%= java.valueOrEnvironment(useEnvVars, "azureOpenaiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
+        <%}%>
+        <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+
+        OpenAIOkHttpClientAsync.Builder clientBuilder = OpenAIOkHttpClientAsync.builder();
+        clientBuilder.azureServiceVersion(AzureOpenAIServiceVersion.latestPreviewVersion());
+        <% if (!useTokenCredentials) { %>
+        clientBuilder
+                .baseUrl(endpoint)
+                .credential(AzureApiKeyCredential.create(azureOpenaiKey));
+        <%
+        } else { %>
+        clientBuilder
+                .baseUrl(endpoint)
+                .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                        new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")));
+        <%} %>
+        OpenAIClientAsync client = clientBuilder.build();
+
+        List<ResponseInputItem> inputItems = new ArrayList<>();
+        inputItems.add(ResponseInputItem.ofEasyInputMessage(EasyInputMessage.builder()
+                .role(EasyInputMessage.Role.USER)
+                .content("Tell me a story about building the best SDK!")
+                .build()));
+
+        CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
+        for (int i = 0; i < 4; i++) {
+            final int iteration = i;
+            future = future.thenCompose(ignored -> {
+                ResponseCreateParams params = ResponseCreateParams.builder()
+                        .inputOfResponse(inputItems)
+                        .model(ChatModel.of(deploymentName))
+                        .build();
+
+                return client.responses().create(params).thenAccept(responseItems -> {
+                    List<ResponseOutputMessage> messages = new ArrayList<>();
+                    responseItems.output().forEach(item -> item.message().ifPresent(messages::add));
+
+                    messages.stream()
+                            .flatMap(m -> m.content().stream())
+                            .forEach(content -> content.outputText().ifPresent(
+                                    outputText -> System.out.println(outputText.text())));
+
+                    System.out.println("\n-----------------------------------\n");
+
+                    messages.forEach(msg -> inputItems.add(ResponseInputItem.ofResponseOutputMessage(msg)));
+                    inputItems.add(ResponseInputItem.ofEasyInputMessage(EasyInputMessage.builder()
+                            .role(EasyInputMessage.Role.USER)
+                            .content("But why?" + new String(new char[iteration]).replace("\0", "?"))
+                            .build()));
+                });
+            });
+        }
+
+        future.join();
+    }
+}
