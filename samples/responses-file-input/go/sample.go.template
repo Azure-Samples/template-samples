@@ -1,0 +1,99 @@
+package main
+
+<%= go.includes(
+	"context",
+	"fmt",
+	"encoding/base64",
+	"os",
+
+	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
+	"github.com/openai/openai-go",
+	"github.com/openai/openai-go/azure",
+	"github.com/openai/openai-go/packages/param",
+	"github.com/openai/openai-go/responses",
+) %>
+
+func main() {
+	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+	<%= go.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
+	<%= go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+	<% if (!useTokenCredentials) { %>
+	<%= go.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
+	<% } %>
+
+	<% if (useTokenCredentials) { %>
+	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
+	if err != nil {
+		fmt.Println("Error creating credential:", err)
+		os.Exit(1)
+	}
+	<% } %>
+	
+	client := openai.NewClient(
+		azure.WithEndpoint(endpoint, api_version),
+		<% if (useTokenCredentials) { %>
+		azure.WithTokenCredential(token_credential),
+		<% } else { %>
+		azure.WithAPIKey(api_key),
+		<% } %>
+	)
+
+	filePath := "resources/ovenbird-tale.txt"
+
+	// Read the file content
+	data, err := os.ReadFile(filePath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
+		return
+	}
+
+	// Convert the file content to a base64-encoded string
+	base64Data := fmt.Sprintf("data:text/plain;base64,%s", base64.StdEncoding.EncodeToString(data))
+	// If you want to use a different file type, you can change the MIME type accordingly
+	// For example, for a PDF file, you might use "data:application/pdf"
+
+	// Create a response with the file input
+	resp, err := client.Responses.New(
+		context.TODO(),
+		responses.ResponseNewParams{
+			Model: deploymentName,
+			Input: responses.ResponseNewParamsInputUnion{
+				OfInputItemList: []responses.ResponseInputItemUnionParam{
+					{
+						OfInputMessage: &responses.ResponseInputItemMessageParam{
+							Role: "user",
+							Content: []responses.ResponseInputContentUnionParam{
+								{
+									OfInputText: &responses.ResponseInputTextParam{
+										Text: "Can you add a paragraph for this story? Use less than 30 words",
+									},
+								},
+								{
+									OfInputFile: &responses.ResponseInputFileParam{
+										FileData: param.NewOpt[string](base64Data),
+										Filename: param.NewOpt[string]("ovenbird-tale.txt"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "ERROR: %s\n", err)
+		return
+	}
+
+	for _, output := range resp.Output {
+		if output.Type == "message" {
+			for _, content := range output.Content {
+				if content.Type == "output_text" {
+					fmt.Fprintf(os.Stderr, "New paragraph: %s\n", content.Text)
+				}
+			}
+		}
+	}
+}
