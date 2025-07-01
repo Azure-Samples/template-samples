@@ -60,6 +60,7 @@ stages:
       displayName: 'Download generated samples'
 
     - script: |
+        mkdir -p ./generated-samples/
         cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
         echo "Copied downloaded samples to ./generated-samples/"
       displayName: 'Copy sample artifacts to workspace'
@@ -115,6 +116,7 @@ stages:
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
     - script: |
+        mkdir -p ./generated-samples/
         cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
         echo "Copied downloaded samples to ./generated-samples/"
       displayName: 'Copy sample artifacts to workspace'
