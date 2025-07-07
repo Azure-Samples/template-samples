@@ -6,7 +6,6 @@ variants:
       properties:
         deploymentName: <some-deployment-name>
         endpoint: <%= endpoint %>
-        apiKey: <some-api-key>
 
 samples:
 # - templatePath: ./chat-completion-with-vision/csharp
