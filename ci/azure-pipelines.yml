@@ -179,3 +179,13 @@ stages:
     - publish: validation-results/
       artifact: PythonResults
       condition: always()
+
+    - task: UniversalPackages@0
+      displayName: 'Publish Python samples to feed'
+      inputs:
+        command: publish
+        publishDirectory: './generated-samples/python'
+        feedsToUse: 'internal'
+        vstsFeedPublish: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'python-samples'
+        versionOption: 'patch'
