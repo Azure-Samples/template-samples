@@ -197,3 +197,50 @@ stages:
         vstsFeedPublish: '$(Project)/$(samples-feed)'
         vstsFeedPackagePublish: 'python-samples'
         versionOption: 'patch'
+
+  - job: ValidateJava
+    displayName: 'Validate Java Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'], 'true')
+
+    steps:
+    - checkout: self
+    - task: UseJavaVersion@0
+      inputs:
+        versionSpec: '17'
+        jdkArchitectureOption: 'x64'
+
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
+      displayName: 'Copy generated configurations to workspace'
+
+    - script: |
+        chmod +x scripts/*.sh
+        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt"
+      displayName: 'Validate Java samples'
+
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+
+    - publish: validation-results/
+      artifact: JavaResults
+      condition: always()
