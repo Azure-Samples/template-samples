@@ -77,16 +77,20 @@ stages:
         # Split by language
         grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
         grep "^generated-samples/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
+        grep "^generated-samples/java/" changed_samples.txt > changed_java.txt || touch changed_java.txt
         
         echo "Changed C# samples:"
         cat changed_csharp.txt
         echo "Changed Python samples:"
         cat changed_python.txt
+        echo "Changed Java samples:"
+        cat changed_java.txt
         
         # Set variables for conditional jobs
         echo "##vso[task.setvariable variable=hasCSharpChanges;isOutput=true]$([ -s changed_csharp.txt ] && echo 'true' || echo 'false')"
         echo "##vso[task.setvariable variable=hasPythonChanges;isOutput=true]$([ -s changed_python.txt ] && echo 'true' || echo 'false')"
-        
+        echo "##vso[task.setvariable variable=hasJavaChanges;isOutput=true]$([ -s changed_java.txt ] && echo 'true' || echo 'false')"
+
       displayName: 'Detect changes'
       name: 'detectChanges'
       
@@ -97,6 +101,10 @@ stages:
     - publish: changed_python.txt
       artifact: ChangedPython
       displayName: 'Publish Python changes'
+
+    - publish: changed_java.txt
+      artifact: ChangedJava
+      displayName: 'Publish Java changes'
 
   - job: ValidateCSharp
     displayName: 'Validate C# Samples'
