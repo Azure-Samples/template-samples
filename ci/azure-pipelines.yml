@@ -207,10 +207,11 @@ stages:
 
     steps:
     - checkout: self
-    - task: UseJavaVersion@0
+    - task: JavaToolInstaller@0
       inputs:
         versionSpec: '17'
         jdkArchitectureOption: 'x64'
+        jdkSourceOption: 'PreInstalled'
 
     - download: current
       artifact: GeneratedSamples
