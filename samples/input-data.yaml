@@ -31,13 +31,14 @@ samples:
         properties:
           endpoint: <%= endpoint %>
           deploymentName: <some-deployment-name>
-# - templatePath: ./audio-transcription-async/java
-#   variants:
-#     - output: ../generated-samples/java/audio-transcription-async
-#       data: 
-#         endpoint: <%= endpoint %>
-#         apiKey: <some-key-value>
-#         deploymentName: <some-deployment-name>
+- templatePath: ./audio-transcription-async/java
+  variants:
+    - output: ../generated-samples/java/audio-transcription-async
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: <some-deployment-name>
 - templatePath: ./audio-transcription/csharp
   variants:
     - output: ../generated-samples/csharp/audio-transcription

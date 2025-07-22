@@ -1,14 +1,19 @@
 import com.openai.azure.credential.AzureApiKeyCredential;
+import com.openai.credential.BearerTokenCredential;
 import com.openai.client.OpenAIClientAsync;
 import com.openai.client.okhttp.OpenAIOkHttpClientAsync;
 import com.openai.models.audio.AudioModel;
 import com.openai.models.audio.transcriptions.Transcription;
 import com.openai.models.audio.transcriptions.TranscriptionCreateParams;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 <% if (useTokenCredentials) { %>import com.azure.core.credential.TokenCredential;
+import com.azure.identity.AuthenticationUtil;
 import com.azure.identity.DefaultAzureCredentialBuilder; <% 
 } else { %>import com.azure.core.credential.AzureKeyCredential; <% } %>
+
 
 public class Sample {
     public static void main(String[] args) {
@@ -34,13 +39,8 @@ public class Sample {
         
         OpenAIClientAsync client = clientBuilder.build();
 
-        // Load the audio file 'batman.wav' from the classpath.
-        // Ensure the file is placed in the 'resources' directory of the project.
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        Path path = Paths.get(classloader.getResource("batman.wav").toURI());
-
         TranscriptionCreateParams createParams = TranscriptionCreateParams.builder()
-            .file(path)
+            .file(Paths.get("batman.wav"))
             .model(AudioModel.of("whisper"))
             .build();
 
