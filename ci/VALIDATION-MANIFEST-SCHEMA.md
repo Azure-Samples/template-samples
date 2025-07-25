@@ -14,7 +14,7 @@ The validation manifest captures comprehensive metadata about sample validation 
 
 ## Schema Location
 
-The JSON Schema is defined in [`validation-manifest.schema.json`](../validation-manifest.schema.json) and follows JSON Schema Draft 2020-12.
+The JSON Schema is defined in [`validation-manifest.schema.json`](validation-manifest.schema.json) and follows JSON Schema Draft 2020-12.
 
 ## Schema Structure
 
