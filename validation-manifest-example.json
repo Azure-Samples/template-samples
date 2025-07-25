@@ -1,0 +1,294 @@
+{
+  "schemaVersion": "1.0.0",
+  "timestamp": "2024-01-25T10:30:00Z",
+  "pipelineInfo": {
+    "runId": "20240125.1",
+    "buildNumber": "1234",
+    "branch": "main",
+    "commit": "abc123def456789",
+    "triggeredBy": "push"
+  },
+  "validationResults": {
+    "csharp": {
+      "language": "csharp",
+      "totalSamples": 3,
+      "passedSamples": 2,
+      "failedSamples": 1,
+      "samples": [
+        {
+          "samplePath": "generated-samples/csharp/chat-completion",
+          "status": "passed",
+          "startTime": "2024-01-25T10:30:05Z",
+          "endTime": "2024-01-25T10:30:45Z",
+          "duration": 40.5,
+          "configuration": {
+            "language": "csharp",
+            "framework": "net9.0",
+            "validationLevel": "compile-only",
+            "buildSteps": ["dotnet restore", "dotnet build"],
+            "validateSteps": [],
+            "dependencies": {
+              "Azure.AI.OpenAI": "latest"
+            }
+          },
+          "buildSteps": [
+            {
+              "command": "dotnet restore",
+              "status": "passed",
+              "startTime": "2024-01-25T10:30:05Z",
+              "endTime": "2024-01-25T10:30:25Z",
+              "duration": 20.0,
+              "exitCode": 0,
+              "stdout": "Restore completed successfully for /generated-samples/csharp/chat-completion/ChatCompletion.csproj"
+            },
+            {
+              "command": "dotnet build",
+              "status": "passed",
+              "startTime": "2024-01-25T10:30:25Z",
+              "endTime": "2024-01-25T10:30:45Z",
+              "duration": 20.5,
+              "exitCode": 0,
+              "stdout": "Build succeeded.\n    0 Warning(s)\n    0 Error(s)"
+            }
+          ],
+          "validationSteps": [],
+          "errors": [],
+          "metadata": {
+            "fileCount": 3,
+            "dependencies": ["Azure.AI.OpenAI"],
+            "tags": ["chat", "completion", "basic"]
+          }
+        },
+        {
+          "samplePath": "generated-samples/csharp/audio-transcription",
+          "status": "passed",
+          "startTime": "2024-01-25T10:30:50Z",
+          "endTime": "2024-01-25T10:31:20Z",
+          "duration": 30.2,
+          "configuration": {
+            "language": "csharp",
+            "framework": "net9.0",
+            "validationLevel": "compile-only",
+            "buildSteps": ["dotnet restore", "dotnet build"],
+            "validateSteps": [],
+            "dependencies": {
+              "Azure.AI.OpenAI": "latest"
+            }
+          },
+          "buildSteps": [
+            {
+              "command": "dotnet restore",
+              "status": "passed",
+              "startTime": "2024-01-25T10:30:50Z",
+              "endTime": "2024-01-25T10:31:05Z",
+              "duration": 15.0,
+              "exitCode": 0,
+              "stdout": "Restore completed successfully"
+            },
+            {
+              "command": "dotnet build",
+              "status": "passed",
+              "startTime": "2024-01-25T10:31:05Z",
+              "endTime": "2024-01-25T10:31:20Z",
+              "duration": 15.2,
+              "exitCode": 0,
+              "stdout": "Build succeeded."
+            }
+          ],
+          "validationSteps": [],
+          "errors": [],
+          "metadata": {
+            "fileCount": 2,
+            "dependencies": ["Azure.AI.OpenAI"],
+            "tags": ["audio", "transcription"]
+          }
+        },
+        {
+          "samplePath": "generated-samples/csharp/image-generation",
+          "status": "failed",
+          "startTime": "2024-01-25T10:31:25Z",
+          "endTime": "2024-01-25T10:31:55Z",
+          "duration": 30.0,
+          "configuration": {
+            "language": "csharp",
+            "framework": "net9.0",
+            "validationLevel": "compile-only",
+            "buildSteps": ["dotnet restore", "dotnet build"],
+            "validateSteps": [],
+            "dependencies": {
+              "Azure.AI.OpenAI": "latest"
+            }
+          },
+          "buildSteps": [
+            {
+              "command": "dotnet restore",
+              "status": "passed",
+              "startTime": "2024-01-25T10:31:25Z",
+              "endTime": "2024-01-25T10:31:35Z",
+              "duration": 10.0,
+              "exitCode": 0,
+              "stdout": "Restore completed successfully"
+            },
+            {
+              "command": "dotnet build",
+              "status": "failed",
+              "startTime": "2024-01-25T10:31:35Z",
+              "endTime": "2024-01-25T10:31:55Z",
+              "duration": 20.0,
+              "exitCode": 1,
+              "stderr": "Program.cs(15,23): error CS0103: The name 'invalidMethod' does not exist in the current context\nProgram.cs(18,5): error CS1002: ; expected"
+            }
+          ],
+          "validationSteps": [],
+          "errors": [
+            {
+              "type": "compilation",
+              "message": "The name 'invalidMethod' does not exist in the current context",
+              "file": "Program.cs",
+              "line": 15,
+              "column": 23,
+              "severity": "error",
+              "code": "CS0103"
+            },
+            {
+              "type": "compilation",
+              "message": "; expected",
+              "file": "Program.cs",
+              "line": 18,
+              "column": 5,
+              "severity": "error",
+              "code": "CS1002"
+            }
+          ],
+          "metadata": {
+            "fileCount": 2,
+            "dependencies": ["Azure.AI.OpenAI"],
+            "tags": ["image", "generation"]
+          }
+        }
+      ]
+    },
+    "python": {
+      "language": "python",
+      "totalSamples": 2,
+      "passedSamples": 2,
+      "failedSamples": 0,
+      "samples": [
+        {
+          "samplePath": "generated-samples/python/chat-completion",
+          "status": "passed",
+          "startTime": "2024-01-25T10:32:00Z",
+          "endTime": "2024-01-25T10:32:25Z",
+          "duration": 25.3,
+          "configuration": {
+            "language": "python",
+            "validationLevel": "compile-only",
+            "buildSteps": ["pip install -r requirements.txt"],
+            "validateSteps": ["python -m py_compile *.py"],
+            "dependencies": {}
+          },
+          "buildSteps": [
+            {
+              "command": "pip install -r requirements.txt",
+              "status": "passed",
+              "startTime": "2024-01-25T10:32:00Z",
+              "endTime": "2024-01-25T10:32:15Z",
+              "duration": 15.0,
+              "exitCode": 0,
+              "stdout": "Successfully installed openai-1.12.0"
+            }
+          ],
+          "validationSteps": [
+            {
+              "command": "python -m py_compile *.py",
+              "status": "passed",
+              "startTime": "2024-01-25T10:32:15Z",
+              "endTime": "2024-01-25T10:32:25Z",
+              "duration": 10.3,
+              "exitCode": 0,
+              "stdout": ""
+            }
+          ],
+          "errors": [],
+          "metadata": {
+            "fileCount": 2,
+            "dependencies": ["openai"],
+            "tags": ["chat", "completion", "python"]
+          }
+        },
+        {
+          "samplePath": "generated-samples/python/embeddings",
+          "status": "passed",
+          "startTime": "2024-01-25T10:32:30Z",
+          "endTime": "2024-01-25T10:32:50Z",
+          "duration": 20.1,
+          "configuration": {
+            "language": "python",
+            "validationLevel": "compile-only",
+            "buildSteps": ["pip install -r requirements.txt"],
+            "validateSteps": ["python -m py_compile *.py"],
+            "dependencies": {}
+          },
+          "buildSteps": [
+            {
+              "command": "pip install -r requirements.txt",
+              "status": "passed",
+              "startTime": "2024-01-25T10:32:30Z",
+              "endTime": "2024-01-25T10:32:45Z",
+              "duration": 15.0,
+              "exitCode": 0,
+              "stdout": "Requirement already satisfied: openai==1.12.0"
+            }
+          ],
+          "validationSteps": [
+            {
+              "command": "python -m py_compile *.py",
+              "status": "passed",
+              "startTime": "2024-01-25T10:32:45Z",
+              "endTime": "2024-01-25T10:32:50Z",
+              "duration": 5.1,
+              "exitCode": 0,
+              "stdout": ""
+            }
+          ],
+          "errors": [],
+          "metadata": {
+            "fileCount": 2,
+            "dependencies": ["openai"],
+            "tags": ["embeddings", "vector", "python"]
+          }
+        }
+      ]
+    }
+  },
+  "cumulativeData": {
+    "previousRunResults": [
+      {
+        "runId": "20240124.3",
+        "timestamp": "2024-01-24T15:45:00Z",
+        "totalSamples": 45,
+        "passedSamples": 43,
+        "failedSamples": 2
+      },
+      {
+        "runId": "20240124.2",
+        "timestamp": "2024-01-24T12:30:00Z",
+        "totalSamples": 45,
+        "passedSamples": 45,
+        "failedSamples": 0
+      },
+      {
+        "runId": "20240124.1",
+        "timestamp": "2024-01-24T09:15:00Z",
+        "totalSamples": 42,
+        "passedSamples": 40,
+        "failedSamples": 2
+      }
+    ],
+    "trendAnalysis": {
+      "successRate": 0.956,
+      "consecutiveSuccesses": 1,
+      "lastFailureTimestamp": "2024-01-24T15:45:00Z"
+    }
+  }
+}

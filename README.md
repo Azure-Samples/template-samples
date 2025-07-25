@@ -35,6 +35,8 @@ This repository serves as the hub for Azure OpenAI code sample templates that au
 │       ├── {etc.}/                  # templates other supported languages
 ├── scripts/                         # Build and validation scripts
 ├── validation-config-defaults/      # Language-specific validation configs
+├── validation-manifest.schema.json  # JSON Schema for validation metadata
+├── VALIDATION-MANIFEST-SCHEMA.md    # Documentation for validation schema
 ├── generated-samples/               # Output folder when run generation sequence is run (locally or pipeline)
 │   ├── csharp/                      # Generated C# samples
 │   ├── python/                      # Generated Python samples
