@@ -1,0 +1,206 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2024-01-15T16:20:12.789Z",
+  "pipeline": {
+    "runId": "20240115.5",
+    "buildNumber": "125",
+    "repository": {
+      "name": "template-samples",
+      "branch": "main",
+      "commit": "456789abc123def012345678901234567890efab"
+    },
+    "agent": {
+      "name": "ubuntu-latest",
+      "os": "Linux"
+    }
+  },
+  "language": "java",
+  "configuration": {
+    "version": "17",
+    "buildSteps": [
+      "mvn clean compile"
+    ],
+    "validationLevel": "compile-only",
+    "validateSteps": [
+      "mvn checkstyle:check",
+      "mvn pmd:pmd"
+    ]
+  },
+  "validation": {
+    "summary": {
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0,
+      "duration": 89.6
+    },
+    "samples": [
+      {
+        "name": "chat-completion",
+        "path": "generated-samples/java/chat-completion",
+        "status": "passed",
+        "timestamp": "2024-01-15T16:20:18.234Z",
+        "duration": 43.2,
+        "configuration": {
+          "buildSteps": [
+            "mvn clean compile"
+          ],
+          "validateSteps": [
+            "mvn checkstyle:check",
+            "mvn pmd:pmd"
+          ],
+          "validationLevel": "compile-only"
+        },
+        "buildSteps": [
+          {
+            "command": "mvn clean compile",
+            "status": "success",
+            "duration": 38.7,
+            "exitCode": 0,
+            "stdout": "[INFO] Scanning for projects...\n[INFO] \n[INFO] ------------------< com.azure:openai-samples >------------------\n[INFO] Building openai-samples 1.0.0\n[INFO] --------------------------------[ jar ]---------------------------------\n[INFO] \n[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ openai-samples ---\n[INFO] Deleting /path/to/target\n[INFO] \n[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ openai-samples ---\n[INFO] Changes detected - recompiling the module!\n[INFO] Compiling 3 source files to /path/to/target/classes\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------\n[INFO] Total time:  38.521 s\n[INFO] Finished at: 2024-01-15T16:20:56.955Z\n[INFO] ------------------------------------------------------------------------",
+            "stderr": ""
+          }
+        ],
+        "validationSteps": [
+          {
+            "command": "mvn checkstyle:check",
+            "status": "success",
+            "duration": 3.2,
+            "exitCode": 0,
+            "stdout": "[INFO] Starting audit...\n[INFO] Audit done.\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD SUCCESS\n[INFO] ------------------------------------------------------------------------",
+            "stderr": ""
+          },
+          {
+            "command": "mvn pmd:pmd",
+            "status": "success",
+            "duration": 1.3,
+            "exitCode": 0,
+            "stdout": "[INFO] PMD processing completed successfully with 0 violations.",
+            "stderr": ""
+          }
+        ],
+        "artifacts": [
+          {
+            "name": "compiled-classes",
+            "path": "target/classes/",
+            "type": "binary",
+            "size": 15728
+          },
+          {
+            "name": "checkstyle-report",
+            "path": "target/checkstyle-result.xml",
+            "type": "report",
+            "size": 1247
+          },
+          {
+            "name": "pmd-report",
+            "path": "target/pmd.xml",
+            "type": "report",
+            "size": 892
+          }
+        ]
+      },
+      {
+        "name": "embeddings-async",
+        "path": "generated-samples/java/embeddings-async",
+        "status": "failed",
+        "timestamp": "2024-01-15T16:21:01.567Z",
+        "duration": 46.4,
+        "configuration": {
+          "buildSteps": [
+            "mvn clean compile"
+          ],
+          "validateSteps": [
+            "mvn checkstyle:check",
+            "mvn pmd:pmd"
+          ],
+          "validationLevel": "compile-only"
+        },
+        "buildSteps": [
+          {
+            "command": "mvn clean compile",
+            "status": "failed",
+            "duration": 41.8,
+            "exitCode": 1,
+            "stdout": "[INFO] Scanning for projects...\n[INFO] \n[INFO] ------------------< com.azure:openai-samples >------------------\n[INFO] Building openai-samples 1.0.0\n[INFO] --------------------------------[ jar ]---------------------------------\n[INFO] \n[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ openai-samples ---\n[INFO] Deleting /path/to/target\n[INFO] \n[INFO] --- maven-compiler-plugin:3.8.1:compile (default-compile) @ openai-samples ---\n[INFO] Changes detected - recompiling the module!\n[INFO] Compiling 2 source files to /path/to/target/classes\n[INFO] -------------------------------------------------------------\n[ERROR] COMPILATION ERROR :\n[INFO] -------------------------------------------------------------\n[ERROR] /path/to/src/main/java/EmbeddingsAsync.java:[25,47] ';' expected\n[ERROR] /path/to/src/main/java/EmbeddingsAsync.java:[25,48] <identifier> expected\n[INFO] 2 errors\n[INFO] -------------------------------------------------------------\n[INFO] ------------------------------------------------------------------------\n[INFO] BUILD FAILURE\n[INFO] ------------------------------------------------------------------------",
+            "stderr": "",
+            "errorDetails": {
+              "type": "CompilationError",
+              "message": "Syntax error in async embeddings implementation",
+              "location": {
+                "file": "src/main/java/EmbeddingsAsync.java",
+                "line": 25,
+                "column": 47
+              }
+            }
+          }
+        ],
+        "validationSteps": [],
+        "artifacts": [
+          {
+            "name": "build-log",
+            "path": "target/maven-build.log",
+            "type": "log",
+            "size": 3456
+          }
+        ]
+      }
+    ]
+  },
+  "history": {
+    "previousRuns": [
+      {
+        "runId": "20240115.4",
+        "timestamp": "2024-01-15T15:45:20.456Z",
+        "passed": 2,
+        "failed": 0,
+        "duration": 78.3
+      },
+      {
+        "runId": "20240115.3",
+        "timestamp": "2024-01-15T14:30:45.123Z",
+        "passed": 1,
+        "failed": 1,
+        "duration": 85.7
+      }
+    ],
+    "trends": {
+      "successRate": 0.67,
+      "averageDuration": 84.5,
+      "failingPatterns": [
+        {
+          "samplePattern": "*async*",
+          "frequency": 2,
+          "lastFailure": "2024-01-15T16:21:01.567Z"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "generatedBy": "validate-samples.sh",
+    "generatedAt": "2024-01-15T16:21:48.012Z",
+    "environment": {
+      "variables": {
+        "JAVA_VERSION": "17.0.7",
+        "MAVEN_VERSION": "3.9.4",
+        "BUILD_BUILDNUMBER": "125",
+        "BUILD_SOURCEBRANCHNAME": "main"
+      },
+      "tools": {
+        "java": "17.0.7",
+        "mvn": "3.9.4",
+        "checkstyle": "10.3.1",
+        "pmd": "6.48.0",
+        "node": "18.17.0",
+        "caleuche": "1.2.3"
+      }
+    },
+    "extensions": {
+      "codeQuality": {
+        "checkstyleEnabled": true,
+        "pmdEnabled": true,
+        "spotbugsEnabled": false
+      }
+    }
+  }
+}
