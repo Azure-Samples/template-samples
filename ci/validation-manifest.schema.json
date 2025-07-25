@@ -1,328 +1,54 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/Azure-Samples/template-samples/validation-manifest.schema.json",
-  "title": "Validation Manifest Schema",
-  "description": "Schema for validation manifest that captures comprehensive validation metadata for Azure OpenAI template samples",
+  "title": "Last Known Good (LKG) Manifest Schema",
+  "description": "Schema for tracking last known good versions of Azure OpenAI template samples for packaging pipeline",
   "type": "object",
   "required": [
-    "schemaVersion",
-    "timestamp",
-    "pipelineInfo",
-    "validationResults"
+    "lastUpdated",
+    "samples"
   ],
   "properties": {
-    "schemaVersion": {
-      "type": "string",
-      "description": "Version of the validation manifest schema",
-      "pattern": "^\\d+\\.\\d+\\.\\d+$"
-    },
-    "timestamp": {
+    "lastUpdated": {
       "type": "string",
       "format": "date-time",
-      "description": "ISO 8601 timestamp when validation was performed"
+      "description": "ISO 8601 timestamp when this manifest was last updated"
     },
-    "pipelineInfo": {
+    "samples": {
       "type": "object",
-      "description": "Information about the pipeline run that generated this validation",
-      "required": ["runId", "buildNumber"],
-      "properties": {
-        "runId": {
-          "type": "string",
-          "description": "Unique identifier for the pipeline run"
-        },
-        "buildNumber": {
-          "type": "string",
-          "description": "Build number or version identifier"
-        },
-        "branch": {
-          "type": "string",
-          "description": "Git branch being validated"
-        },
-        "commit": {
-          "type": "string",
-          "description": "Git commit SHA being validated"
-        },
-        "triggeredBy": {
-          "type": "string",
-          "description": "What triggered the pipeline run (e.g., 'manual', 'push', 'pr')"
-        }
-      }
-    },
-    "validationResults": {
-      "type": "object",
-      "description": "Validation results organized by language",
+      "description": "Last known good information for each sample, keyed by sample path",
       "patternProperties": {
-        "^(csharp|python|java|javascript|go)$": {
-          "type": "object",
-          "description": "Validation results for a specific language",
-          "required": ["language", "samples"],
-          "properties": {
-            "language": {
-              "type": "string",
-              "enum": ["csharp", "python", "java", "javascript", "go"],
-              "description": "Programming language identifier"
-            },
-            "totalSamples": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Total number of samples validated for this language"
-            },
-            "passedSamples": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Number of samples that passed validation"
-            },
-            "failedSamples": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Number of samples that failed validation"
-            },
-            "samples": {
-              "type": "array",
-              "description": "Individual sample validation results",
-              "items": {
-                "$ref": "#/$defs/sampleResult"
-              }
-            }
-          }
+        "^[a-zA-Z0-9_/-]+$": {
+          "$ref": "#/$defs/lastKnownGoodSample"
         }
       },
       "additionalProperties": false
-    },
-    "cumulativeData": {
-      "type": "object",
-      "description": "Cumulative data from previous runs for packaging logic",
-      "properties": {
-        "previousRunResults": {
-          "type": "array",
-          "description": "Results from previous pipeline runs",
-          "items": {
-            "type": "object",
-            "properties": {
-              "runId": { "type": "string" },
-              "timestamp": { "type": "string", "format": "date-time" },
-              "totalSamples": { "type": "integer", "minimum": 0 },
-              "passedSamples": { "type": "integer", "minimum": 0 },
-              "failedSamples": { "type": "integer", "minimum": 0 }
-            }
-          }
-        },
-        "trendAnalysis": {
-          "type": "object",
-          "description": "Trend analysis data for packaging decisions",
-          "properties": {
-            "successRate": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1,
-              "description": "Overall success rate across recent runs"
-            },
-            "consecutiveSuccesses": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Number of consecutive successful runs"
-            },
-            "lastFailureTimestamp": {
-              "type": "string",
-              "format": "date-time",
-              "description": "Timestamp of last validation failure"
-            }
-          }
-        }
-      }
     }
   },
   "$defs": {
-    "sampleResult": {
+    "lastKnownGoodSample": {
       "type": "object",
-      "description": "Validation result for a single sample",
-      "required": ["samplePath", "status", "startTime", "endTime", "configuration"],
+      "description": "Last known good information for a single sample",
+      "required": [
+        "lastValidated",
+        "version",
+        "status"
+      ],
       "properties": {
-        "samplePath": {
+        "lastValidated": {
           "type": "string",
-          "description": "Relative path to the sample directory"
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when this sample was last successfully validated"
+        },
+        "version": {
+          "type": "string",
+          "description": "Package version that contains the last known good version of this sample",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
         },
         "status": {
           "type": "string",
-          "enum": ["passed", "failed", "skipped"],
-          "description": "Overall validation status for the sample"
-        },
-        "startTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ISO 8601 timestamp when validation started"
-        },
-        "endTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ISO 8601 timestamp when validation completed"
-        },
-        "duration": {
-          "type": "number",
-          "minimum": 0,
-          "description": "Validation duration in seconds"
-        },
-        "configuration": {
-          "$ref": "#/$defs/validationConfiguration"
-        },
-        "buildSteps": {
-          "type": "array",
-          "description": "Results of individual build steps",
-          "items": {
-            "$ref": "#/$defs/stepResult"
-          }
-        },
-        "validationSteps": {
-          "type": "array",
-          "description": "Results of individual validation steps",
-          "items": {
-            "$ref": "#/$defs/stepResult"
-          }
-        },
-        "errors": {
-          "type": "array",
-          "description": "Compilation or validation errors encountered",
-          "items": {
-            "$ref": "#/$defs/errorDetail"
-          }
-        },
-        "metadata": {
-          "type": "object",
-          "description": "Additional metadata about the sample",
-          "properties": {
-            "fileCount": {
-              "type": "integer",
-              "minimum": 0,
-              "description": "Number of source files in the sample"
-            },
-            "dependencies": {
-              "type": "array",
-              "description": "List of dependencies used by the sample",
-              "items": { "type": "string" }
-            },
-            "tags": {
-              "type": "array",
-              "description": "Tags or categories for the sample",
-              "items": { "type": "string" }
-            }
-          }
-        }
-      }
-    },
-    "validationConfiguration": {
-      "type": "object",
-      "description": "Configuration used for validating the sample",
-      "required": ["language"],
-      "properties": {
-        "language": {
-          "type": "string",
-          "description": "Programming language"
-        },
-        "framework": {
-          "type": "string",
-          "description": "Framework version (e.g., 'net9.0', '3.11')"
-        },
-        "validationLevel": {
-          "type": "string",
-          "enum": ["compile-only", "full-test", "runtime-check"],
-          "description": "Level of validation performed"
-        },
-        "buildSteps": {
-          "type": "array",
-          "description": "Build commands executed",
-          "items": { "type": "string" }
-        },
-        "validateSteps": {
-          "type": "array",
-          "description": "Validation commands executed", 
-          "items": { "type": "string" }
-        },
-        "dependencies": {
-          "type": "object",
-          "description": "Dependencies specified in configuration",
-          "additionalProperties": { "type": "string" }
-        }
-      }
-    },
-    "stepResult": {
-      "type": "object",
-      "description": "Result of executing a single build or validation step",
-      "required": ["command", "status", "startTime", "endTime"],
-      "properties": {
-        "command": {
-          "type": "string",
-          "description": "The command that was executed"
-        },
-        "status": {
-          "type": "string",
-          "enum": ["passed", "failed", "skipped"],
-          "description": "Status of the step execution"
-        },
-        "startTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ISO 8601 timestamp when step started"
-        },
-        "endTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "ISO 8601 timestamp when step completed"
-        },
-        "duration": {
-          "type": "number",
-          "minimum": 0,
-          "description": "Step execution duration in seconds"
-        },
-        "exitCode": {
-          "type": "integer",
-          "description": "Exit code returned by the command"
-        },
-        "stdout": {
-          "type": "string",
-          "description": "Standard output from the command"
-        },
-        "stderr": {
-          "type": "string",
-          "description": "Standard error from the command"
-        }
-      }
-    },
-    "errorDetail": {
-      "type": "object",
-      "description": "Detailed information about an error",
-      "required": ["type", "message"],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": ["compilation", "syntax", "dependency", "runtime", "validation", "timeout"],
-          "description": "Type of error encountered"
-        },
-        "message": {
-          "type": "string",
-          "description": "Error message"
-        },
-        "file": {
-          "type": "string",
-          "description": "File where the error occurred"
-        },
-        "line": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Line number where the error occurred"
-        },
-        "column": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "Column number where the error occurred"
-        },
-        "severity": {
-          "type": "string",
-          "enum": ["error", "warning", "info"],
-          "description": "Severity level of the error"
-        },
-        "code": {
-          "type": "string",
-          "description": "Error code if available"
+          "enum": ["validated"],
+          "description": "Status of the sample - only validated samples are included in LKG manifest"
         }
       }
     }
