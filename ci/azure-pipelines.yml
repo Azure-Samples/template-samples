@@ -39,10 +39,21 @@ stages:
     dependsOn: GenerateSamples
     steps:
     - script: |
-        # Publish configs to generated directories
+        # Generate validation manifest from repository configs
+        chmod +x scripts/generate-validation-manifest.sh
+        ./scripts/generate-validation-manifest.sh
+      displayName: 'Generate validation manifest'
+    
+    - script: |
+        # Publish configs to generated directories (for backward compatibility)
         chmod +x scripts/publish-configs.sh
         ./scripts/publish-configs.sh
       displayName: 'Publish configurations'
+    
+    # Publish the validation manifest as an artifact
+    - publish: validation-manifest.json
+      artifact: ValidationManifest
+      displayName: 'Publish validation manifest'
     
     # Publish the generated config files as artifacts so we can access them in validation jobs
     - publish: generated-samples/
@@ -133,12 +144,13 @@ stages:
       displayName: 'Copy sample artifacts to workspace'
 
     - download: current
-      artifact: GeneratedConfigs
-      displayName: 'Download generated configurations'
+      artifact: ValidationManifest
+      displayName: 'Download validation manifest'
 
     - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Copy generated configurations to workspace'
+        cp "$(Pipeline.Workspace)/ValidationManifest/validation-manifest.json" ./validation-manifest.json
+        echo "Copied validation manifest to workspace"
+      displayName: 'Copy validation manifest to workspace'
 
     - script: |
         chmod +x scripts/*.sh
@@ -182,12 +194,13 @@ stages:
       displayName: 'Copy sample artifacts to workspace'
 
     - download: current
-      artifact: GeneratedConfigs
-      displayName: 'Download generated configurations'
+      artifact: ValidationManifest
+      displayName: 'Download validation manifest'
 
     - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Copy generated configurations to workspace'
+        cp "$(Pipeline.Workspace)/ValidationManifest/validation-manifest.json" ./validation-manifest.json
+        echo "Copied validation manifest to workspace"
+      displayName: 'Copy validation manifest to workspace'
 
     - script: |
         chmod +x scripts/*.sh
@@ -244,12 +257,13 @@ stages:
       displayName: 'Copy sample artifacts to workspace'
 
     - download: current
-      artifact: GeneratedConfigs
-      displayName: 'Download generated configurations'
+      artifact: ValidationManifest
+      displayName: 'Download validation manifest'
 
     - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Copy generated configurations to workspace'
+        cp "$(Pipeline.Workspace)/ValidationManifest/validation-manifest.json" ./validation-manifest.json
+        echo "Copied validation manifest to workspace"
+      displayName: 'Copy validation manifest to workspace'
 
     - script: |
         chmod +x scripts/*.sh

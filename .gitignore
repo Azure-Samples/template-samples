@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Generated validation manifest (published as Azure DevOps artifact)
+validation-manifest.json
+
 # User-specific files
 *.rsuser
 *.suo

@@ -3,9 +3,15 @@ set -e
 
 SAMPLE_DIR=$1
 
-# Resolve configuration
+# Resolve configuration using the validation manifest
+if [ -f "validation-manifest.json" ]; then
+    echo "Using validation manifest for config resolution"
+    CONFIG=$(./scripts/resolve-sample-configs-from-manifest.sh "$SAMPLE_DIR" "validation-manifest.json")
+else
+    echo "Falling back to legacy config resolution"
+    CONFIG=$(./scripts/resolve-sample-configs.sh "$SAMPLE_DIR")
+fi
 
-CONFIG=$(./scripts/resolve-sample-configs.sh "$SAMPLE_DIR")
 LANGUAGE=$(echo "$CONFIG" | jq -r '.language')
 
 echo "Language: $LANGUAGE"
