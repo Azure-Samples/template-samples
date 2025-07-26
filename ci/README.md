@@ -114,7 +114,8 @@ The pipeline generates several artifacts for debugging and reporting:
 - **GeneratedSamples**: The complete set of generated code samples from templates
 - **GeneratedConfigs**: Configuration files copied to the generated samples structure
 - **Changed<Language>**: Files listing the changed sample directories for each language
-- **<Language>Results/PythonResults**: Validation logs (`validation-success.log`, `validation-errors.log`)
+- **<Language>Results**: Validation logs (`validation-success.log`, `validation-errors.log`) for each language
+- **ValidationManifest**: Consolidated validation manifest (`validation-manifest.json`) containing the status of all validated samples
 
 ## Adding New Samples
 
