@@ -1,10 +1,4 @@
 {
-  "lastUpdated": "2025-07-26T00:41:25Z",
-  "samples": {
-    "python/test-sample": {
-      "lastValidated": "2025-07-26T00:41:24Z",
-      "version": "2.1.5",
-      "status": "validated"
-    }
-  }
+  "lastUpdated": "2025-07-26T00:43:56Z",
+  "samples": {}
 }

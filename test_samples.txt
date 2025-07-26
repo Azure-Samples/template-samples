@@ -1,1 +1,0 @@
-generated-samples/python/test-sample
