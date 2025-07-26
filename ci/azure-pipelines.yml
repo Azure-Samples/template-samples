@@ -270,3 +270,65 @@ stages:
     - publish: validation-results/
       artifact: JavaResults
       condition: always()
+
+  - job: CreateValidationManifest
+    displayName: 'Create Validation Manifest'
+    dependsOn: 
+    - ValidateCSharp
+    - ValidatePython
+    - ValidateJava
+    condition: always()
+    steps:
+    - checkout: self
+
+    # Download all validation result artifacts (if they exist)
+    - download: current
+      artifact: CSharpResults
+      displayName: 'Download C# validation results'
+      condition: succeeded('ValidateCSharp')
+
+    - download: current
+      artifact: PythonResults
+      displayName: 'Download Python validation results'
+      condition: succeeded('ValidatePython')
+
+    - download: current
+      artifact: JavaResults
+      displayName: 'Download Java validation results'
+      condition: succeeded('ValidateJava')
+
+    - script: |
+        # Create symlinks to downloaded artifacts with expected names
+        mkdir -p validation-results
+        
+        # Link C# results if available
+        if [ -d "$(Pipeline.Workspace)/CSharpResults" ]; then
+          ln -s "$(Pipeline.Workspace)/CSharpResults" csharp-results
+          echo "Linked C# results"
+        fi
+        
+        # Link Python results if available
+        if [ -d "$(Pipeline.Workspace)/PythonResults" ]; then
+          ln -s "$(Pipeline.Workspace)/PythonResults" python-results
+          echo "Linked Python results"
+        fi
+        
+        # Link Java results if available
+        if [ -d "$(Pipeline.Workspace)/JavaResults" ]; then
+          ln -s "$(Pipeline.Workspace)/JavaResults" java-results
+          echo "Linked Java results"
+        fi
+        
+        echo "Available result directories:"
+        ls -la *-results/ || echo "No result directories found"
+      displayName: 'Prepare validation results'
+
+    - script: |
+        chmod +x scripts/generate-validation-manifest.sh
+        ./scripts/generate-validation-manifest.sh
+      displayName: 'Generate validation manifest'
+
+    - publish: validation-manifest/
+      artifact: ValidationManifest
+      displayName: 'Publish validation manifest'
+      condition: succeeded()
