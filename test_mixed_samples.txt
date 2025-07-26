@@ -1,0 +1,2 @@
+generated-samples/python/test-sample
+generated-samples/python/broken-sample
