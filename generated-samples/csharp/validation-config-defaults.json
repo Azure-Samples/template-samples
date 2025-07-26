@@ -1,0 +1,14 @@
+{
+  "language": "csharp",
+  "framework": "net8.0",
+  "dependencies": {
+    "Azure.AI.OpenAI": "latest"
+  },
+  "buildSteps": [
+    "dotnet restore",
+    "dotnet build"
+  ],
+  "validationLevel": "compile-only",
+  "validateSteps": [
+  ]
+}

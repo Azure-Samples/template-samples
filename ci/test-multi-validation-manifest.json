@@ -1,0 +1,15 @@
+{
+  "lastUpdated": "2025-07-26T00:40:53Z",
+  "samples": {
+    "python/test-sample": {
+      "lastValidated": "2025-07-26T00:40:47Z",
+      "version": "1.0.0",
+      "status": "validated"
+    },
+    "csharp/test-sample": {
+      "lastValidated": "2025-07-26T00:40:51Z",
+      "version": "1.0.0",
+      "status": "validated"
+    }
+  }
+}

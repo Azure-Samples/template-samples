@@ -404,3 +404,13 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Validation artifacts  
+validation-*.log
+validation-manifest.json
+validation-results/
+
+# Generated test samples (temporary)
+generated-samples/
+test_*.txt
+empty_samples.txt
