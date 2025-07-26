@@ -1,0 +1,29 @@
+variants:
+  # Define a reusable configuration object
+  - name: defaultConfiguration
+    input:
+      type: object
+      properties:
+        deploymentName: <some-deployment-name>
+        endpoint: <%= endpoint %>
+
+samples:
+- templatePath: ./chat-completion/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint % >
+          deploymentName: <some-deployment-name>
+- templatePath: ./chat-completion/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint % >
+          deploymentName: <some-deployment-name>
+          apiKey: <%= apiKey % >
