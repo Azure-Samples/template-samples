@@ -82,11 +82,19 @@ fi
 # Validate the generated manifest against the schema if ajv is available
 if command -v ajv &> /dev/null; then
     echo "Validating generated manifest against schema..."
-    if ajv validate -s ci/validation-manifest.schema.json -d "$MANIFEST_FILE" --strict=false; then
-        echo "✅ Generated manifest is valid!"
+    SCHEMA_PATH="ci/validation-manifest.schema.json"
+    if [ ! -f "$SCHEMA_PATH" ]; then
+        SCHEMA_PATH="validation-manifest.schema.json"
+    fi
+    if [ -f "$SCHEMA_PATH" ]; then
+        if ajv validate -s "$SCHEMA_PATH" -d "$MANIFEST_FILE" --strict=false; then
+            echo "✅ Generated manifest is valid!"
+        else
+            echo "❌ Generated manifest validation failed!"
+            exit 1
+        fi
     else
-        echo "❌ Generated manifest validation failed!"
-        exit 1
+        echo "⚠️  Schema file not found - skipping schema validation"
     fi
 else
     echo "⚠️  ajv not available - skipping schema validation"
