@@ -6,6 +6,11 @@ trigger:
     include:
     - generated-samples/**
 
+pr:
+  branches:
+    include:
+      - "*"
+
 pool:
   vmImage: 'ubuntu-latest'
 
