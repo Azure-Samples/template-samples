@@ -49,6 +49,18 @@ samples:
 #       input:
   # type: reference
   # value: defaultConfiguration
+- templatePath: ./generated-samples/java/authentication-entra-id
+  variants:
+    - output: ../generated-samples/java/authentication-entra-id
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./authentication-key-credential/java
+  variants:
+    - output: ../generated-samples/java/authentication-key-credential
+      input:
+        type: reference
+        value: defaultConfiguration
 - templatePath: ./chat-completion-async/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion-async
