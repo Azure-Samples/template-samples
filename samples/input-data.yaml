@@ -49,7 +49,7 @@ samples:
 #       input:
   # type: reference
   # value: defaultConfiguration
-- templatePath: ./generated-samples/java/authentication-entra-id
+- templatePath: ./authentication-entra-id/java
   variants:
     - output: ../generated-samples/java/authentication-entra-id
       input:
