@@ -159,7 +159,12 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
+    - GenerateSamples
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'], 'true')
+    variables:
+      # Map the output variables from GenerateSamples job
+      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
     steps:
     - checkout: self
     - task: UseDotNet@2
@@ -190,9 +195,9 @@ stages:
 
     - script: |
         chmod +x scripts/*.sh
-         # Set environment variables for validation
-        export AZURE_OPENAI_ENDPOINT=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'])
-        export AZURE_OPENAI_API_KEY=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'])
+        # Set environment variables for validation using the mapped variables
+        export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
+        export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
       displayName: 'Validate C# samples'
@@ -212,7 +217,12 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
+    - GenerateSamples
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'], 'true')
+    variables:
+      # Map the output variables from GenerateSamples job
+      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -243,9 +253,9 @@ stages:
 
     - script: |
         chmod +x scripts/*.sh
-        # Set environment variables for validation
-        export AZURE_OPENAI_ENDPOINT=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'])
-        export AZURE_OPENAI_API_KEY=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'])
+        # Set environment variables for validation using the mapped variables
+        export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
+        export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
       displayName: 'Validate Python samples'
@@ -275,7 +285,12 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
+    - GenerateSamples
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'], 'true')
+    variables:
+      # Map the output variables from GenerateSamples job
+      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
 
     steps:
     - checkout: self
@@ -309,9 +324,9 @@ stages:
 
     - script: |
         chmod +x scripts/*.sh
-        # Set environment variables for validation
-        export AZURE_OPENAI_ENDPOINT=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'])
-        export AZURE_OPENAI_API_KEY=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'])
+        # Set environment variables for validation using the mapped variables
+        export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
+        export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt"
       displayName: 'Validate Java samples'
