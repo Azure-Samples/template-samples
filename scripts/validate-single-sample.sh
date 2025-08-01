@@ -14,6 +14,16 @@ echo "Language: $LANGUAGE"
 ORIGINAL_DIR=$(pwd)
 cd "$SAMPLE_DIR"
 
+# Execute prebuild steps
+echo ""
+echo "--- Prebuild Steps ---"
+echo "$CONFIG" | jq -r '.prebuildSteps[]?' | while IFS= read -r step; do
+    if [ -n "$step" ] && [ "$step" != "null" ]; then
+        echo "Executing: $step"
+        eval "$step"
+    fi
+done
+
 # Execute build steps
 echo ""
 echo "--- Build Steps ---"
