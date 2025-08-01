@@ -369,7 +369,7 @@ stages:
         EOF
   
         echo "Created npm package structure for Python samples"
-        displayName: 'Prepare Python samples as npm package'
+      displayName: 'Prepare Python samples as npm package'
   
     - task: Npm@1
       displayName: 'Publish Python samples to npm feed'
