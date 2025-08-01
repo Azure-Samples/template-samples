@@ -151,6 +151,12 @@ samples:
       input:
         type: reference
         value: defaultConfiguration
+- templatePath: ./chat-completion-no-streaming/java
+  variants:
+    - output: ../generated-samples/java/chat-completion-no-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
 - templatePath: ./chat-completion-streaming-async/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion-streaming-async
