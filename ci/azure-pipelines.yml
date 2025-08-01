@@ -24,7 +24,7 @@ variables:
   - name: AZURE_OPENAI_DEPLOYMENT
     value: '' # This will be set dynamically or from ADO variables
   - name: TEMPLATE_CONFIG_INPUT
-    value: 'samples/input-data.yaml'
+    value: 'input-data.yaml'
 
 stages:
 - stage: ValidateSamples
