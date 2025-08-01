@@ -14,6 +14,16 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+parameters:
+  - name: templateConfigInput
+    displayName: 'Template Configuration Input File'
+    type: string
+    default: 'input-data.yaml'
+    values:
+      - 'input-data.yaml'
+      - 'service-setup.yaml'
+      - 'test-data.yaml'
+
 variables:
   - name: dotnetVersion
     value: '9.x'
@@ -24,7 +34,7 @@ variables:
   - name: AZURE_OPENAI_DEPLOYMENT
     value: '' # This will be set dynamically or from ADO variables
   - name: TEMPLATE_CONFIG_INPUT
-    value: 'input-data.yaml'
+    value: ${{ parameters.templateConfigInput }}
 
 stages:
 - stage: ValidateSamples
