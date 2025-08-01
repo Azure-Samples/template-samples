@@ -27,12 +27,6 @@ parameters:
 variables:
   - name: dotnetVersion
     value: '9.x'
-  - name: AZURE_OPENAI_ENDPOINT
-    value: '' # This will be set dynamically or from ADO variables
-  - name: AZURE_OPENAI_API_KEY
-    value: '' # This will be set dynamically or from ADO variables
-  - name: AZURE_OPENAI_DEPLOYMENT
-    value: '' # This will be set dynamically or from ADO variables
   - name: TEMPLATE_CONFIG_INPUT
     value: ${{ parameters.templateConfigInput }}
 
@@ -77,9 +71,13 @@ stages:
             --resource-group $(RESOURCE_GROUP) \
             --query "key1" -o tsv)
 
+          # Get predefined deployment if available
+          DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
+
           # Set as pipeline variables for use in subsequent jobs
           echo "##vso[task.setvariable variable=AZURE_OPENAI_ENDPOINT;isOutput=true]$ENDPOINT"
           echo "##vso[task.setvariable variable=AZURE_OPENAI_API_KEY;isOutput=true]$API_KEY"
+          echo "##vso[task.setvariable variable=AZURE_OPENAI_DEPLOYMENT;isOutput=true]$DEPLOYMENT"
       name: 'configureCredentials'
 
   - job: PublishConfigs
@@ -165,6 +163,7 @@ stages:
       # Map the output variables from GenerateSamples job
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
     steps:
     - checkout: self
     - task: UseDotNet@2
@@ -198,7 +197,7 @@ stages:
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
-        export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
+        export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
       displayName: 'Validate C# samples'
 
@@ -223,6 +222,7 @@ stages:
       # Map the output variables from GenerateSamples job
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -256,7 +256,7 @@ stages:
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
-        export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
+        export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
       displayName: 'Validate Python samples'
 
@@ -291,6 +291,7 @@ stages:
       # Map the output variables from GenerateSamples job
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
 
     steps:
     - checkout: self
@@ -327,7 +328,7 @@ stages:
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
-        export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
+        export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
         ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt"
       displayName: 'Validate Java samples'
 
