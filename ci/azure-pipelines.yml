@@ -51,7 +51,7 @@ stages:
     - script: |
         echo "Generating samples with input: $(TEMPLATE_CONFIG_INPUT)"
         # Generate samples using che batch command
-        che batch samples/$(TEMPLATE_CONFIG_INPUT)
+        che batch samples/$(TEMPLATE_CONFIG_INPUT) -p
       displayName: 'Generate samples'
 
     - publish: generated-samples/
