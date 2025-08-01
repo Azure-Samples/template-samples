@@ -22,10 +22,7 @@ public class Main {
                 .addUserMessage("Can you help me?")
                 .addUserMessage("What's the best way to train a parrot?")
                 .build();
-
-        ChatCompletion chatCompletion = client.chat().completions().create(createParams);
-        System.out.printf("Model ID=%s is created at %s.%n", chatCompletion.id(), chatCompletion.created());
-
+                
         client.chat().completions().create(createParams).choices().stream()
             .flatMap(choice -> choice.message().content().stream())
             .forEach(System.out::println);

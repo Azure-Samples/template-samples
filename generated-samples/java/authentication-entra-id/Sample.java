@@ -9,8 +9,8 @@ import com.openai.models.chat.completions.ChatCompletionCreateParams;
 public class Main {
     public static void main(String[] args) {
 
-        <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
-        <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>      
+        String endpoint = "<%= endpoint %>";
+        String deploymentName = "<some-deployment-name>";      
 
         OpenAIClient client = OpenAIOkHttpClient.builder()
                 .baseUrl(endpoint)
