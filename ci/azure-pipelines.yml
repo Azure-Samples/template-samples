@@ -186,8 +186,6 @@ stages:
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
       displayName: 'Validate C# samples'
 
-
-
     - script: |
         mkdir -p validation-results
         cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
@@ -259,6 +257,107 @@ stages:
         feedsToUse: 'internal'
         vstsFeedPublish: '$(Project)/$(samples-feed)'
         vstsFeedPackagePublish: 'python-samples'
+        versionOption: 'patch'
+      
+    # Prepare npm packages for source file consumption
+    - script: |
+        cd ./generated-samples/python
+        
+        # Create a main package.json for the entire collection
+        cat > package.json << 'EOF'
+        {
+          "name": "@azure-samples/openai-python-samples",
+          "version": "1.0.0",
+          "description": "Azure OpenAI Python sample source files",
+          "main": "index.js",
+          "files": ["**/*.py", "**/requirements.txt", "**/README.md", "index.js"],
+          "keywords": ["azure", "openai", "python", "samples", "source"],
+          "author": "Azure Samples",
+          "license": "MIT",
+          "repository": {
+            "type": "git",
+            "url": "https://github.com/Azure-Samples/template-samples"
+          }
+        }
+        EOF
+  
+        # Create an index.js that exports metadata about available samples
+        cat > index.js << 'EOF'
+        const fs = require('fs');
+        const path = require('path');
+  
+        // Discover all sample directories
+        function getSamples() {
+          const samples = {};
+          const dirs = fs.readdirSync(__dirname, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+          
+          dirs.forEach(dir => {
+            const samplePath = path.join(__dirname, dir);
+            const files = fs.readdirSync(samplePath);
+            
+            samples[dir] = {
+              path: samplePath,
+              pythonFiles: files.filter(f => f.endsWith('.py')),
+              requirementsFile: files.includes('requirements.txt') ? 'requirements.txt' : null,
+              readme: files.find(f => f.toLowerCase().includes('readme')) || null,
+              allFiles: files
+            };
+          });
+          
+          return samples;
+        }
+  
+        // Get the absolute path to a specific sample
+        function getSamplePath(sampleName) {
+          return path.join(__dirname, sampleName);
+        }
+  
+        // Read the contents of a specific file in a sample
+        function readSampleFile(sampleName, fileName) {
+          const filePath = path.join(__dirname, sampleName, fileName);
+          return fs.readFileSync(filePath, 'utf8');
+        }
+  
+        // Copy a sample to a destination directory
+        function copySample(sampleName, destinationPath) {
+          const sourcePath = getSamplePath(sampleName);
+          const destPath = path.join(destinationPath, sampleName);
+          
+          if (!fs.existsSync(destPath)) {
+            fs.mkdirSync(destPath, { recursive: true });
+          }
+          
+          const files = fs.readdirSync(sourcePath);
+          files.forEach(file => {
+            const srcFile = path.join(sourcePath, file);
+            const destFile = path.join(destPath, file);
+            fs.copyFileSync(srcFile, destFile);
+          });
+          
+          return destPath;
+        }
+  
+        module.exports = {
+          getSamples,
+          getSamplePath,
+          readSampleFile,
+          copySample
+        };
+        EOF
+  
+        echo "Created npm package structure for Python samples"
+        displayName: 'Prepare Python samples as npm package'
+  
+    - task: Npm@1
+      displayName: 'Publish Python samples to npm feed'
+      inputs:
+        command: 'publish'
+        workingDir: './generated-samples/python'
+        publishRegistry: 'useFeed'
+        publishFeed: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'python-samples-npm'
         versionOption: 'patch'
 
   - job: ValidateJava
