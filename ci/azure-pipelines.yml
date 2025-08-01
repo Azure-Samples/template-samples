@@ -39,6 +39,7 @@ stages:
         npm install -g @caleuche/cli
       displayName: 'Install Caleuche CLI'
     - script: |
+        echo "Generating samples with input: $(TEMPLATE_CONFIG_INPUT)"
         # Generate samples using che batch command
         che batch samples/$(TEMPLATE_CONFIG_INPUT)
       displayName: 'Generate samples'
@@ -185,8 +186,6 @@ stages:
         export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
       displayName: 'Validate C# samples'
-
-
 
     - script: |
         mkdir -p validation-results
