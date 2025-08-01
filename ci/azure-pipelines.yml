@@ -17,6 +17,14 @@ pool:
 variables:
   - name: dotnetVersion
     value: '9.x'
+  - name: AZURE_OPENAI_ENDPOINT
+    value: '' # This will be set dynamically or from ADO variables
+  - name: AZURE_OPENAI_API_KEY
+    value: '' # This will be set dynamically or from ADO variables
+  - name: AZURE_OPENAI_DEPLOYMENT
+    value: '' # This will be set dynamically or from ADO variables
+  - name: TEMPLATE_CONFIG_INPUT
+    value: 'samples/input-data.yaml'
 
 stages:
 - stage: ValidateSamples
@@ -32,12 +40,36 @@ stages:
       displayName: 'Install Caleuche CLI'
     - script: |
         # Generate samples using che batch command
-        che batch samples/input-data.yaml
+        che batch samples/$(TEMPLATE_CONFIG_INPUT)
       displayName: 'Generate samples'
 
     - publish: generated-samples/
       artifact: GeneratedSamples
       displayName: 'Publish generated samples'
+
+    - task: AzureCLI@2
+      displayName: 'Get Azure OpenAI credentials'
+      inputs:
+        azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Get endpoint from Azure OpenAI resource
+          ENDPOINT=$(az cognitiveservices account show \
+            --name $(AZURE_OPENAI_SERVICE) \
+            --resource-group $(RESOURCE_GROUP) \
+            --query "properties.endpoint" -o tsv)
+          
+          # Get API key from Azure OpenAI resource
+          API_KEY=$(az cognitiveservices account keys list \
+            --name $(AZURE_OPENAI_SERVICE) \
+            --resource-group $(RESOURCE_GROUP) \
+            --query "key1" -o tsv)
+
+          # Set as pipeline variables for use in subsequent jobs
+          echo "##vso[task.setvariable variable=AZURE_OPENAI_ENDPOINT;isOutput=true]$ENDPOINT"
+          echo "##vso[task.setvariable variable=AZURE_OPENAI_API_KEY;isOutput=true]$API_KEY"
+      name: 'configureCredentials'
 
   - job: PublishConfigs
     displayName: 'Publish build configurations for samples'
@@ -147,8 +179,14 @@ stages:
 
     - script: |
         chmod +x scripts/*.sh
+         # Set environment variables for validation
+        export AZURE_OPENAI_ENDPOINT=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'])
+        export AZURE_OPENAI_API_KEY=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'])
+        export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
       displayName: 'Validate C# samples'
+
+
 
     - script: |
         mkdir -p validation-results
@@ -196,6 +234,10 @@ stages:
 
     - script: |
         chmod +x scripts/*.sh
+        # Set environment variables for validation
+        export AZURE_OPENAI_ENDPOINT=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'])
+        export AZURE_OPENAI_API_KEY=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'])
+        export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
       displayName: 'Validate Python samples'
 
@@ -258,6 +300,10 @@ stages:
 
     - script: |
         chmod +x scripts/*.sh
+        # Set environment variables for validation
+        export AZURE_OPENAI_ENDPOINT=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'])
+        export AZURE_OPENAI_API_KEY=$(dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'])
+        export AZURE_OPENAI_DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
         ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt"
       displayName: 'Validate Java samples'
 

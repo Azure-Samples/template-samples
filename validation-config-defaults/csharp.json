@@ -10,5 +10,6 @@
   ],
   "validationLevel": "compile-only",
   "validateSteps": [
+    "dotnet run"
   ]
 }
