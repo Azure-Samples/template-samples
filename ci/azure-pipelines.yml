@@ -232,6 +232,18 @@ stages:
       artifact: CSharpResults
       condition: always()
 
+    - task: UniversalPackages@0
+      displayName: 'Publish C# samples to feed'
+      # Only publish if all samples were successfully validated
+      condition: succeeded()
+      inputs:
+        command: publish
+        publishDirectory: './generated-samples/csharp'
+        feedsToUse: 'internal'
+        vstsFeedPublish: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'csharp-samples'
+        versionOption: 'patch'
+
   - job: ValidatePython
     displayName: 'Validate Python Samples'
     dependsOn: 
@@ -293,6 +305,8 @@ stages:
 
     - task: UniversalPackages@0
       displayName: 'Publish Python samples to feed'
+      # Only publish if all samples were successfully validated
+      condition: succeeded()
       inputs:
         command: publish
         publishDirectory: './generated-samples/python'
@@ -362,3 +376,15 @@ stages:
     - publish: validation-results/
       artifact: JavaResults
       condition: always()
+
+    - task: UniversalPackages@0
+      displayName: 'Publish Java samples to feed'
+      # Only publish if all samples were successfully validated
+      condition: succeeded()
+      inputs:
+        command: publish
+        publishDirectory: './generated-samples/java'
+        feedsToUse: 'internal'
+        vstsFeedPublish: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'java-samples'
+        versionOption: 'patch'
