@@ -16,7 +16,7 @@ input:
     description: "API key for authentication"
   - name: deploymentName
     type: string
-    required: true
+    required: false
     description: "Model to use for chat completion"
   - name: useEnvVars
     type: boolean
