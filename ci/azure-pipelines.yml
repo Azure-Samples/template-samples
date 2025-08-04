@@ -23,12 +23,21 @@ parameters:
       - 'input-data.yaml'
       - 'service-setup.yaml'
       - 'test-data.yaml'
+  - name: validationLevel
+    displayName: 'Validation Level'
+    type: string
+    default: 'compile-only'
+    values:
+      - 'compile-only'
+      - 'service-calls'
 
 variables:
   - name: dotnetVersion
     value: '9.x'
   - name: TEMPLATE_CONFIG_INPUT
     value: ${{ parameters.templateConfigInput }}
+  - name: VALIDATION_LEVEL
+    value: ${{ parameters.validationLevel }}
 
 stages:
 - stage: ValidateSamples

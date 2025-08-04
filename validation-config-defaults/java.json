@@ -4,7 +4,6 @@
   "buildSteps": [
     "mvn clean compile"
   ],
-  "validationLevel": "compile-only",
   "validateSteps": [
     "mvn checkstyle:check",
     "mvn pmd:pmd"

@@ -4,11 +4,12 @@
   "dependencies": {
     "Azure.AI.OpenAI": "latest"
   },
+  "preBuildSteps": [
+    "dotnet restore"
+  ],
   "buildSteps": [
-    "dotnet restore",
     "dotnet build"
   ],
-  "validationLevel": "compile-only",
   "validateSteps": [
     "dotnet run"
   ]
