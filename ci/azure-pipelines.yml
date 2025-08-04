@@ -6,6 +6,14 @@ trigger:
     include:
     - generated-samples/**
 
+schedules:
+- cron: "0 2 * * 0"  # Run every Sunday at 2 AM UTC
+  displayName: Weekly Service Calls Validation
+  branches:
+    include:
+    - main
+  always: true
+
 pr:
   branches:
     include:
@@ -26,7 +34,11 @@ parameters:
   - name: validationLevel
     displayName: 'Validation Level'
     type: string
-    default: 'compile-only'
+    # Automatically use service-calls for scheduled runs
+    default: ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+      value: 'service-calls'
+    ${{ else }}:
+      value: 'compile-only'
     values:
       - 'compile-only'
       - 'service-calls'
