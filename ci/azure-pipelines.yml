@@ -31,25 +31,17 @@ parameters:
       - 'input-data.yaml'
       - 'service-setup.yaml'
       - 'test-data.yaml'
-  - name: validationLevel
-    displayName: 'Validation Level'
-    type: string
-    # Automatically use service-calls for scheduled runs
-    default: ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-      value: 'service-calls'
-    ${{ else }}:
-      value: 'compile-only'
-    values:
-      - 'compile-only'
-      - 'service-calls'
 
 variables:
   - name: dotnetVersion
     value: '9.x'
   - name: TEMPLATE_CONFIG_INPUT
     value: ${{ parameters.templateConfigInput }}
-  - name: VALIDATION_LEVEL
-    value: ${{ parameters.validationLevel }}
+  - name: MAKE_SERVICE_CALLS
+    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+        value: true
+    ${{ else }}:
+        value: false
 
 stages:
 - stage: ValidateSamples
@@ -219,7 +211,7 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
+        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt" $(MAKE_SERVICE_CALLS)
       displayName: 'Validate C# samples'
 
     - script: |
@@ -290,7 +282,7 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
+        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(MAKE_SERVICE_CALLS)
       displayName: 'Validate Python samples'
 
     - script: |
@@ -364,7 +356,7 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt"
+        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt" $(MAKE_SERVICE_CALLS)
       displayName: 'Validate Java samples'
 
     - script: |

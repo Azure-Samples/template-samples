@@ -10,7 +10,10 @@
   "buildSteps": [
     "dotnet build"
   ],
-  "validateSteps": [
+  "executeSteps": [
     "dotnet run"
+  ],
+  "validateSteps": [
+    "dotnet test"
   ]
 }

@@ -3,6 +3,7 @@ set -e
 
 LANGUAGE=$1
 CHANGED_SAMPLES_FILE=$2
+MAKE_SERVICE_CALLS=$3
 
 echo "Validating $LANGUAGE samples..."
 
@@ -23,7 +24,7 @@ while IFS= read -r sample_dir; do
     if [ -d "$sample_dir" ]; then
         echo ""
         echo "=== Validating: $sample_dir ==="
-        if ./scripts/validate-single-sample.sh "$sample_dir"; then
+        if ./scripts/validate-single-sample.sh "$sample_dir" "$MAKE_SERVICE_CALLS"; then
             echo "✅ $sample_dir" >> validation-success.log
         else
             echo "❌ $sample_dir" >> validation-errors.log
