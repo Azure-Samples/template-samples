@@ -1,0 +1,38 @@
+variants:
+  # Define a reusable configuration object
+  - name: defaultConfiguration
+    input:
+      type: object
+      properties:
+        deploymentName: <some-deployment-name>
+        endpoint: <%= endpoint %>
+
+samples:
+- templatePath: ./chat-completion/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          useEnvVars: true
+          deploymentName: AZURE_OPENAI_DEPLOYMENT
+- templatePath: ./chat-completion/csharp
+  variants:
+    - output: ../generated-samples/csharp/chat-completion/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          useEnvVars: true
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+- templatePath: ./chat-completion-no-streaming/python
+  variants:
+    - output: ../generated-samples/python/chat-completion-no-streaming
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          deploymentName: AZURE_OPENAI_DEPLOYMENT
+          apiVersion: 2025-01-01-preview
+          useEnvVars: true
