@@ -1,0 +1,23 @@
+variants:
+  - name: defaultConfiguration
+    input:
+      type: object
+      properties:
+        endpoint: <%= endpoint %>
+        apiKey: <some-api-key>
+        useTokenCredentials: true
+
+samples:
+- templatePath: ./chat-completion/csharp-v1/
+  variants:
+    - output: ../generated-samples/csharp-v1/chat-completion/keyAuth
+      input: defaultConfiguration
+- templatePath: ./chat-completion/csharp-v1/
+  variants:
+    - output: ../generated-samples/csharp-v1/chat-completion/entra
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          useTokenCredentials: false
+          apiKey: <some-api-key>
