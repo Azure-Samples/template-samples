@@ -18,14 +18,14 @@ OpenAIClient client = new(
     authenticationPolicy: tokenPolicy,
     options: new OpenAIClientOptions()
     {
-        Endpoint = new("{endpoint}/openai/v1/"),
+        Endpoint = new($"{endpoint}/openai/v1/"),
     });
 <% } else { %> 
 OpenAIClient client = new(
     new ApiKeyCredential(apiKey),
     new OpenAIClientOptions()
     {
-        Endpoint = new("{endpoint}/openai/v1/"),
+        Endpoint = new($"{endpoint}/openai/v1/"),
         TokenProvider = new DefaultAzureCredential(),
     });
 <% } %>

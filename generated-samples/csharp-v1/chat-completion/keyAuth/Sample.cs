@@ -10,7 +10,7 @@ OpenAIClient client = new(
     authenticationPolicy: tokenPolicy,
     options: new OpenAIClientOptions()
     {
-        Endpoint = new("https://{your-resource}.openai.azure.com/openai/v1/"),
+        Endpoint = new($"{endpoint}/openai/v1/"),
     });
 
 ChatCompletion completion = client.CompleteChat(

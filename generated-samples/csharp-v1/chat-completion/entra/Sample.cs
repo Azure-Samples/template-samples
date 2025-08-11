@@ -8,7 +8,7 @@ OpenAIClient client = new(
     new ApiKeyCredential(apiKey),
     new OpenAIClientOptions()
     {
-        Endpoint = new("https://{your-resource}.openai.azure.com/openai/v1/"),
+        Endpoint = new($"{endpoint}/openai/v1/"),
         TokenProvider = new DefaultAzureCredential(),
     });
 
