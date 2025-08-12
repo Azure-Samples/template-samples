@@ -49,6 +49,21 @@ samples:
 #       input:
   # type: reference
   # value: defaultConfiguration
+- templatePath: ./authentication-entra-id/java
+  variants:
+    - output: ../generated-samples/java/authentication-entra-id
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./authentication-key-credential/java
+  variants:
+    - output: ../generated-samples/java/authentication-key-credential
+      input:
+        type: object
+        properties:
+          apiKey: fake-api-key
+          endpoint: fake-endpoint
+          deploymentName: fake-deployment-name
 - templatePath: ./chat-completion-async/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion-async
@@ -136,6 +151,12 @@ samples:
 - templatePath: ./chat-completion-no-streaming/python
   variants:
     - output: ../generated-samples/python/chat-completion-no-streaming
+      input:
+        type: reference
+        value: defaultConfiguration
+- templatePath: ./chat-completion-no-streaming/java
+  variants:
+    - output: ../generated-samples/java/chat-completion-no-streaming
       input:
         type: reference
         value: defaultConfiguration
