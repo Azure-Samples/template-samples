@@ -1,0 +1,57 @@
+import com.openai.client.OpenAIClient;
+import com.openai.client.okhttp.OpenAIOkHttpClient;
+import com.openai.models.ChatModel;
+import com.openai.models.chat.completions.ChatCompletion;
+import com.openai.models.chat.completions.ChatCompletionCreateParams;
+import com.openai.models.chat.completions.ChatCompletionMessage;
+
+<% if (useTokenCredentials) { %>import com.azure.identity.AuthenticationUtil;
+import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.openai.credential.BearerTokenCredential; <% 
+} else { %>import com.openai.azure.credential.AzureApiKeyCredential; 
+<% } %>
+
+
+public class Main {
+    public static void main(String[] args) {
+
+    <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+    <%if (!useTokenCredentials) { %>
+    <%= java.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
+    <%}%>
+    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+
+        <% if (!useTokenCredentials) { %>
+        OpenAIClient client = OpenAIOkHttpClient.builder()
+                .baseUrl(endpoint)
+                .credential(AzureApiKeyCredential.create("{your-api-key}"))
+                .build();
+        <% 
+        } else { %>
+        Credential tokenCredential = BearerTokenCredential.create(
+        AuthenticationUtil.getBearerTokenSupplier(
+                new DefaultAzureCredentialBuilder().build(),
+                "https://cognitiveservices.azure.com/.default"));
+        OpenAIClient client = OpenAIOkHttpClient.builder()
+                .baseUrl(endpoint)
+                .credential(tokenCredential)
+                .build();
+        <%} %>
+
+        ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
+                .model(ChatModel.of(deploymentName))
+                .addSystemMessage("You are a helpful assistant. You will talk like a pirate.")
+                .addUserMessage("Can you help me?")
+                .addUserMessage("What's the best way to train a parrot?")
+                .build();
+
+        ChatCompletion chatCompletion = client.chat().completions().create(createParams);
+        System.out.printf("Model ID=%s is created at %s.%n", chatCompletion.id(), chatCompletion.created());
+
+        for (ChatCompletion.Choice choice : chatCompletion.choices()) {
+            ChatCompletionMessage message = choice.message();
+            System.out.println("Message:");
+            System.out.println(message.content());
+        }
+    }
+}
