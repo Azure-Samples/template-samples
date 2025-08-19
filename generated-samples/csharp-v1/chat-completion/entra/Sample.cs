@@ -1,8 +1,8 @@
 using Azure; 
 using OpenAI.Chat;
 
-const string endpoint = "<%= endpoint %>";
-const string apiKey = "<some-api-key>";;
+const string endpoint = "<%= openai_v1_endpoint %>";
+const string apiKey = "<your-api-key>";;
  
 OpenAIClient client = new(
     new ApiKeyCredential(apiKey),

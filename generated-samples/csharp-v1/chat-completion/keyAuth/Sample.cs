@@ -1,7 +1,7 @@
 using Azure.Identity; 
 using OpenAI.Chat;
 
-const string endpoint = "<%= endpoint %>";
+const string endpoint = "<%= openai_v1_endpoint %>";
 
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
