@@ -1,7 +1,7 @@
 using Azure.Identity; 
 using OpenAI.Chat;
 
-const string endpoint = "<%= endpoint %>";
+const string endpoint = "<%= openai_v1_endpoint %>";
 
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
@@ -22,9 +22,9 @@ ChatCompletion completion = client.CompleteChat(
      ]);
 
 Console.WriteLine($"Model={completion.Model}");
-foreach (var choice in completion.Content)
+foreach (ChatMessageContentPart contentPart in completion.Content)
 {
-    var message = choice.Text;
+    string message = contentPart.Text;
     Console.WriteLine($"Chat Role: {completion.Role}");
     Console.WriteLine("Message:");
     Console.WriteLine(message);
