@@ -7,7 +7,7 @@ using OpenAI.Chat;
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
 <%if (useTokenCredentials) { %>
 <% } else { %>
-<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
+<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 <% } %>
 <% if (useTokenCredentials) { %>
 
@@ -39,9 +39,9 @@ ChatCompletion completion = client.CompleteChat(
      ]);
 
 Console.WriteLine($"Model={completion.Model}");
-foreach (var choice in completion.Content)
+foreach (ChatMessageContentPart contentPart in completion.Content)
 {
-    var message = choice.Text;
+    string message = contentPart.Text;
     Console.WriteLine($"Chat Role: {completion.Role}");
     Console.WriteLine("Message:");
     Console.WriteLine(message);

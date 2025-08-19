@@ -2,7 +2,7 @@ using Azure;
 using OpenAI.Chat;
 
 const string endpoint = "<%= openai_v1_endpoint %>";
-const string apiKey = "<your-api-key>";;
+const string apiKey = "<your-api-key>";
  
 OpenAIClient client = new(
     new ApiKeyCredential(apiKey),
@@ -21,9 +21,9 @@ ChatCompletion completion = client.CompleteChat(
      ]);
 
 Console.WriteLine($"Model={completion.Model}");
-foreach (var choice in completion.Content)
+foreach (ChatMessageContentPart contentPart in completion.Content)
 {
-    var message = choice.Text;
+    string message = contentPart.Text;
     Console.WriteLine($"Chat Role: {completion.Role}");
     Console.WriteLine("Message:");
     Console.WriteLine(message);

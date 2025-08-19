@@ -22,9 +22,9 @@ ChatCompletion completion = client.CompleteChat(
      ]);
 
 Console.WriteLine($"Model={completion.Model}");
-foreach (var choice in completion.Content)
+foreach (ChatMessageContentPart contentPart in completion.Content)
 {
-    var message = choice.Text;
+    string message = contentPart.Text;
     Console.WriteLine($"Chat Role: {completion.Role}");
     Console.WriteLine("Message:");
     Console.WriteLine(message);
