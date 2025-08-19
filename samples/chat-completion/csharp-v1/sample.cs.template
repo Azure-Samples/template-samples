@@ -2,6 +2,7 @@
 using Azure.Identity; 
 <%} else { %>using Azure; 
 <% } %>
+using System.ClientModel;
 using OpenAI.Chat;
 
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
