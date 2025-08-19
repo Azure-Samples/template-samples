@@ -1,0 +1,44 @@
+<% if (useEnvVars) { %>
+import os
+<% } %>
+from openai import OpenAI
+<% if (useTokenCredentials) { %>
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+<% } %>
+
+<%= python.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+<%= python.valueOrEnvironment(useEnvVars, "deployment_name", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+<% if (useTokenCredentials) { %>
+token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
+<% } else { %>
+<%= python.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
+<% } %>
+
+<% if (useTokenCredentials) { %>
+client = OpenAI(
+    base_url=f"https://{endpoint}/openai/v1",
+    api_key_provider=token_provider
+)
+<% } else { %>
+client = OpenAI(
+    base_url=f"https://{endpoint}/openai/v1",
+    api_key=api_key
+)
+<% } %>
+
+completion = client.chat.completions.create(
+    model=deployment_name,
+    messages=[
+        {
+            "role": "user",
+            "content": "What is the capital of France?",
+        }
+    ],
+    <% if (extraParams) { %>
+    <% if (extraParams.temperature) { %>
+    temperature=<%= extraParams.temperature %>,
+    <% } %>
+    <% } %>
+)
+
+print(completion.choices[0].message)

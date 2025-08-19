@@ -3,8 +3,8 @@ variants:
     input:
       type: object
       properties:
-        endpoint: <%= endpoint %>
-        apiKey: <some-api-key>
+        endpoint: <%= openai_v1_endpoint %>
+        apiKey: <your-api-key>
         useTokenCredentials: true
 
 samples:
@@ -18,6 +18,25 @@ samples:
       input:
         type: object
         properties:
-          endpoint: <%= endpoint %>
+          endpoint: <%= openai_v1_endpoint %>
           useTokenCredentials: false
-          apiKey: <some-api-key>
+          apiKey: <your-api-key>
+- templatePath: ./chat-completion-no-streaming/python-v1/
+  variants:
+    - output: ../generated-samples/python-v1/chat-completion/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= openai_v1_endpoint %>
+          deploymentName: <%= deploymentName %>
+- templatePath: ./chat-completion-no-streaming/python-v1/
+  variants:
+    - output: ../generated-samples/python-v1/chat-completion/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= openai_v1_endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
