@@ -9,7 +9,7 @@ import com.azure.identity.AuthenticationUtil;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.openai.credential.BearerTokenCredential; 
 
-public class Main {
+public class Sample {
     public static void main(String[] args) {
 
     String endpoint = "<%= openai_v1_endpoint %>";
