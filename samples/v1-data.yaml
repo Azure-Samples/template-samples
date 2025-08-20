@@ -76,3 +76,20 @@ samples:
           endpoint: <%= openai_v1_endpoint %>
           apiKey: "{your-api-key}"
           deploymentName: <%= deploymentName %>
+# - templatePath: ./chat-completion/js-v1/
+#   variants:
+#     - output: ../generated-samples/js-v1/chat-completion/entra-auth
+#       input:
+#         type: object
+#         properties:
+#           useTokenCredentials: true
+#           endpoint: <%= openai_v1_endpoint %>
+#           deploymentName: <%= deploymentName %>
+#     - output: ../generated-samples/js-v1/chat-completion/key-auth
+#       input:
+#         type: object
+#         properties:
+#           useTokenCredentials: false
+#           endpoint: <%= openai_v1_endpoint %>
+#           apiKey: "{your-api-key}"
+#           deploymentName: <%= deploymentName %>
