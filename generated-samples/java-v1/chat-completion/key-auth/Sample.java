@@ -8,7 +8,7 @@ import com.openai.models.chat.completions.ChatCompletionMessage;
 import com.openai.azure.credential.AzureApiKeyCredential; 
 
 
-public class Sample {
+public class Main {
     public static void main(String[] args) {
 
     String endpoint = "<%= openai_v1_endpoint %>";
