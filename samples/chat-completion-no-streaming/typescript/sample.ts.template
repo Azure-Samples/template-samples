@@ -1,0 +1,58 @@
+import { AzureOpenAI } from "openai";
+<% if (useTokenCredentials) { %>
+import { DefaultAzureCredential, getBearerTokenProvider } from "@azure/identity";
+<% } %>
+<% if (useEnvVars) { %>
+// Load the .env file if it exists
+import "dotenv/config";
+<% } %>
+
+<% if (!useTokenCredentials) { %>
+<%= typescript.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
+<% } %>
+<%= typescript.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+<%= typescript.valueOrEnvironment(useEnvVars, "apiVersion", "AZURE_OPENAI_API_VERSION", apiVersion) %>
+<%= typescript.valueOrEnvironment(useEnvVars, "deployment", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+
+export async function main(): Promise<void> {
+  console.log("== Chat Completions Sample ==");
+
+  <% if (useTokenCredentials) { %>
+  const scope = "https://cognitiveservices.azure.com/.default";
+  const azureADTokenProvider = getBearerTokenProvider(new DefaultAzureCredential(), scope);
+  const client = new AzureOpenAI({ 
+    azureADTokenProvider, 
+    deployment, 
+    apiVersion,
+    endpoint 
+  });
+  <% } else { %>
+  const client = new AzureOpenAI({ 
+    apiKey, 
+    deployment, 
+    apiVersion,
+    endpoint 
+  });
+  <% } %>
+
+  const result = await client.chat.completions.create({
+    messages: [
+      { role: "user", content: "What is the capital of France?" },
+    ],
+    model: "",
+    <% if (extraParams) { %>
+    <% if (extraParams.temperature) { %>
+    temperature: <%= extraParams.temperature %>,
+    <% } %>
+    <% } %>
+  });
+
+  for (const choice of result.choices) {
+    console.log(choice.message);
+  }
+}
+
+main().catch((err) => {
+  console.error("The sample encountered an error:", err);
+});
+
