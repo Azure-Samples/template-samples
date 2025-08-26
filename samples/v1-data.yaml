@@ -6,15 +6,13 @@ variants:
         endpoint: <%= openai_v1_endpoint %>
         apiKey: <your-api-key>
         deploymentName: <%= deploymentName %>
-        useTokenCredentials: true
+        useTokenCredentials: false
 
 samples:
 - templatePath: ./chat-completion/csharp-v1/
   variants:
     - output: ../generated-samples/csharp-v1/chat-completion/keyAuth
       input: defaultConfiguration
-- templatePath: ./chat-completion/csharp-v1/
-  variants:
     - output: ../generated-samples/csharp-v1/chat-completion/entra
       input:
         type: object
@@ -22,7 +20,7 @@ samples:
           deploymentName: <%= deploymentName %>
           apiKey: <your-api-key>
           endpoint: <%= openai_v1_endpoint %>
-          useTokenCredentials: false
+          useTokenCredentials: true
 - templatePath: ./chat-completion-no-streaming/python-v1/
   variants:
     - output: ../generated-samples/python-v1/chat-completion/entra-auth

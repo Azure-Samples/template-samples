@@ -1,20 +1,24 @@
+using Azure.Identity; 
 using OpenAI;
 using OpenAI.Chat;
+using System.ClientModel.Primitives;
 
 #pragma warning disable OPENAI001
 
 const string deploymentName = "<%= deploymentName %>";
 const string endpoint = "<%= openai_v1_endpoint %>";
-const string apiKey = "<your-api-key>";
 
- 
+BearerTokenPolicy tokenPolicy = new(
+    new DefaultAzureCredential(),
+    "https://cognitiveservices.azure.com/.default");
+
 ChatClient client = new(
-    credential: new ApiKeyCredential(apiKey),
+    authenticationPolicy: tokenPolicy,
     model: deploymentName,
     options: new OpenAIClientOptions()
     {
         Endpoint = new($"{endpoint}"),
-    }); 
+    });
 
 ChatCompletion completion = client.CompleteChat(
      [
