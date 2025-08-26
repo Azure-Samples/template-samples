@@ -7,7 +7,7 @@ token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://co
 
 client = OpenAI(
     base_url = endpoint,
-    azure_ad_token_provider = token_provider,
+    api_key_provider = token_provider,
 )
 
 response = client.embeddings.create(
