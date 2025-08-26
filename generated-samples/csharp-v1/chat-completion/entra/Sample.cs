@@ -1,16 +1,20 @@
-using Azure; 
+using OpenAI;
 using OpenAI.Chat;
 
+#pragma warning disable OPENAI001
+
+const string deploymentName = "<%= deploymentName %>";
 const string endpoint = "<%= openai_v1_endpoint %>";
 const string apiKey = "<your-api-key>";
+
  
-OpenAIClient client = new(
-    new ApiKeyCredential(apiKey),
-    new OpenAIClientOptions()
+ChatClient client = new(
+    credential: new ApiKeyCredential(apiKey),
+    model: deploymentName,
+    options: new OpenAIClientOptions()
     {
-        Endpoint = new($"{endpoint}/openai/v1/"),
-        TokenProvider = new DefaultAzureCredential(),
-    });
+        Endpoint = new($"{endpoint}"),
+    }); 
 
 ChatCompletion completion = client.CompleteChat(
      [
@@ -27,4 +31,4 @@ foreach (ChatMessageContentPart contentPart in completion.Content)
     Console.WriteLine($"Chat Role: {completion.Role}");
     Console.WriteLine("Message:");
     Console.WriteLine(message);
-} 
+}

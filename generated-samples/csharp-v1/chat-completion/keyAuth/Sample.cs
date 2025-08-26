@@ -1,16 +1,22 @@
 using Azure.Identity; 
+using OpenAI;
 using OpenAI.Chat;
+using System.ClientModel.Primitives;
 
+#pragma warning disable OPENAI001
+
+const string deploymentName = "<%= deploymentName %>";
 const string endpoint = "<%= openai_v1_endpoint %>";
 
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
     "https://cognitiveservices.azure.com/.default");
-OpenAIClient client = new(
+ChatClient client = new(
     authenticationPolicy: tokenPolicy,
+    model: deploymentName,
     options: new OpenAIClientOptions()
     {
-        Endpoint = new($"{endpoint}/openai/v1/"),
+        Endpoint = new($"{endpoint}"),
     });
 
 ChatCompletion completion = client.CompleteChat(
@@ -28,4 +34,4 @@ foreach (ChatMessageContentPart contentPart in completion.Content)
     Console.WriteLine($"Chat Role: {completion.Role}");
     Console.WriteLine("Message:");
     Console.WriteLine(message);
-} 
+}

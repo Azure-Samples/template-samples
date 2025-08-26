@@ -3,8 +3,6 @@ type: csharp
 dependencies:
   - name: OpenAI
     version: 2.3.0
-  - name: Azure.AI.OpenAI
-    version: 2.3.0-beta.1
   - name: Azure.Identity
     version: 1.15.0
 input:
@@ -20,6 +18,10 @@ input:
     type: string
     required: false
     description: "API key for authentication"
+  - name: deploymentName
+    type: string
+    required: true
+    description: "Model to use for chat completion"
   - name: useEnvVars
     type: boolean
     required: false

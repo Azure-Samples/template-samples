@@ -5,6 +5,7 @@ variants:
       properties:
         endpoint: <%= openai_v1_endpoint %>
         apiKey: <your-api-key>
+        deploymentName: <%= deploymentName %>
         useTokenCredentials: true
 
 samples:
@@ -18,9 +19,10 @@ samples:
       input:
         type: object
         properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
           endpoint: <%= openai_v1_endpoint %>
           useTokenCredentials: false
-          apiKey: <your-api-key>
 - templatePath: ./chat-completion-no-streaming/python-v1/
   variants:
     - output: ../generated-samples/python-v1/chat-completion/entra-auth
