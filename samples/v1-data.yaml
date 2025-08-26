@@ -59,5 +59,107 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: <your-api-key>
+          apiKey: "{your-api-key}"
+          deploymentName: <%= deploymentName %>
+- templatePath: ./chat-completion/go-v1/
+  variants:
+    - output: ../generated-samples/go-v1/chat-completion/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= openai_v1_endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/go-v1/chat-completion/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= openai_v1_endpoint %>
+          apiKey: "{your-api-key}"
+          deploymentName: <%= deploymentName %>
+# - templatePath: ./chat-completion/js-v1/
+#   variants:
+#     - output: ../generated-samples/js-v1/chat-completion/entra-auth
+#       input:
+#         type: object
+#         properties:
+#           useTokenCredentials: true
+#           endpoint: <%= openai_v1_endpoint %>
+#           deploymentName: <%= deploymentName %>
+#     - output: ../generated-samples/js-v1/chat-completion/key-auth
+#       input:
+#         type: object
+#         properties:
+#           useTokenCredentials: false
+#           endpoint: <%= openai_v1_endpoint %>
+#           apiKey: "{your-api-key}"
+#           deploymentName: <%= deploymentName %>
+- templatePath: ./image-generation/python-v1/
+  variants:
+    - output: ../generated-samples/python-v1/image-generation/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= openai_v1_endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/python-v1/image-generation/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= openai_v1_endpoint %>
+          apiKey: "{your-api-key}"
+          deploymentName: <%= deploymentName %>
+- templatePath: ./image-generation/csharp-v1/
+  variants:
+    - output: ../generated-samples/csharp-v1/image-generation/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= openai_v1_endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/csharp-v1/image-generation/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= openai_v1_endpoint %>
+          apiKey: "{your-api-key}"
+          deploymentName: <%= deploymentName %>
+- templatePath: ./image-generation/java-v1/
+  variants:
+    - output: ../generated-samples/java-v1/image-generation/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= openai_v1_endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/java-v1/image-generation/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= openai_v1_endpoint %>
+          apiKey: "{your-api-key}"
+          deploymentName: <%= deploymentName %>
+- templatePath: ./image-generation/go-v1/
+  variants:
+    - output: ../generated-samples/go-v1/image-generation/entra-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= openai_v1_endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/go-v1/image-generation/key-auth
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= openai_v1_endpoint %>
+          apiKey: "{your-api-key}"
           deploymentName: <%= deploymentName %>

@@ -9,19 +9,17 @@ import com.azure.identity.AuthenticationUtil;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.openai.credential.BearerTokenCredential; 
 
-public class Main {
+public class Sample {
     public static void main(String[] args) {
 
     String endpoint = "<%= openai_v1_endpoint %>";
     String deploymentName = "<%= deploymentName %>";
 
-        Credential tokenCredential = BearerTokenCredential.create(
-        AuthenticationUtil.getBearerTokenSupplier(
-                new DefaultAzureCredentialBuilder().build(),
-                "https://cognitiveservices.azure.com/.default"));
-        OpenAIClient client = OpenAIOkHttpClient.builder()
+         OpenAIClient client = OpenAIOkHttpClient.builder()
                 .baseUrl(endpoint)
-                .credential(tokenCredential)
+                // Set the Azure Entra ID
+                .credential(BearerTokenCredential.create(AuthenticationUtil.getBearerTokenSupplier(
+                        new DefaultAzureCredentialBuilder().build(), "https://cognitiveservices.azure.com/.default")))
                 .build();
 
         ChatCompletionCreateParams createParams = ChatCompletionCreateParams.builder()
