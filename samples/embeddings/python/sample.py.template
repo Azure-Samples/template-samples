@@ -1,0 +1,30 @@
+<% if (useEnvVars) { %>
+import os
+<% } %>
+from openai import OpenAI
+<% if (useTokenCredentials) { %>
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+<% } %>
+
+<%= python.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+<%= python.valueOrEnvironment(useEnvVars, "deployment_name", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+<% if (useTokenCredentials) { %>
+token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
+<% } else { %>
+<%= python.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
+<% } %>
+
+client = OpenAI(
+    base_url = endpoint,
+    <% if (useTokenCredentials) { %>
+    azure_ad_token_provider = token_provider,
+    <% } else { %>
+    api_key = api_key,
+    <% } %>
+)
+
+response = client.embeddings.create(
+    input = "How do I use Python in VS Code?",
+    model = deployment_name
+)
+print(response.data[0].embedding)
