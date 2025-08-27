@@ -3,8 +3,9 @@ using OpenAI;
 using OpenAI.Embeddings;
 using System.ClientModel;
 
-const string endpoint = "<%= endpoint %>";
-const string deploymentName = "<some-deployment-name>";
+const string endpoint = "<%= openai_v1_endpoint %>";
+const string deploymentName = "<%= deploymentName %>";
+
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
     "https://cognitiveservices.azure.com/.default");
@@ -12,7 +13,8 @@ OpenAIClient client = new(
     authenticationPolicy: tokenPolicy,
     options: new OpenAIClientOptions()
     {
-        Endpoint = new($"{endpoint}/openai/v1/"),
+        Endpoint = new Uri(endpoint),
+        TokenProvider = new DefaultAzureCredential(),
     });
 EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
 

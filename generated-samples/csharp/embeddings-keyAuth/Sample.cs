@@ -3,16 +3,16 @@ using OpenAI;
 using OpenAI.Embeddings;
 using System.ClientModel;
 
-const string endpoint = "<%= endpoint %>";
-const string apiKey = "<%= apiKey %>";
-const string deploymentName = "<some-deployment-name>";
+const string endpoint = "<%= openai_v1_endpoint %>";
+const string apiKey = "<your-api-key>";
+const string deploymentName = "<%= deploymentName %>";
+
  
 OpenAIClient client = new(
     new ApiKeyCredential(apiKey),
     new OpenAIClientOptions()
     {
-        Endpoint = new($"{endpoint}/openai/v1/"),
-        TokenProvider = new DefaultAzureCredential(),
+        Endpoint = new Uri(endpoint),
     });
 EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
 
