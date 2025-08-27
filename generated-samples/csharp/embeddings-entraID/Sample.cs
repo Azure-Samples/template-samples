@@ -1,18 +1,10 @@
-<% if (useTokenCredentials) { %>
 using Azure.Identity; 
-<%} else { %>using Azure; 
-<% } %>
 using OpenAI;
 using OpenAI.Embeddings;
 using System.ClientModel;
 
-<%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
-<%if (useTokenCredentials) { %>
-<% } else { %>
-<%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
-<% } %>
-<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
-<% if (useTokenCredentials) { %>
+const string endpoint = "<%= endpoint %>";
+const string deploymentName = "<some-deployment-name>";
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
     "https://cognitiveservices.azure.com/.default");
@@ -22,15 +14,7 @@ OpenAIClient client = new(
     {
         Endpoint = new($"{endpoint}/openai/v1/"),
     });
-<% } else { %> 
-OpenAIClient client = new(
-    new ApiKeyCredential(apiKey),
-    new OpenAIClientOptions()
-    {
-        Endpoint = new($"{endpoint}/openai/v1/"),
-        TokenProvider = new DefaultAzureCredential(),
-    });
-<% } %>EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
+EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
 
 ClientResult<OpenAIEmbedding> embeddingResult = embeddingClient.GenerateEmbedding("The quick brown fox jumped over the lazy dog");
 

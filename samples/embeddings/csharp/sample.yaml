@@ -3,8 +3,6 @@ type: csharp
 dependencies:
   - name: OpenAI
     version: 2.1.0
-  - name: Azure.AI.OpenAI
-    version: 2.1.0
   - name: Azure.Identity
     version: 1.14.0
 input:
