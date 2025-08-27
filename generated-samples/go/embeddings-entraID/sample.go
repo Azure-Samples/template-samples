@@ -1,24 +1,20 @@
 package main
 
-<%= go.includes(
-	"context",
-	"fmt",
-	"log",
-	"os",
-	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
-	"github.com/openai/openai-go/v2",
-	"github.com/openai/openai-go/v2/azure",
-	"github.com/openai/openai-go/v2/option",
-) %>
+import (
+	"context"
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
+	"github.com/openai/openai-go/v2"
+	"github.com/openai/openai-go/v2/option"
+)
 
 func main() {
-	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
-	<%	if (!useTokenCredentials) { %>
-	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
-	<% } %>
-	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+	const endpoint = "<%= endpoint %>"
+	const deploymentName = "<some-deployment-name>"
 
-	<% if (useTokenCredentials) { %>
 	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
 		fmt.Println("Error creating credential:", err)
@@ -28,12 +24,6 @@ func main() {
 		option.WithBaseURL(endpoint),
 		option.WithTokenCredential(token_credential),
 	)
-	<% } else { %>
-	client := openai.NewClient(
-		option.WithBaseURL(endpoint),
-		option.WithAPIKey(apiKey),
-	)
-	<% } %>
 
 	inputText := "The quick brown fox jumped over the lazy dog"
 
