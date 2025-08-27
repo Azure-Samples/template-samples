@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { DefaultAzureCredential } from "@azure/identity";
+import { getBearerTokenProvider, DefaultAzureCredential } from "@azure/identity";
 
 const endpoint = "<%= openai_v1_endpoint %>";
 const deployment_name = "<%= deploymentName %>";
