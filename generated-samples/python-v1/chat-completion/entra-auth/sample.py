@@ -6,7 +6,7 @@ deployment_name = "<%= deploymentName %>"
 token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
 
 client = OpenAI(
-    base_url=f"https://{endpoint}/openai/v1",
+    base_url=endpoint,
     api_key_provider=token_provider
 )
 

@@ -7,7 +7,6 @@ import (
 	"os"
 
 	"github.com/openai/openai-go/v2"
-	"github.com/openai/openai-go/v2/azure"
 	"github.com/openai/openai-go/v2/option"
 )
 
@@ -16,10 +15,10 @@ func main() {
 	const apiKey = "{your-api-key}"
 	const deploymentName = "<%= deploymentName %>"
 
-		client := openai.NewClient(
+	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
 		option.WithAPIKey(apiKey),
-		)
+	)
 
 	resp, err := client.Chat.Completions.New(context.TODO(), openai.ChatCompletionNewParams{
 		Model: openai.ChatModel(deploymentName),

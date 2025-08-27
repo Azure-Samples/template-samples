@@ -57,7 +57,7 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: "{your-api-key}"
+          apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
 - templatePath: ./chat-completion/go-v1/
   variants:
@@ -74,7 +74,7 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: "{your-api-key}"
+          apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
 # - templatePath: ./chat-completion/js-v1/
 #   variants:
@@ -91,7 +91,7 @@ samples:
 #         properties:
 #           useTokenCredentials: false
 #           endpoint: <%= openai_v1_endpoint %>
-#           apiKey: "{your-api-key}"
+#           apiKey: <your-api-key>
 #           deploymentName: <%= deploymentName %>
 - templatePath: ./image-generation/python-v1/
   variants:
@@ -108,7 +108,7 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: "{your-api-key}"
+          apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
 - templatePath: ./image-generation/csharp-v1/
   variants:
@@ -125,7 +125,7 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: "{your-api-key}"
+          apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
 - templatePath: ./image-generation/java-v1/
   variants:
@@ -142,7 +142,7 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: "{your-api-key}"
+          apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
 - templatePath: ./image-generation/go-v1/
   variants:
@@ -159,5 +159,5 @@ samples:
         properties:
           useTokenCredentials: false
           endpoint: <%= openai_v1_endpoint %>
-          apiKey: "{your-api-key}"
+          apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>

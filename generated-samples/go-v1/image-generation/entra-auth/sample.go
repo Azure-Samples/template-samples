@@ -27,7 +27,7 @@ func main() {
 	)
 	
 	// Image URL
-	image, err := client.Images.Generate(ctx, openai.ImageGenerateParams{
+	image, err := client.Images.Generate(context.Background(), openai.ImageGenerateParams{
 		Prompt:         "A cute baby polar bear",
 		Model:          deploymentName,
 		ResponseFormat: openai.ImageGenerateParamsResponseFormatURL,

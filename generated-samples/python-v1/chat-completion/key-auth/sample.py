@@ -5,7 +5,7 @@ deployment_name = "<%= deploymentName %>"
 api_key = "<your-api-key>"
 
 client = OpenAI(
-    base_url=f"https://{endpoint}/openai/v1",
+    base_url=endpoint,
     api_key=api_key
 )
 

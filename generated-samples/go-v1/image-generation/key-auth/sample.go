@@ -16,11 +16,11 @@ func main() {
 	const apiKey = "{your-api-key}"
 	const deploymentName = "<%= deploymentName %>"
 
-		client := openai.NewClient(
+	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
 		option.WithAPIKey(apiKey),
-		)
-	
+	)
+
 	// Image URL
 	image, err := client.Images.Generate(ctx, openai.ImageGenerateParams{
 		Prompt:         "A cute baby polar bear",
