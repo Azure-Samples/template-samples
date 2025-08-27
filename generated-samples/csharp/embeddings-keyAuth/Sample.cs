@@ -12,7 +12,7 @@ OpenAIClient client = new(
     new ApiKeyCredential(apiKey),
     new OpenAIClientOptions()
     {
-        Endpoint = new Uri(endpoint),
+        Endpoint = new Uri(endpoint)
     });
 EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
 

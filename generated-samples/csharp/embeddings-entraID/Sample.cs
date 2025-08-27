@@ -2,6 +2,9 @@ using Azure.Identity;
 using OpenAI;
 using OpenAI.Embeddings;
 using System.ClientModel;
+using System.ClientModel.Primitives;
+
+#pragma warning disable OPENAI001
 
 const string endpoint = "<%= openai_v1_endpoint %>";
 const string deploymentName = "<%= deploymentName %>";
@@ -13,8 +16,7 @@ OpenAIClient client = new(
     authenticationPolicy: tokenPolicy,
     options: new OpenAIClientOptions()
     {
-        Endpoint = new Uri(endpoint),
-        TokenProvider = new DefaultAzureCredential(),
+        Endpoint = new Uri(endpoint)
     });
 EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
 

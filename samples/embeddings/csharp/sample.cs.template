@@ -5,6 +5,11 @@ using Azure.Identity;
 using OpenAI;
 using OpenAI.Embeddings;
 using System.ClientModel;
+<% if (useTokenCredentials) { %>
+using System.ClientModel.Primitives;
+
+#pragma warning disable OPENAI001
+<% } %>
 
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
 <%if (useTokenCredentials) { %>
@@ -21,15 +26,14 @@ OpenAIClient client = new(
     authenticationPolicy: tokenPolicy,
     options: new OpenAIClientOptions()
     {
-        Endpoint = new Uri(endpoint),
-        TokenProvider = new DefaultAzureCredential(),
+        Endpoint = new Uri(endpoint)
     });
 <% } else { %> 
 OpenAIClient client = new(
     new ApiKeyCredential(apiKey),
     new OpenAIClientOptions()
     {
-        Endpoint = new Uri(endpoint),
+        Endpoint = new Uri(endpoint)
     });
 <% } %>EmbeddingClient embeddingClient = client.GetEmbeddingClient(deploymentName);
 
