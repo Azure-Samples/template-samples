@@ -26,7 +26,7 @@ func main() {
 	}
 	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
-		option.WithTokenCredential(token_credential),
+		azure.WithTokenCredential(token_credential),
 	)
 	<% } else { %>
 	client := openai.NewClient(

@@ -8,6 +8,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/openai/openai-go/v2"
+	"github.com/openai/openai-go/v2/azure"
 	"github.com/openai/openai-go/v2/option"
 )
 
@@ -22,7 +23,7 @@ func main() {
 	}
 	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
-		option.WithTokenCredential(token_credential),
+		azure.WithTokenCredential(token_credential),
 	)
 
 	inputText := "The quick brown fox jumped over the lazy dog"
