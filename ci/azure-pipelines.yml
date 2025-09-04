@@ -164,7 +164,7 @@ stages:
       displayName: 'Publish Csharp samples to feed'
       inputs:
         command: publish
-        publishDirectory: './generated-samples/csharp
+        publishDirectory: './generated-samples/csharp'
         feedsToUse: 'internal'
         vstsFeedPublish: '$(Project)/$(samples-feed)'
         vstsFeedPackagePublish: 'csharp-samples'
@@ -285,7 +285,7 @@ stages:
       displayName: 'Publish Java samples to feed'
       inputs:
         command: publish
-        publishDirectory: './generated-samples/java
+        publishDirectory: './generated-samples/java'
         feedsToUse: 'internal'
         vstsFeedPublish: '$(Project)/$(samples-feed)'
         vstsFeedPackagePublish: 'java-samples'
