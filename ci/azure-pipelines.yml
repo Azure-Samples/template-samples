@@ -214,6 +214,15 @@ stages:
       condition: always()
 
       # publish the validated samples to an Azure Artifacts feed
+    - task: UniversalPackages@0
+      displayName: 'Publish Csharp samples to feed'
+      inputs:
+        command: publish
+        publishDirectory: './generated-samples/csharp
+        feedsToUse: 'internal'
+        vstsFeedPublish: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'csharp-samples'
+        versionOption: 'patch'
 
   - job: ValidatePython
     displayName: 'Validate Python Samples'
@@ -349,3 +358,12 @@ stages:
       condition: always()
 
       # publish the validated samples to an Azure Artifacts feed
+    - task: UniversalPackages@0
+      displayName: 'Publish Java samples to feed'
+      inputs:
+        command: publish
+        publishDirectory: './generated-samples/java
+        feedsToUse: 'internal'
+        vstsFeedPublish: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'java-samples'
+        versionOption: 'patch'
