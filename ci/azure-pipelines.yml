@@ -117,8 +117,8 @@ stages:
         # Ensure we have the main branch reference
         git fetch origin main:main || git fetch origin main
         
-        # Get changed sample directories (use main instead of origin/main)
-        (git diff --name-only main HEAD; git ls-files --others --exclude-standard) | grep "^generated-samples/" | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        # Get changed sample directories (compare working tree to main, not HEAD to main)
+        (git diff --name-only main; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-4 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
         echo "Changed sample directories:"
         cat changed_samples.txt
 

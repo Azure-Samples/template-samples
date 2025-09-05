@@ -28,7 +28,7 @@ samples:
           deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
 - templatePath: ./chat-completion-no-streaming/python
   variants:
-    - output: ../generated-samples/python/chat-completion-no-streaming
+    - output: ../generated-samples/python/chat-completion-no-streaming/basic
       input:
         type: object
         properties:
