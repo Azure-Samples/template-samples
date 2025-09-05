@@ -31,12 +31,6 @@ variables:
     value: '9.x'
   - name: TEMPLATE_CONFIG_INPUT
     value: ${{ parameters.templateConfigInput }}
-    # currently no-op, need to create an ADO variable
-  - name: MAKE_SERVICE_CALLS
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-        value: true
-    ${{ else }}:
-        value: false
 
 stages:
 - stage: ValidateSamples
@@ -206,7 +200,7 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt" $(MAKE_SERVICE_CALLS)
+        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt" $(VALIDATE_WITH_SERVICE)
       displayName: 'Validate C# samples'
 
     - script: |
@@ -267,7 +261,7 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(MAKE_SERVICE_CALLS)
+        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(VALIDATE_WITH_SERVICE)
       displayName: 'Validate Python samples'
 
     - script: |
@@ -341,7 +335,7 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt" $(MAKE_SERVICE_CALLS)
+        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt" $(VALIDATE_WITH_SERVICE)
       displayName: 'Validate Java samples'
 
     - script: |
