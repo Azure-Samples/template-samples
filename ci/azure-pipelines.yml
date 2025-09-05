@@ -6,14 +6,6 @@ trigger:
     include:
     - generated-samples/**
 
-schedules:
-- cron: "0 2 * * 0"  # Run every Sunday at 2 AM UTC
-  displayName: Weekly Service Calls Validation
-  branches:
-    include:
-    - main
-  always: true
-
 pr:
   branches:
     include:
@@ -23,6 +15,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 parameters:
+  # this parameter allows selecting different input data files for generating samples,
+  # selection happens as a dropdown in the ADO UI
   - name: templateConfigInput
     displayName: 'Template Configuration Input File'
     type: string
@@ -37,6 +31,7 @@ variables:
     value: '9.x'
   - name: TEMPLATE_CONFIG_INPUT
     value: ${{ parameters.templateConfigInput }}
+    # currently no-op, need to create an ADO variable
   - name: MAKE_SERVICE_CALLS
     ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
         value: true
