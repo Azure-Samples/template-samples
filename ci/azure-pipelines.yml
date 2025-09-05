@@ -118,7 +118,7 @@ stages:
         git fetch origin main:main || git fetch origin main
         
         # Get changed sample directories (use main instead of origin/main)
-        (git diff --name-only main HEAD; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        (git diff --name-only main HEAD; git ls-files --others --exclude-standard) | grep "^generated-samples/" | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
         echo "Changed sample directories:"
         cat changed_samples.txt
 
