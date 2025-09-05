@@ -145,12 +145,12 @@ samples:
       input:
         type: reference
         value: defaultConfiguration
-- templatePath: ./chat-completion-streaming-async/go
-  variants:
-    - output: ../generated-samples/go/chat-completion-streaming-async
-      input:
-        type: reference
-        value: defaultConfiguration
+# - templatePath: ./chat-completion-streaming-async/go
+#   variants:
+#     - output: ../generated-samples/go/chat-completion-streaming-async
+#       input:
+#         type: reference
+#         value: defaultConfiguration
 # - templatePath: ./chat-completion-streaming-async/java
 #   variants:
 #     - output: ../generated-samples/java/chat-completion-streaming-async
@@ -181,12 +181,12 @@ samples:
       input:
         type: reference
         value: defaultConfiguration
-- templatePath: ./chat-completion-streaming/go
-  variants:
-    - output: ../generated-samples/go/chat-completion-streaming
-      input:
-        type: reference
-        value: defaultConfiguration
+# - templatePath: ./chat-completion-streaming/go
+#   variants:
+#     - output: ../generated-samples/go/chat-completion-streaming
+#       input:
+#         type: reference
+#         value: defaultConfiguration
 # - templatePath: ./chat-completion-streaming/java
 #   variants:
 #     - output: ../generated-samples/java/chat-completion-streaming
@@ -277,12 +277,12 @@ samples:
       input:
         type: reference
         value: defaultConfiguration
-- templatePath: ./responses-basic/go
-  variants:
-    - output: ../generated-samples/go/responses-basic
-      input:
-        type: reference
-        value: defaultConfiguration
+# - templatePath: ./responses-basic/go
+#   variants:
+#     - output: ../generated-samples/go/responses-basic
+#       input:
+#         type: reference
+#         value: defaultConfiguration
 # - templatePath: ./responses-basic/java
 #   variants:
 #     - output: ../generated-samples/java/responses-basic
