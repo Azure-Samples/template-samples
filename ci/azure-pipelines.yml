@@ -126,18 +126,22 @@ stages:
         grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
         grep "^generated-samples/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
         grep "^generated-samples/java/" changed_samples.txt > changed_java.txt || touch changed_java.txt
-        
+        grep "^generated-samples/go/" changed_samples.txt > changed_go.txt || touch changed_go.txt
+
         echo "Changed C# samples:"
         cat changed_csharp.txt
         echo "Changed Python samples:"
         cat changed_python.txt
         echo "Changed Java samples:"
         cat changed_java.txt
+        echo "Changed Go samples:"
+        cat changed_go.txt
         
         # Set variables for conditional jobs
         echo "##vso[task.setvariable variable=hasCSharpChanges;isOutput=true]$([ -s changed_csharp.txt ] && echo 'true' || echo 'false')"
         echo "##vso[task.setvariable variable=hasPythonChanges;isOutput=true]$([ -s changed_python.txt ] && echo 'true' || echo 'false')"
         echo "##vso[task.setvariable variable=hasJavaChanges;isOutput=true]$([ -s changed_java.txt ] && echo 'true' || echo 'false')"
+        echo "##vso[task.setvariable variable=hasGoChanges;isOutput=true]$([ -s changed_go.txt ] && echo 'true' || echo 'false')"
 
       displayName: 'Detect changes'
       name: 'detectChanges'
@@ -153,6 +157,10 @@ stages:
     - publish: changed_java.txt
       artifact: ChangedJava
       displayName: 'Publish Java changes'
+
+    - publish: changed_go.txt
+      artifact: ChangedGo
+      displayName: 'Publish Go changes'
 
   - job: ValidateCSharp
     displayName: 'Validate C# Samples'
@@ -366,4 +374,64 @@ stages:
         feedsToUse: 'internal'
         vstsFeedPublish: '$(Project)/$(samples-feed)'
         vstsFeedPackagePublish: 'java-samples'
+        versionOption: 'patch'
+
+  - job: ValidateGo
+    displayName: 'Validate Go Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'], 'true')
+
+    steps:
+    - checkout: self
+    - task: GoTool@0
+      inputs:
+        version: '1.25.1'
+
+    - download: current
+      artifact: ChangedGo
+      displayName: 'Download list of changed Go samples'
+
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
+      displayName: 'Copy generated configurations to workspace'
+
+    - script: |
+        chmod +x scripts/*.sh
+        ./scripts/validate-samples.sh go "$(Pipeline.Workspace)/ChangedGo/changed_go.txt"
+      displayName: 'Validate Go samples'
+
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+
+    - publish: validation-results/
+      artifact: GoResults
+      condition: always()
+
+    - task: UniversalPackages@0
+      displayName: 'Publish Go samples to feed'
+      inputs:
+        command: publish
+        publishDirectory: './generated-samples/go'
+        feedsToUse: 'internal'
+        vstsFeedPublish: '$(Project)/$(samples-feed)'
+        vstsFeedPackagePublish: 'go-samples'
         versionOption: 'patch'
