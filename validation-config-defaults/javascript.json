@@ -8,6 +8,6 @@
     "node *.js"
   ],
   "validateSteps": [
-    "node --check sample.js"
+    "node --check *.js"
   ]
 }
