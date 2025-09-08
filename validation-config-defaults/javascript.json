@@ -1,0 +1,11 @@
+{
+  "language": "javascript",
+  "framework": "node16",
+  "buildSteps": [
+    "npm install"
+  ],
+  "validationLevel": "compile-only",
+  "validateSteps": [
+    "node --check sample.js"
+  ]
+}

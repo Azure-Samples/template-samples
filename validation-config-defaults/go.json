@@ -1,6 +1,5 @@
 {
   "language": "go",
-  "framework": "net9.0",
   "buildSteps": [
     "go mod tidy",
     "go build *.go"
