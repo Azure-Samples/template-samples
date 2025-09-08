@@ -9,7 +9,7 @@ const tokenProvider = getBearerTokenProvider(
     'https://cognitiveservices.azure.com/.default');
 const client = new OpenAI({
     baseURL: endpoint,
-    tokenProvider: async () => { return { token: await tokenProvider(), } }
+    apiKey: tokenProvider
 });
 
 const embedding = await client.embeddings.create({
