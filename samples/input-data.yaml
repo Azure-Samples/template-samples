@@ -225,10 +225,22 @@ samples:
 #   value: defaultConfiguration
 - templatePath: ./embeddings/csharp
   variants:
-    - output: ../generated-samples/csharp/embeddings
+    - output: ../generated-samples/csharp/embeddings-entraID
       input:
-        type: reference
-        value: defaultConfiguration
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= openai_v1_endpoint %>
+          useTokenCredentials: true
+    - output: ../generated-samples/csharp/embeddings-keyAuth
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= openai_v1_endpoint %>
+          useTokenCredentials: false
 - templatePath: ./embeddings/go
   variants:
     - output: ../generated-samples/go/embeddings
