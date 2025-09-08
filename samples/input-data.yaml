@@ -23,6 +23,17 @@ samples:
 #             python_name: max_completion_tokens
 #             csharp_name: MaxOutputTokenCount
 #             value: 2000
+- templatePath: ./chat-completion/javascript
+  variants: 
+    - output: ../generated-samples/javascript/chat-completion
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: <some-deployment-name>
+          useEnvVars: false
+          useTokenCredentials: false
+          apiKey: <%= apiKey %>
 - templatePath: ./audio-transcription-async/csharp
   variants: 
     - output: ../generated-samples/csharp/audio-transcription-async
