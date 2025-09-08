@@ -444,16 +444,15 @@ stages:
         vstsFeedPackagePublish: 'go-samples'
         versionOption: 'patch'
     
-    - job: ValidateJavascript
-      displayName: 'Validate Javascript Samples'
-      dependsOn: 
-      - DetectChanges
-      - PublishConfigs
-      condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'], 'true')
+  - job: ValidateJavascript
+    displayName: 'Validate Javascript Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'], 'true')
 
     steps:
     - checkout: self
-    #TODO: Update Node version as needed
     - task: NodeTool@0
       inputs:
         versionSource: 'spec'
