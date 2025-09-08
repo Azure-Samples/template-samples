@@ -1,0 +1,13 @@
+{
+  "language": "javascript",
+  "framework": "node16",
+  "preBuildSteps": [
+    "npm install"
+  ],
+  "executeSteps": [
+    "node *.js"
+  ],
+  "validateSteps": [
+    "node --check *.js"
+  ]
+}
