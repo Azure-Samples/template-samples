@@ -1,0 +1,10 @@
+{
+  "language": "typescript",
+  "preBuildSteps": [
+    "npm install"
+  ],
+  "validateSteps": [
+    "npx tsc -p ../../../validation-config-defaults/tsconfig.json *.ts"
+  ],
+  "dependencyUpdateCommand": "npm outdated"
+}
