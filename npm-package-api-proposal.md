@@ -31,6 +31,36 @@ Our samples are organized by:
 ### Core Interfaces
 
 ```typescript
+// Discovery filter interfaces - each method gets focused, extensible filters
+interface ScenarioFilters {
+  sdk?: string;               // 'openai', 'projects'
+  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
+}
+
+interface LanguageFilters {
+  scenario?: string;          // 'chat-completion', 'embeddings', 'responses-basic', etc.
+  sdk?: string;               // 'openai', 'projects'
+  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
+}
+
+interface ApiFilters {
+  sdk?: string;               // 'openai', 'projects'
+}
+
+interface AuthTypeFilters {
+  scenario?: string;          // 'chat-completion', 'embeddings', 'responses-basic', etc.
+  language?: string;          // 'csharp', 'python', 'java', 'go', 'javascript'
+  sdk?: string;               // 'openai', 'projects'
+  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
+}
+
+interface CapabilityFilters {
+  scenario?: string;          // 'chat-completion', 'embeddings', 'responses-basic', etc.
+  sdk?: string;               // 'openai', 'projects'
+  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
+}
+
+// Sample query interface for finding/retrieving samples
 interface SampleQuery {
   scenario?: string;           // 'chat-completion', 'embeddings', 'responses-basic', etc.
   language?: string;          // 'csharp', 'python', 'java', 'go', 'javascript'
@@ -40,7 +70,6 @@ interface SampleQuery {
   apiStyle?: string;          // 'sync', 'async'
   modelCapabilities?: string[]; // 'reasoning', 'tool-calling', 'streaming', 'vision'
   modelFamily?: string;       // 'gpt-4', 'o1-mini', etc.
-  [key: string]: any;         // Future extensibility
 }
 
 interface SampleMetadata {
@@ -77,13 +106,13 @@ interface SampleContent {
 
 ```typescript
 export class SdkSamples {
-  // Discovery methods - explore what's available
-  static getAvailableScenarios(sdk?: string, api?: string): string[];
-  static getAvailableLanguages(scenario?: string, sdk?: string, api?: string): string[];
-  static getAvailableApis(sdk?: string): string[];
-  static getAvailableAuthTypes(scenario?: string, language?: string, sdk?: string, api?: string): string[];
-  static getAvailableCapabilities(scenario?: string, sdk?: string, api?: string): string[];
+  // Discovery methods - explore what's available with focused, extensible filters
   static getAvailableSDKs(): string[];
+  static getAvailableScenarios(filters: ScenarioFilters = {}): string[];
+  static getAvailableLanguages(filters: LanguageFilters = {}): string[];
+  static getAvailableApis(filters: ApiFilters = {}): string[];
+  static getAvailableAuthTypes(filters: AuthTypeFilters = {}): string[];
+  static getAvailableCapabilities(filters: CapabilityFilters = {}): string[];
   
   // Core query methods - retrieve samples
   static findSamples(query: Partial<SampleQuery>): SampleMetadata[];
@@ -101,24 +130,38 @@ export class SdkSamples {
 const sdks = SdkSamples.getAvailableSDKs();
 // ['openai']
 
-// What API types does OpenAI SDK support?
-const apiTypes = SdkSamples.getAvailableApis('openai');
+// What APIs do the OpenAI SDK samples support?
+const openaiApis = SdkSamples.getAvailableApis({ sdk: 'openai' });
 // ['completions', 'responses', 'embeddings', 'images', 'audio']
 
 // What scenarios does the Completions API support?
-const completionsScenarios = SdkSamples.getAvailableScenarios('openai', 'completions');
+const completionsScenarios = SdkSamples.getAvailableScenarios({ 
+  sdk: 'openai', 
+  api: 'completions' 
+});
 // ['chat-completion', 'chat-completion-streaming', 'chat-completion-conversation']
 
 // What scenarios does the Responses API support?
-const responsesScenarios = SdkSamples.getAvailableScenarios('openai', 'responses');
+const responsesScenarios = SdkSamples.getAvailableScenarios({ 
+  sdk: 'openai', 
+  api: 'responses' 
+});
 // ['responses-basic', 'responses-streaming', 'responses-conversation', 'responses-image-input']
 
 // What model capabilities are available for chat completion?
-const capabilities = SdkSamples.getAvailableCapabilities('chat-completion', 'openai', 'completions');
+const capabilities = SdkSamples.getAvailableCapabilities({
+  scenario: 'chat-completion',
+  sdk: 'openai',
+  api: 'completions'
+});
 // ['reasoning', 'tool-calling', 'streaming', 'vision', 'structured-outputs']
 
-// What languages support the responses API?
-const languages = SdkSamples.getAvailableLanguages('responses-basic', 'openai', 'responses');
+// What languages support chat completion with responses API?
+const languages = SdkSamples.getAvailableLanguages({
+  scenario: 'responses-basic',
+  sdk: 'openai',
+  api: 'responses'
+});
 // ['csharp', 'python', 'java', 'go']
 const scenarios = SdkSamples.getAvailableScenarios('openai');
 // ['chat-completion', 'embeddings', 'image-generation', 'audio-transcription']
@@ -180,8 +223,13 @@ Based on the original usage example, here's how it maps to our API:
 // const codeSampleFile = chatCodeSample.getCodeFile(modelName, sdk, apiType, authType, language, capabilities[0]);
 // const requirements = chatCodeSample.getRequirements(modelName, sdk, language, apiType, authType, capabilities[0]);
 
-// New API equivalent:
-const capabilities = SdkSamples.getAvailableCapabilities('chat-completion', 'openai', 'completions');
+// New API equivalent with clear, extensible filters:
+const capabilities = SdkSamples.getAvailableCapabilities({
+  scenario: 'chat-completion',
+  sdk: 'openai',
+  api: 'completions'
+});
+
 const samples = SdkSamples.getSamplesByQuery({
   scenario: 'chat-completion',
   sdk: 'openai',
@@ -189,7 +237,7 @@ const samples = SdkSamples.getSamplesByQuery({
   language: 'csharp',
   authType: 'entra',
   apiStyle: 'async',
-  modelCapabilities: [capabilities[0]]
+  modelCapabilities: capabilities.length > 0 ? [capabilities[0]] : []
 });
 
 const codeSampleFile = samples[0]?.sourceCode;
@@ -264,13 +312,90 @@ const projectsSample = SdkSamples.getSamplesByQuery({
 });
 ```
 
-### New Dimensions
-Future parameters can be added without breaking changes:
+### Extensibility Examples
+The filter-based approach makes future extensions seamless:
+
+#### Adding New Filter Dimensions
 ```typescript
-interface SampleQuery {
-  // ... existing parameters
-  region?: string;          // 'eastus', 'westus2', etc.
-  securityLevel?: string;   // 'basic', 'enterprise', etc.
-  deploymentType?: string;  // 'container', 'serverless', etc.
+// Version 1.0 - Original interface
+interface LanguageFilters {
+  scenario?: string;
+  sdk?: string;
+  api?: string;
 }
+
+// Version 1.1 - Add region and security level support
+interface LanguageFilters {
+  scenario?: string;
+  sdk?: string;
+  api?: string;
+  region?: string;          // ← New field, existing calls unaffected
+  securityLevel?: string;   // ← Another new field
+}
+
+// All existing partner team code continues working unchanged:
+const languages = SdkSamples.getAvailableLanguages({ 
+  scenario: 'chat-completion', 
+  sdk: 'openai' 
+});
+
+// New capabilities become available naturally:
+const enterpriseLanguages = SdkSamples.getAvailableLanguages({
+  scenario: 'chat-completion',
+  sdk: 'openai',
+  region: 'eastus',         // ← New usage
+  securityLevel: 'enterprise' // ← New usage
+});
 ```
+
+#### Adding New Sample Types
+```typescript
+// When Projects SDK is added, no API changes needed:
+const projectsScenarios = SdkSamples.getAvailableScenarios({ sdk: 'projects' });
+const projectsLanguages = SdkSamples.getAvailableLanguages({ 
+  sdk: 'projects',
+  scenario: 'model-deployment' 
+});
+
+// Partner teams can immediately use new SDKs/scenarios without API updates
+```
+
+## API Design Rationale
+
+### Why Filter Objects Over Positional Parameters?
+
+This API design uses filter objects (e.g., `{ scenario: 'chat-completion', sdk: 'openai' }`) instead of positional parameters for several key reasons:
+
+#### ✅ **Extensibility Without Breaking Changes**
+```typescript
+// Adding new filter dimensions is seamless:
+// Version 1.0: getAvailableLanguages({ scenario: 'chat-completion' })
+// Version 1.1: getAvailableLanguages({ scenario: 'chat-completion', region: 'eastus' })
+// ↳ Existing code continues working unchanged
+```
+
+#### ✅ **Partner Team Developer Experience** 
+```typescript
+// Self-documenting and flexible parameter usage:
+SdkSamples.getAvailableLanguages({ 
+  scenario: 'chat-completion',
+  api: 'completions' 
+  // ↳ Clear intent, can skip irrelevant parameters
+});
+```
+
+#### ✅ **Maintainer Burden Minimization**
+- Small consumer base (1-3 teams) makes coordination feasible
+- Method-specific filter interfaces prevent parameter proliferation
+- TypeScript provides compile-time safety for interface changes
+
+### Alternative Considered: Faceted Search
+
+A "flat" faceted approach was considered but seemed over-engineered for our context:
+- **Small consumer base**: Don't need the flexibility for unknown use cases  
+- **Infrequent updates**: Don't need to optimize for constant taxonomy changes
+- **Known requirements**: Can design for specific partner team needs
+
+The chosen approach optimizes for partner team productivity while maintaining reasonable maintainer burden.
+
+
