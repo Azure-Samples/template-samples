@@ -40,35 +40,18 @@ const sdks = SdkSamples.getAvailableSDKs();
 // Returns: ['openai', 'projects']
 ```
 
-#### `getAvailableScenarios(filters)`
-Returns scenarios available for the given SDK and/or API.
-
-```typescript
-interface ScenarioFilters {
-  sdk?: string;     // 'openai', 'projects'
-  api?: string;     // 'completions', 'responses', 'embeddings', 'images', 'audio'
-}
-
-const scenarios = SdkSamples.getAvailableScenarios({ 
-  sdk: 'openai', 
-  api: 'completions' 
-});
-// Returns: ['chat-completion', 'chat-completion-streaming', 'chat-completion-conversation', ...]
-```
-
 #### `getAvailableLanguages(filters)`
-Returns programming languages available for the given scenario/SDK/API combination.
+Returns programming languages available for the given SDK/API combination.
 
 ```typescript
 interface LanguageFilters {
-  scenario?: string;  // 'chat-completion', 'embeddings', etc.
   sdk?: string;       // 'openai', 'projects'
   api?: string;       // 'completions', 'responses', etc.
 }
 
 const languages = SdkSamples.getAvailableLanguages({
-  scenario: 'chat-completion',
-  sdk: 'openai'
+  sdk: 'openai',
+  api: 'completions'
 });
 // Returns: ['csharp', 'python', 'java', 'go', 'javascript']
 ```
@@ -90,7 +73,6 @@ Returns authentication types available for the given combination.
 
 ```typescript
 interface AuthTypeFilters {
-  scenario?: string;  // 'chat-completion', etc.
   language?: string;  // 'csharp', 'python', etc.
   sdk?: string;       // 'openai', 'projects'
   api?: string;       // 'completions', 'responses', etc.
@@ -109,7 +91,6 @@ Returns model capabilities available for the given combination.
 
 ```typescript
 interface CapabilityFilters {
-  scenario?: string;  // 'chat-completion', etc.
   sdk?: string;       // 'openai', 'projects'
   api?: string;       // 'completions', 'responses', etc.
 }
@@ -123,6 +104,44 @@ const capabilities = SdkSamples.getAvailableCapabilities({
 
 ---
 
+### Model Capabilities Methods
+
+#### `getAvailableModels(filters)`
+Returns available models for the given SDK and/or API.
+
+```typescript
+interface ModelFilters {
+  sdk?: string;       // 'openai', 'projects'
+  api?: string;       // 'completions', 'responses', etc.
+}
+
+const models = SdkSamples.getAvailableModels({
+  sdk: 'openai',
+  api: 'completions'
+});
+// Returns: ['gpt-4', 'gpt-4o', 'o1-mini', 'gpt-3.5-turbo']
+```
+
+#### `getModelCapabilities(modelName)`
+Returns detailed capabilities information for a specific model.
+
+```typescript
+const modelInfo = SdkSamples.getModelCapabilities('gpt-4');
+// Returns: ModelCapabilities object with capabilities, supported APIs, etc.
+```
+
+#### `getModelsWithCapability(capability, filters)`
+Returns models that support a specific capability.
+
+```typescript
+const visionModels = SdkSamples.getModelsWithCapability('vision', {
+  sdk: 'openai'
+});
+// Returns: ['gpt-4', 'gpt-4o']
+```
+
+---
+
 ### Query Methods
 
 #### `findSamples(query)`
@@ -130,7 +149,6 @@ Returns sample metadata matching the query criteria.
 
 ```typescript
 interface SampleQuery {
-  scenario?: string;           // 'chat-completion', etc.
   language?: string;          // 'csharp', 'python', etc.
   sdk?: string;               // 'openai', 'projects'
   api?: string;               // 'completions', 'responses', etc.
@@ -141,7 +159,7 @@ interface SampleQuery {
 }
 
 const samples = SdkSamples.findSamples({
-  scenario: 'chat-completion',
+  api: 'completions',
   language: 'csharp',
   authType: 'entra'
 });
@@ -177,7 +195,6 @@ Core information about a code sample.
 ```typescript
 interface SampleMetadata {
   id: string;                    // Unique identifier
-  scenario: string;              // Use case scenario
   language: string;              // Programming language
   sdk: string;                   // SDK type
   api: string;                   // API category
@@ -215,6 +232,21 @@ interface Dependency {
 }
 ```
 
+### `ModelCapabilities`
+Model capabilities and metadata information.
+
+```typescript
+interface ModelCapabilities {
+  modelName: string;          // Model identifier
+  sdk: string;                // SDK that provides this model
+  supportedApis: string[];    // APIs this model supports
+  capabilities: string[];     // Model capabilities
+  description?: string;       // Human-readable description
+  deprecated?: boolean;       // Whether model is deprecated
+  contextWindow?: number;     // Token context window size
+}
+```
+
 ---
 
 ## Usage Patterns
@@ -229,25 +261,24 @@ const sdks = SdkSamples.getAvailableSDKs();
 // Step 2: Show APIs for chosen SDK
 const apis = SdkSamples.getAvailableApis({ sdk: selectedSdk });
 
-// Step 3: Show scenarios for SDK + API
-const scenarios = SdkSamples.getAvailableScenarios({ 
-  sdk: selectedSdk, 
-  api: selectedApi 
+// Step 3: Show languages for SDK + API combination
+const languages = SdkSamples.getAvailableLanguages({
+  sdk: selectedSdk,
+  api: selectedApi
 });
 
-// Step 4: Show languages for the combination
-const languages = SdkSamples.getAvailableLanguages({
-  scenario: selectedScenario,
+// Step 4: Show capabilities for the combination
+const capabilities = SdkSamples.getAvailableCapabilities({
   sdk: selectedSdk,
   api: selectedApi
 });
 
 // Step 5: Get the actual samples
 const samples = SdkSamples.getSamplesByQuery({
-  scenario: selectedScenario,
   language: selectedLanguage,
   sdk: selectedSdk,
-  api: selectedApi
+  api: selectedApi,
+  modelCapabilities: selectedCapabilities
 });
 ```
 
@@ -286,6 +317,31 @@ const toolCallingSamples = SdkSamples.findSamples({
 const advancedSamples = SdkSamples.findSamples({
   modelCapabilities: ['streaming', 'vision']
 });
+```
+
+### 4. **Model-Aware Sample Discovery**
+Choose appropriate samples based on model capabilities.
+
+```typescript
+// Step 1: Find models that support vision
+const visionModels = SdkSamples.getModelsWithCapability('vision');
+// ['gpt-4', 'gpt-4o']
+
+// Step 2: Get detailed capabilities for a specific model
+const modelInfo = SdkSamples.getModelCapabilities('gpt-4');
+console.log('GPT-4 capabilities:', modelInfo.capabilities);
+// ['reasoning', 'tool-calling', 'streaming', 'vision', 'structured-outputs']
+
+// Step 3: Find samples that match the model's capabilities
+const matchingSamples = SdkSamples.findSamples({
+  sdk: 'openai',
+  api: 'completions',
+  language: 'python',
+  modelCapabilities: ['vision', 'streaming'] // Use model's capabilities
+});
+
+// Step 4: Use the model with compatible samples
+console.log(`Found ${matchingSamples.length} samples compatible with GPT-4`);
 ```
 
 ---

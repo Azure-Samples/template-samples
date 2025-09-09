@@ -3,59 +3,21 @@ import {
   SampleMetadata, 
   SampleContent, 
   Dependency,
-  ScenarioFilters,
   LanguageFilters,
   ApiFilters,
   AuthTypeFilters,
-  CapabilityFilters
+  CapabilityFilters,
+  ModelFilters,
+  ModelCapabilities
 } from './types';
 
 // In-memory sample metadata store (will be populated from file system scan)
 let sampleMetadataIndex: SampleMetadata[] = [];
 
-/**
- * Parse scenario information from folder path
- */
-function parseScenarioInfo(folderPath: string): {
-  scenario: string;
-  api: string;
-  apiStyle: string;
-  modelCapabilities: string[];
-} {
-  // Extract folder name from path
-  const folderName = folderPath.split('/').pop() || folderPath;
-  
-  // Determine API type from scenario name
-  let api = 'completions'; // default
-  if (folderName.startsWith('responses-')) {
-    api = 'responses';
-  } else if (folderName.startsWith('embeddings')) {
-    api = 'embeddings';
-  } else if (folderName.startsWith('image-generation')) {
-    api = 'images';
-  } else if (folderName.startsWith('audio-transcription')) {
-    api = 'audio';
-  }
+// In-memory model capabilities store
+let modelCapabilitiesIndex: ModelCapabilities[] = [];
 
-  // Determine API style
-  const apiStyle = folderName.includes('-async') ? 'async' : 'sync';
 
-  // Extract model capabilities
-  const modelCapabilities: string[] = [];
-  if (folderName.includes('streaming')) modelCapabilities.push('streaming');
-  if (folderName.includes('conversation')) modelCapabilities.push('conversation');
-  if (folderName.includes('vision') || folderName.includes('image')) modelCapabilities.push('vision');
-  if (folderName.includes('structured-outputs')) modelCapabilities.push('structured-outputs');
-  if (folderName.includes('tool-calling')) modelCapabilities.push('tool-calling');
-  if (folderName.includes('reasoning')) modelCapabilities.push('reasoning');
-
-  return {
-    scenario: folderName,
-    api,
-    apiStyle,
-    modelCapabilities
-  };
-}
 
 /**
  * Determine SDK from folder structure
@@ -92,7 +54,6 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
   const mockSamples: SampleMetadata[] = [
     {
       id: 'go-chat-completion-openai-completions-key-sync',
-      scenario: 'chat-completion',
       language: 'go',
       sdk: 'openai',
       api: 'completions',
@@ -108,7 +69,6 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
     },
     {
       id: 'go-chat-completion-async-openai-completions-key-async',
-      scenario: 'chat-completion',
       language: 'go',
       sdk: 'openai',
       api: 'completions',
@@ -124,7 +84,6 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
     },
     {
       id: 'go-chat-completion-streaming-openai-completions-key-sync',
-      scenario: 'chat-completion-streaming',
       language: 'go',
       sdk: 'openai',
       api: 'completions',
@@ -140,7 +99,6 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
     },
     {
       id: 'go-responses-basic-openai-responses-key-sync',
-      scenario: 'responses-basic',
       language: 'go',
       sdk: 'openai',
       api: 'responses',
@@ -156,7 +114,6 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
     },
     {
       id: 'go-embeddings-openai-embeddings-key-sync',
-      scenario: 'embeddings',
       language: 'go',
       sdk: 'openai',
       api: 'embeddings',
@@ -172,7 +129,6 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
     },
     {
       id: 'csharp-chat-completion-openai-completions-entra-sync',
-      scenario: 'chat-completion',
       language: 'csharp',
       sdk: 'openai',
       api: 'completions',
@@ -193,11 +149,81 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
 }
 
 /**
+ * Generate model capabilities data
+ * This would typically be populated from a models registry or configuration
+ */
+function generateModelCapabilities(): ModelCapabilities[] {
+  const mockModels: ModelCapabilities[] = [
+    {
+      modelName: 'gpt-4',
+      sdk: 'openai',
+      supportedApis: ['completions', 'responses'],
+      capabilities: ['reasoning', 'tool-calling', 'streaming', 'vision', 'structured-outputs'],
+      description: 'Most capable GPT-4 model with vision and advanced reasoning',
+      contextWindow: 128000
+    },
+    {
+      modelName: 'gpt-4o',
+      sdk: 'openai',
+      supportedApis: ['completions', 'responses'],
+      capabilities: ['reasoning', 'tool-calling', 'streaming', 'vision', 'structured-outputs'],
+      description: 'GPT-4 Optimized for better performance and lower cost',
+      contextWindow: 128000
+    },
+    {
+      modelName: 'o1-mini',
+      sdk: 'openai',
+      supportedApis: ['completions'],
+      capabilities: ['reasoning'],
+      description: 'Reasoning-focused model optimized for complex problem solving',
+      contextWindow: 65536
+    },
+    {
+      modelName: 'gpt-3.5-turbo',
+      sdk: 'openai',
+      supportedApis: ['completions'],
+      capabilities: ['tool-calling', 'streaming'],
+      description: 'Fast and efficient model for most chat use cases',
+      contextWindow: 4096
+    },
+    {
+      modelName: 'text-embedding-ada-002',
+      sdk: 'openai',
+      supportedApis: ['embeddings'],
+      capabilities: [],
+      description: 'Most capable embedding model for text similarity and search',
+      contextWindow: 8191
+    },
+    {
+      modelName: 'dall-e-3',
+      sdk: 'openai',
+      supportedApis: ['images'],
+      capabilities: [],
+      description: 'Advanced image generation model',
+      contextWindow: 4000
+    },
+    {
+      modelName: 'whisper-1',
+      sdk: 'openai',
+      supportedApis: ['audio'],
+      capabilities: [],
+      description: 'Speech recognition model for audio transcription',
+      contextWindow: 25000000 // 25MB file limit
+    }
+  ];
+
+  return mockModels;
+}
+
+/**
  * Initialize the metadata index
  */
 function initializeIndex() {
   if (sampleMetadataIndex.length === 0) {
     sampleMetadataIndex = generateSampleMetadata();
+  }
+  if (modelCapabilitiesIndex.length === 0) {
+    modelCapabilitiesIndex = generateModelCapabilities();
   }
 }
 
@@ -207,7 +233,6 @@ function initializeIndex() {
 function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): SampleMetadata[] {
   return samples.filter(sample => {
     // Check each query parameter
-    if (query.scenario && sample.scenario !== query.scenario) return false;
     if (query.language && sample.language !== query.language) return false;
     if (query.sdk && sample.sdk !== query.sdk) return false;
     if (query.api && sample.api !== query.api) return false;
@@ -255,12 +280,12 @@ function loadSampleContent(metadata: SampleMetadata): SampleContent {
   // For now, return mock content
   return {
     metadata,
-    sourceCode: `// ${metadata.description}\n// Sample code for ${metadata.language} ${metadata.scenario}\n// This would contain the actual source code`,
+    sourceCode: `// ${metadata.description}\n// Sample code for ${metadata.language} ${metadata.api} API\n// This would contain the actual source code`,
     projectFile: metadata.language === 'csharp' ? 'Sample.csproj' : 
                 metadata.language === 'python' ? 'requirements.txt' :
                 metadata.language === 'go' ? 'go.mod' : 
                 metadata.language === 'java' ? 'pom.xml' : 'package.json',
-    readme: `# ${metadata.scenario}\n\n${metadata.description}\n\n## Dependencies\n\n${metadata.dependencies.map(d => `- ${d.name}: ${d.version}`).join('\n')}`
+    readme: `# ${metadata.api} API Sample\n\n${metadata.description}\n\n## Dependencies\n\n${metadata.dependencies.map(d => `- ${d.name}: ${d.version}`).join('\n')}`
   };
 }
 
@@ -274,19 +299,9 @@ export class SdkSamples {
     return getUniqueValues(sampleMetadataIndex, 'sdk');
   }
 
-  static getAvailableScenarios(filters: ScenarioFilters = {}): string[] {
-    initializeIndex();
-    const query: Partial<SampleQuery> = {};
-    if (filters.sdk) query.sdk = filters.sdk;
-    if (filters.api) query.api = filters.api;
-    
-    return getUniqueValues(sampleMetadataIndex, 'scenario', query);
-  }
-
   static getAvailableLanguages(filters: LanguageFilters = {}): string[] {
     initializeIndex();
     const query: Partial<SampleQuery> = {};
-    if (filters.scenario) query.scenario = filters.scenario;
     if (filters.sdk) query.sdk = filters.sdk;
     if (filters.api) query.api = filters.api;
     
@@ -304,7 +319,6 @@ export class SdkSamples {
   static getAvailableAuthTypes(filters: AuthTypeFilters = {}): string[] {
     initializeIndex();
     const query: Partial<SampleQuery> = {};
-    if (filters.scenario) query.scenario = filters.scenario;
     if (filters.language) query.language = filters.language;
     if (filters.sdk) query.sdk = filters.sdk;
     if (filters.api) query.api = filters.api;
@@ -315,11 +329,46 @@ export class SdkSamples {
   static getAvailableCapabilities(filters: CapabilityFilters = {}): string[] {
     initializeIndex();
     const query: Partial<SampleQuery> = {};
-    if (filters.scenario) query.scenario = filters.scenario;
     if (filters.sdk) query.sdk = filters.sdk;
     if (filters.api) query.api = filters.api;
     
     return getUniqueValues(sampleMetadataIndex, 'modelCapabilities', query);
+  }
+
+  // Model-related methods
+  static getAvailableModels(filters: ModelFilters = {}): string[] {
+    initializeIndex();
+    let filteredModels = modelCapabilitiesIndex;
+    
+    if (filters.sdk) {
+      filteredModels = filteredModels.filter(model => model.sdk === filters.sdk);
+    }
+    if (filters.api) {
+      filteredModels = filteredModels.filter(model => model.supportedApis.includes(filters.api!));
+    }
+    
+    return filteredModels.map(model => model.modelName).sort();
+  }
+
+  static getModelCapabilities(modelName: string): ModelCapabilities | null {
+    initializeIndex();
+    return modelCapabilitiesIndex.find(model => model.modelName === modelName) || null;
+  }
+
+  static getModelsWithCapability(capability: string, filters: ModelFilters = {}): string[] {
+    initializeIndex();
+    let filteredModels = modelCapabilitiesIndex.filter(model => 
+      model.capabilities.includes(capability)
+    );
+    
+    if (filters.sdk) {
+      filteredModels = filteredModels.filter(model => model.sdk === filters.sdk);
+    }
+    if (filters.api) {
+      filteredModels = filteredModels.filter(model => model.supportedApis.includes(filters.api!));
+    }
+    
+    return filteredModels.map(model => model.modelName).sort();
   }
 
   // Core query methods - retrieve samples

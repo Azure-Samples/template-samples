@@ -1,11 +1,5 @@
 // Filter interfaces for discovery methods - focused and extensible
-export interface ScenarioFilters {
-  sdk?: string;               // 'openai', 'projects'
-  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
-}
-
 export interface LanguageFilters {
-  scenario?: string;          // 'chat-completion', 'embeddings', 'responses-basic', etc.
   sdk?: string;               // 'openai', 'projects'
   api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
 }
@@ -15,21 +9,34 @@ export interface ApiFilters {
 }
 
 export interface AuthTypeFilters {
-  scenario?: string;          // 'chat-completion', 'embeddings', 'responses-basic', etc.
   language?: string;          // 'csharp', 'python', 'java', 'go', 'javascript'
   sdk?: string;               // 'openai', 'projects'
   api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
 }
 
 export interface CapabilityFilters {
-  scenario?: string;          // 'chat-completion', 'embeddings', 'responses-basic', etc.
   sdk?: string;               // 'openai', 'projects'
   api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
 }
 
+// Model-related interfaces
+export interface ModelFilters {
+  sdk?: string;               // 'openai', 'projects'
+  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
+}
+
+export interface ModelCapabilities {
+  modelName: string;          // 'gpt-4', 'gpt-4o', 'o1-mini', 'text-embedding-ada-002', etc.
+  sdk: string;                // 'openai', 'projects'
+  supportedApis: string[];    // APIs this model supports: ['completions', 'responses']
+  capabilities: string[];     // Model capabilities: ['reasoning', 'tool-calling', 'streaming', 'vision']
+  description?: string;       // Human-readable description of the model
+  deprecated?: boolean;       // Whether this model is deprecated
+  contextWindow?: number;     // Token context window size
+}
+
 // Sample query interface for finding/retrieving samples
 export interface SampleQuery {
-  scenario?: string;           // 'chat-completion', 'embeddings', 'responses-basic', etc.
   language?: string;          // 'csharp', 'python', 'java', 'go', 'javascript'
   sdk?: string;               // 'openai', 'projects' (future)
   api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
@@ -41,7 +48,6 @@ export interface SampleQuery {
 
 export interface SampleMetadata {
   id: string;
-  scenario: string;
   language: string;
   sdk: string;
   api: string;

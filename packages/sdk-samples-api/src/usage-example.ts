@@ -6,13 +6,12 @@ import { SdkSamples } from './sdk-samples';
 
 console.log('=== Consumer Usage Example ===\n');
 
-// Step 1: Get available capabilities for chat completion
-const capabilities = SdkSamples.getAvailableCapabilities({ scenario: 'chat-completion', sdk: 'openai', api: 'completions' });
-console.log('Available capabilities for chat completion:', capabilities);
+// Step 1: Get available capabilities for completions API
+const capabilities = SdkSamples.getAvailableCapabilities({ sdk: 'openai', api: 'completions' });
+console.log('Available capabilities for completions API:', capabilities);
 
 // Step 2: Get code sample with the specified criteria
 const samples = SdkSamples.getSamplesByQuery({
-  scenario: 'chat-completion',
   sdk: 'openai',
   api: 'completions', 
   authType: 'entra',
@@ -54,8 +53,8 @@ console.log('\n=== Additional Discovery Examples ===\n');
 // Explore what's available
 console.log('All available SDKs:', SdkSamples.getAvailableSDKs());
 console.log('APIs for OpenAI SDK:', SdkSamples.getAvailableApis({ sdk: 'openai' }));
-console.log('Scenarios for Responses API:', SdkSamples.getAvailableScenarios({ sdk: 'openai', api: 'responses' }));
-console.log('Languages supporting Go:', SdkSamples.getAvailableLanguages({ sdk: 'openai' }));
+console.log('Languages for Responses API:', SdkSamples.getAvailableLanguages({ sdk: 'openai', api: 'responses' }));
+console.log('Languages supporting OpenAI:', SdkSamples.getAvailableLanguages({ sdk: 'openai' }));
 console.log('Available auth types:', SdkSamples.getAvailableAuthTypes());
 
 console.log('\n=== Advanced Query Examples ===\n');
@@ -64,21 +63,21 @@ console.log('\n=== Advanced Query Examples ===\n');
 const asyncSamples = SdkSamples.findSamples({ apiStyle: 'async' });
 console.log(`Found ${asyncSamples.length} async samples:`);
 asyncSamples.forEach(sample => {
-  console.log(`- ${sample.language} ${sample.scenario} (${sample.api})`);
+  console.log(`- ${sample.language} ${sample.api} API (${sample.apiStyle})`);
 });
 
 // Find all streaming samples
 const streamingSamples = SdkSamples.findSamples({ modelCapabilities: ['streaming'] });
 console.log(`\nFound ${streamingSamples.length} streaming samples:`);
 streamingSamples.forEach(sample => {
-  console.log(`- ${sample.language} ${sample.scenario}`);
+  console.log(`- ${sample.language} ${sample.api} API (streaming)`);
 });
 
 // Find responses API samples
 const responsesSamples = SdkSamples.findSamples({ api: 'responses' });
 console.log(`\nFound ${responsesSamples.length} responses API samples:`);
 responsesSamples.forEach(sample => {
-  console.log(`- ${sample.language} ${sample.scenario}`);
+  console.log(`- ${sample.language} ${sample.api} API`);
 });
 
 console.log('\nUsage example completed!');
