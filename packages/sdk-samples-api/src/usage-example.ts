@@ -46,6 +46,8 @@ if (samples.length > 0) {
   console.log(`- Auth Type: ${firstSample.metadata.authType}`);
   console.log(`- API Style: ${firstSample.metadata.apiStyle}`);
   console.log(`- Capabilities: ${firstSample.metadata.modelCapabilities.join(', ') || 'None'}`);
+  console.log(`- API Version: ${firstSample.metadata.apiVersion || 'Not specified'}`);
+  console.log(`- SDK Version: ${firstSample.metadata.sdkVersion || 'Not specified'}`);
 }
 
 console.log('\n=== Additional Discovery Examples ===\n');
@@ -56,6 +58,8 @@ console.log('APIs for OpenAI SDK:', SdkSamples.getAvailableApis({ sdk: 'openai' 
 console.log('Languages for Responses API:', SdkSamples.getAvailableLanguages({ sdk: 'openai', api: 'responses' }));
 console.log('Languages supporting OpenAI:', SdkSamples.getAvailableLanguages({ sdk: 'openai' }));
 console.log('Available auth types:', SdkSamples.getAvailableAuthTypes());
+console.log('Available API versions:', SdkSamples.getAvailableApiVersions({ sdk: 'openai' }));
+console.log('Available SDK versions for C#:', SdkSamples.getAvailableSdkVersions({ language: 'csharp' }));
 
 console.log('\n=== Advanced Query Examples ===\n');
 
@@ -78,6 +82,28 @@ const responsesSamples = SdkSamples.findSamples({ api: 'responses' });
 console.log(`\nFound ${responsesSamples.length} responses API samples:`);
 responsesSamples.forEach(sample => {
   console.log(`- ${sample.language} ${sample.api} API`);
+});
+
+console.log('\n=== Version-Based Discovery Examples ===\n');
+
+// Find samples for specific API version
+const latestApiSamples = SdkSamples.findSamples({ 
+  apiVersion: '2024-06-01',
+  sdk: 'openai' 
+});
+console.log(`Found ${latestApiSamples.length} samples using API version 2024-06-01:`);
+latestApiSamples.forEach(sample => {
+  console.log(`- ${sample.language} ${sample.api} API (v${sample.apiVersion})`);
+});
+
+// Find samples for specific SDK version
+const specificSdkSamples = SdkSamples.findSamples({ 
+  sdkVersion: '2.1.0',
+  language: 'csharp'
+});
+console.log(`\nFound ${specificSdkSamples.length} C# samples using SDK version 2.1.0:`);
+specificSdkSamples.forEach(sample => {
+  console.log(`- ${sample.language} ${sample.api} API (SDK v${sample.sdkVersion})`);
 });
 
 console.log('\nUsage example completed!');

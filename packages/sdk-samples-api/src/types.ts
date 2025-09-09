@@ -19,6 +19,12 @@ export interface CapabilityFilters {
   api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
 }
 
+export interface VersionFilters {
+  sdk?: string;               // 'openai', 'projects'
+  api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
+  language?: string;          // 'csharp', 'python', 'java', 'go', 'javascript'
+}
+
 // Model-related interfaces
 export interface ModelFilters {
   sdk?: string;               // 'openai', 'projects'
@@ -44,6 +50,8 @@ export interface SampleQuery {
   apiStyle?: string;          // 'sync', 'async'
   modelCapabilities?: string[]; // 'reasoning', 'tool-calling', 'streaming', 'vision'
   modelFamily?: string;       // 'gpt-4', 'o1-mini', etc.
+  apiVersion?: string;        // '2024-06-01', '2023-12-01-preview', etc.
+  sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
 }
 
 export interface SampleMetadata {
@@ -58,6 +66,8 @@ export interface SampleMetadata {
   dependencies: Dependency[];
   description: string;
   tags: string[];
+  apiVersion?: string;
+  sdkVersion?: string;
 }
 
 export interface Dependency {

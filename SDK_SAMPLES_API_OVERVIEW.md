@@ -102,6 +102,34 @@ const capabilities = SdkSamples.getAvailableCapabilities({
 // Returns: ['streaming', 'conversation', 'vision', 'structured-outputs', 'tool-calling', 'reasoning']
 ```
 
+#### `getAvailableApiVersions(filters)`
+Returns REST API versions available for the given combination.
+
+```typescript
+interface VersionFilters {
+  sdk?: string;        // 'openai', 'projects'
+  api?: string;        // 'completions', 'responses', etc.
+  language?: string;   // 'csharp', 'python', etc.
+}
+
+const apiVersions = SdkSamples.getAvailableApiVersions({
+  sdk: 'openai',
+  api: 'completions'
+});
+// Returns: ['2024-06-01', '2023-12-01-preview', '2023-10-01-preview']
+```
+
+#### `getAvailableSdkVersions(filters)`
+Returns SDK library versions available for the given combination.
+
+```typescript
+const sdkVersions = SdkSamples.getAvailableSdkVersions({
+  sdk: 'openai',
+  language: 'csharp'
+});
+// Returns: ['2.1.0', '2.0.0', '1.11.0']
+```
+
 ---
 
 ### Model Capabilities Methods
@@ -156,6 +184,8 @@ interface SampleQuery {
   apiStyle?: string;          // 'sync', 'async'
   modelCapabilities?: string[]; // ['streaming', 'vision', etc.]
   modelFamily?: string;       // 'gpt-4', 'o1-mini', etc.
+  apiVersion?: string;        // '2024-06-01', '2023-12-01-preview', etc.
+  sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
 }
 
 const samples = SdkSamples.findSamples({
@@ -204,7 +234,9 @@ interface SampleMetadata {
   modelFamily?: string;          // Specific model family
   dependencies: Dependency[];    // Required packages
   description: string;           // Human-readable description
-  tags: string[];               // Searchable tags
+  tags: string[];                // Searchable tags
+  apiVersion?: string;           // REST API version used
+  sdkVersion?: string;           // SDK library version used
 }
 ```
 
@@ -316,6 +348,36 @@ const toolCallingSamples = SdkSamples.findSamples({
 // Find samples with multiple capabilities
 const advancedSamples = SdkSamples.findSamples({
   modelCapabilities: ['streaming', 'vision']
+});
+```
+
+### 4. **Version-Based Discovery**
+Find samples that use specific API or SDK versions.
+
+```typescript
+// Find samples using the latest REST API version
+const latestApiSamples = SdkSamples.findSamples({
+  apiVersion: '2024-06-01',
+  sdk: 'openai'
+});
+
+// Find samples for a specific SDK version
+const specificSdkSamples = SdkSamples.findSamples({
+  sdkVersion: '2.1.0',
+  language: 'csharp'
+});
+
+// Discover available API versions for a specific SDK
+const apiVersions = SdkSamples.getAvailableApiVersions({
+  sdk: 'openai',
+  api: 'completions'
+});
+
+// Find samples compatible with your current SDK version
+const compatibleSamples = SdkSamples.findSamples({
+  language: 'python',
+  sdkVersion: '1.35.0',
+  api: 'completions'
 });
 ```
 

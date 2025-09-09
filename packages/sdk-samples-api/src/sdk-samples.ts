@@ -8,7 +8,8 @@ import {
   AuthTypeFilters,
   CapabilityFilters,
   ModelFilters,
-  ModelCapabilities
+  ModelCapabilities,
+  VersionFilters
 } from './types';
 
 // In-memory sample metadata store (will be populated from file system scan)
@@ -65,7 +66,9 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Basic chat completion using Go SDK with key authentication',
-      tags: ['chat', 'completion', 'go', 'basic']
+      tags: ['chat', 'completion', 'go', 'basic'],
+      apiVersion: '2024-06-01',
+      sdkVersion: 'v1.1.0'
     },
     {
       id: 'go-chat-completion-async-openai-completions-key-async',
@@ -80,7 +83,9 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Async chat completion using Go SDK with key authentication',
-      tags: ['chat', 'completion', 'go', 'async']
+      tags: ['chat', 'completion', 'go', 'async'],
+      apiVersion: '2024-06-01',
+      sdkVersion: 'v1.1.0'
     },
     {
       id: 'go-chat-completion-streaming-openai-completions-key-sync',
@@ -95,7 +100,9 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Streaming chat completion using Go SDK',
-      tags: ['chat', 'completion', 'go', 'streaming']
+      tags: ['chat', 'completion', 'go', 'streaming'],
+      apiVersion: '2024-06-01',
+      sdkVersion: 'v1.1.0'
     },
     {
       id: 'go-responses-basic-openai-responses-key-sync',
@@ -110,7 +117,9 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Basic responses API usage with Go SDK',
-      tags: ['responses', 'go', 'basic']
+      tags: ['responses', 'go', 'basic'],
+      apiVersion: '2024-06-01',
+      sdkVersion: 'v1.1.0'
     },
     {
       id: 'go-embeddings-openai-embeddings-key-sync',
@@ -125,7 +134,9 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Text embeddings using Go SDK',
-      tags: ['embeddings', 'go', 'vectors']
+      tags: ['embeddings', 'go', 'vectors'],
+      apiVersion: '2024-06-01',
+      sdkVersion: 'v1.1.0'
     },
     {
       id: 'csharp-chat-completion-openai-completions-entra-sync',
@@ -141,7 +152,9 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
         { name: 'Azure.Identity', version: '1.14.0', type: 'package' }
       ],
       description: 'Chat completion using C# SDK with Entra ID authentication',
-      tags: ['chat', 'completion', 'csharp', 'entra']
+      tags: ['chat', 'completion', 'csharp', 'entra'],
+      apiVersion: '2024-06-01',
+      sdkVersion: '2.1.0'
     }
   ];
 
@@ -239,6 +252,8 @@ function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): 
     if (query.authType && sample.authType !== query.authType) return false;
     if (query.apiStyle && sample.apiStyle !== query.apiStyle) return false;
     if (query.modelFamily && sample.modelFamily !== query.modelFamily) return false;
+    if (query.apiVersion && sample.apiVersion !== query.apiVersion) return false;
+    if (query.sdkVersion && sample.sdkVersion !== query.sdkVersion) return false;
     
     // Check model capabilities (sample must have all requested capabilities)
     if (query.modelCapabilities && query.modelCapabilities.length > 0) {
@@ -333,6 +348,26 @@ export class SdkSamples {
     if (filters.api) query.api = filters.api;
     
     return getUniqueValues(sampleMetadataIndex, 'modelCapabilities', query);
+  }
+
+  static getAvailableApiVersions(filters: VersionFilters = {}): string[] {
+    initializeIndex();
+    const query: Partial<SampleQuery> = {};
+    if (filters.sdk) query.sdk = filters.sdk;
+    if (filters.api) query.api = filters.api;
+    if (filters.language) query.language = filters.language;
+    
+    return getUniqueValues(sampleMetadataIndex, 'apiVersion', query);
+  }
+
+  static getAvailableSdkVersions(filters: VersionFilters = {}): string[] {
+    initializeIndex();
+    const query: Partial<SampleQuery> = {};
+    if (filters.sdk) query.sdk = filters.sdk;
+    if (filters.api) query.api = filters.api;
+    if (filters.language) query.language = filters.language;
+    
+    return getUniqueValues(sampleMetadataIndex, 'sdkVersion', query);
   }
 
   // Model-related methods

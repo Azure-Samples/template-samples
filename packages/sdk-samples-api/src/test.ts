@@ -9,6 +9,8 @@ console.log('Available APIs for OpenAI:', SdkSamples.getAvailableApis({ sdk: 'op
 console.log('Available languages for completions:', SdkSamples.getAvailableLanguages({ sdk: 'openai', api: 'completions' }));
 console.log('Available auth types:', SdkSamples.getAvailableAuthTypes());
 console.log('Available capabilities:', SdkSamples.getAvailableCapabilities({ sdk: 'openai', api: 'completions' }));
+console.log('Available API versions:', SdkSamples.getAvailableApiVersions({ sdk: 'openai' }));
+console.log('Available SDK versions for C#:', SdkSamples.getAvailableSdkVersions({ language: 'csharp' }));
 
 console.log('\n--- Query Examples ---\n');
 
@@ -46,6 +48,8 @@ if (sampleContent) {
   console.log('Sample ID:', sampleContent.metadata.id);
   console.log('Description:', sampleContent.metadata.description);
   console.log('Dependencies:', sampleContent.metadata.dependencies.map(d => `${d.name}@${d.version}`));
+  console.log('API Version:', sampleContent.metadata.apiVersion);
+  console.log('SDK Version:', sampleContent.metadata.sdkVersion);
   console.log('Source code preview:', sampleContent.sourceCode.substring(0, 100) + '...');
 }
 
@@ -85,5 +89,26 @@ if (o1Capabilities) {
   console.log('- Supported APIs:', o1Capabilities.supportedApis);
   console.log('- Capabilities:', o1Capabilities.capabilities);
 }
+
+console.log('\n--- Version-Based Queries ---\n');
+
+// Test version-based filtering
+const latestApiSamples = SdkSamples.findSamples({
+  apiVersion: '2024-06-01',
+  sdk: 'openai'
+});
+console.log(`Samples using API version 2024-06-01: ${latestApiSamples.length}`);
+latestApiSamples.forEach(sample => {
+  console.log(`- ${sample.id} (API v${sample.apiVersion}, SDK v${sample.sdkVersion})`);
+});
+
+const csharpV2Samples = SdkSamples.findSamples({
+  language: 'csharp',
+  sdkVersion: '2.1.0'
+});
+console.log(`\nC# samples using SDK version 2.1.0: ${csharpV2Samples.length}`);
+csharpV2Samples.forEach(sample => {
+  console.log(`- ${sample.id} (API v${sample.apiVersion}, SDK v${sample.sdkVersion})`);
+});
 
 console.log('\nAPI test completed!');
