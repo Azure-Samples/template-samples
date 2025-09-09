@@ -4,12 +4,6 @@ import { SdkSamples } from './sdk-samples';
  * Example usage demonstrating the partner team's proposed usage pattern
  */
 
-// Original proposed usage:
-// const capabilities = chatCodeSample.getCapabilities(modelName);
-// const codeSampleFile = chatCodeSample.getCodeFile(modelName, sdk, apiType, authType, language, capabilities[0]);
-// const requirements = chatCodeSample.getRequirements(modelName, sdk, language, apiType, authType, capabilities[0]);
-
-// New API equivalent:
 console.log('=== Consumer Usage Example ===\n');
 
 // Step 1: Get available capabilities for chat completion
