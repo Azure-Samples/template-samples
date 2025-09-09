@@ -16,6 +16,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 parameters:
+  # this parameter allows selecting different input data files for generating samples,
+  # selection happens as a dropdown in the ADO UI
   - name: templateConfigInput
     displayName: 'Template Configuration Input File'
     type: string
@@ -116,8 +118,8 @@ stages:
         # Ensure we have the main branch reference
         git fetch origin main:main || git fetch origin main
         
-        # Get changed sample directories (use main instead of origin/main)
-        (git diff --name-only main HEAD; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-3 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        # Get changed sample directories (compare working tree to main, not HEAD to main)
+        (git diff --name-only main; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-4 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
         echo "Changed sample directories:"
         cat changed_samples.txt
 
@@ -199,7 +201,8 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt"
+        ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt" $(VALIDATE_WITH_SERVICE)
+
       displayName: 'Validate C# samples'
 
     - script: |
@@ -211,6 +214,8 @@ stages:
     - publish: validation-results/
       artifact: CSharpResults
       condition: always()
+
+      # publish the validated samples to an Azure Artifacts feed
 
   - job: ValidatePython
     displayName: 'Validate Python Samples'
@@ -258,7 +263,8 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt"
+        ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(VALIDATE_WITH_SERVICE)
+
       displayName: 'Validate Python samples'
 
     - script: |
@@ -273,6 +279,8 @@ stages:
 
     - task: UniversalPackages@0
       displayName: 'Publish Python samples to feed'
+      # Only publish if all samples were successfully validated
+      condition: succeeded()
       inputs:
         command: publish
         publishDirectory: './generated-samples/python'
@@ -330,7 +338,8 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
-        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt"
+        ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt" $(VALIDATE_WITH_SERVICE)
+
       displayName: 'Validate Java samples'
 
     - script: |
@@ -387,3 +396,4 @@ stages:
         publishRegistry: 'useFeed'
         publishFeed: '$(Project)/$(samples-feed)'
         versionOption: 'patch'
+

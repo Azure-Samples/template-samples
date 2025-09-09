@@ -6,7 +6,7 @@
   "buildSteps": [
     "python -m py_compile *.py"
   ],
-  "validateSteps": [
+  "executeSteps": [
     "python *.py"
   ],
   "dependencyUpdateCommand": "pip list --outdated"

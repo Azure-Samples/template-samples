@@ -29,7 +29,8 @@ The main orchestrator script that:
 ### `validate-single-sample.sh`
 Validates an individual sample by:
 1. **Configuration Resolution**: Calls `resolve-sample-configs.sh` to merge language defaults with sample-specific overrides
-2. **Build Steps**: Executes commands from the `buildSteps` array (e.g., `dotnet restore`, `dotnet build`)
+2. **Build Steps**: Runs commands from the `buildSteps` array (e.g., `dotnet restore`, `dotnet build`)
+3. **Execute Steps**: Executes samples, in many cases making service calls (e.g. `dotnet run`)
 3. **Validation Steps**: Runs commands from the `validateSteps` array for additional checks
 4. **Error Handling**: Exits with appropriate status codes
 
