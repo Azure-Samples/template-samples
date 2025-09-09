@@ -346,7 +346,6 @@ stages:
   - job: PublishSampleLibrary
     displayName: 'Publish Sample Library npm package'
     dependsOn: 
-    - ValidateJava
     - ValidateCSharp
     - ValidatePython
     steps:
