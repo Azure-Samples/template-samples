@@ -37,9 +37,9 @@ function determineAuthType(folderPath: string): string {
 }
 
 /**
- * Extract model family from folder structure
+ * Extract model name from folder structure
  */
-function extractModelFamily(folderPath: string): string | undefined {
+function extractModelName(folderPath: string): string | undefined {
   if (folderPath.includes('/gpt-5/')) return 'gpt-5';
   if (folderPath.includes('/o1-mini/')) return 'o1-mini';
   return undefined;
@@ -60,6 +60,7 @@ function generateSampleMetadata(basePath: string = '/workspaces/template-samples
       api: 'completions',
       authType: 'key',
       apiStyle: 'sync',
+      modelName: 'gpt-4o',
       modelCapabilities: [],
       dependencies: [
         { name: 'github.com/Azure/azure-sdk-for-go/sdk/azidentity', version: 'v1.10.0', type: 'package' },
@@ -251,7 +252,7 @@ function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): 
     if (query.api && sample.api !== query.api) return false;
     if (query.authType && sample.authType !== query.authType) return false;
     if (query.apiStyle && sample.apiStyle !== query.apiStyle) return false;
-    if (query.modelFamily && sample.modelFamily !== query.modelFamily) return false;
+    if (query.modelName && sample.modelName !== query.modelName) return false;
     if (query.apiVersion && sample.apiVersion !== query.apiVersion) return false;
     if (query.sdkVersion && sample.sdkVersion !== query.sdkVersion) return false;
     

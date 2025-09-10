@@ -49,9 +49,10 @@ export interface SampleQuery {
   authType?: string;          // 'entra', 'key'
   apiStyle?: string;          // 'sync', 'async'
   modelCapabilities?: string[]; // 'reasoning', 'tool-calling', 'streaming', 'vision'
-  modelFamily?: string;       // 'gpt-4', 'o1-mini', etc.
+  modelName?: string;         // 'gpt-4', 'gpt-4o', 'o1-mini', 'text-embedding-ada-002', etc.
   apiVersion?: string;        // '2024-06-01', '2023-12-01-preview', etc.
   sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
+  agentCapability?: boolean; // ???? for Hosted Agent or for Prompt Agent, etc.
 }
 
 export interface SampleMetadata {
@@ -62,7 +63,7 @@ export interface SampleMetadata {
   authType: string;
   apiStyle: string;
   modelCapabilities: string[];
-  modelFamily?: string;
+  modelName?: string;
   dependencies: Dependency[];
   description: string;
   tags: string[];

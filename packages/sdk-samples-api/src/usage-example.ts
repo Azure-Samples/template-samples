@@ -107,3 +107,10 @@ specificSdkSamples.forEach(sample => {
 });
 
 console.log('\nUsage example completed!');
+
+// Find samples by model name
+const gpt4Samples = SdkSamples.findSamples({ modelName: 'gpt-4o' });
+console.log(`Found ${gpt4Samples.length} GPT-4o samples:`);
+gpt4Samples.forEach(sample => {
+  console.log(`- ${sample.language} ${sample.api} API (${sample.apiStyle})`);
+});
