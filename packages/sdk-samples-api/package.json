@@ -37,8 +37,5 @@
     "type": "git",
     "url": "https://github.com/Azure-Samples/template-samples.git",
     "directory": "packages/sdk-samples-api"
-  },
-  "publishConfig": {
-    "registry": "https://pkgs.dev.azure.com/{organization}/_packaging/{feed-name}/npm/registry/"
   }
 }
