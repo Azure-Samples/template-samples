@@ -383,6 +383,17 @@ stages:
 
     - script: |
         cd packages/sdk-samples-api
+        # Check if package already exists and increment version accordingly
+        if npm view @azure-foundry/sample-library version --registry https://msdata.pkgs.visualstudio.com/Vienna/_packaging/$(samples-feed)/npm/registry/ 2>/dev/null; then
+          echo "Package exists, incrementing patch version"
+          npm version patch --no-git-tag-version
+        else
+          echo "First publish, using version from package.json"
+        fi
+      displayName: 'Set package version'
+
+    - script: |
+        cd packages/sdk-samples-api
         npm install
         npm run build
       displayName: 'Build sample library package'
@@ -394,5 +405,4 @@ stages:
         workingDir: './packages/sdk-samples-api'
         publishRegistry: 'useFeed'
         publishFeed: '$(Project)/$(samples-feed)'
-        versionOption: 'patch'
 
