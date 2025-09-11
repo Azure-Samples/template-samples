@@ -383,14 +383,17 @@ stages:
 
     - script: |
         cd packages/sdk-samples-api
-        # Check if package already exists and increment version accordingly
-        if npm view @azure-foundry/sample-library version --registry https://msdata.pkgs.visualstudio.com/Vienna/_packaging/$(samples-feed)/npm/registry/ 2>/dev/null; then
-          echo "Package exists, incrementing patch version"
-          npm version patch --no-git-tag-version
-        else
-          echo "First publish, using version from package.json"
-        fi
-      displayName: 'Set package version'
+        # Get current version from package.json
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "Current version in package.json: $CURRENT_VERSION"
+        
+        # Always increment patch version for automated builds
+        # This ensures we never have version conflicts
+        npm version patch --no-git-tag-version
+        
+        NEW_VERSION=$(node -p "require('./package.json').version")
+        echo "New version: $NEW_VERSION"
+      displayName: 'Increment package version'
 
     - script: |
         cd packages/sdk-samples-api
