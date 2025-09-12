@@ -1,0 +1,20 @@
+# Output path must follow: <model>/<api>/<sdk>/<language>/<auth-type>/<api-style>
+# e.g., gpt-4o/completion-api/openai/python/entra/streaming
+samples:
+- templatePath: ./chat-completion/csharp
+  variants: 
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/entra
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: true
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/keyAuth
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: false
+          useEnvVars: true
