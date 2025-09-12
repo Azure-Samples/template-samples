@@ -167,7 +167,7 @@ function getDefaultBasePath(): string {
   }
   
   // Fall back to current working directory
-  return path.join(process.cwd(), 'generated-samples');
+  return path.join(process.cwd(), 'samples');
 }
 
 function generateSampleMetadata(basePath?: string): SampleMetadata[] {
