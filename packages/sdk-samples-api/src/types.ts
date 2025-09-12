@@ -61,7 +61,7 @@ export interface SampleMetadata {
   sdk: string;
   api: string;
   authType: string;
-  apiStyle: string;
+  apiStyle?: string;
   modelCapabilities: string[];
   modelName?: string;
   dependencies: Dependency[];
