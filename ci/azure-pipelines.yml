@@ -124,9 +124,9 @@ stages:
         cat changed_samples.txt
 
         # Split by language
-        grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
-        grep "^generated-samples/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
-        grep "^generated-samples/java/" changed_samples.txt > changed_java.txt || touch changed_java.txt
+        grep "/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
+        grep "/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
+        grep "/java/" changed_samples.txt > changed_java.txt || touch changed_java.txt
         
         echo "Changed C# samples:"
         cat changed_csharp.txt
