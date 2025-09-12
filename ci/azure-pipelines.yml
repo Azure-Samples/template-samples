@@ -386,7 +386,7 @@ stages:
         
         # Compose a version string using the base version and the build ID
         BASE_VERSION=$(node -p "require('./package.json').version" | cut -d- -f1)
-        NEW_VERSION=\"$BASE_VERSION-ci.$(Build.BuildId)\"
+        NEW_VERSION=${BASE_VERSION}-ci.$(Build.BuildId)
         echo "Setting version to $NEW_VERSION"
         npm version --no-git-tag-version $NEW_VERSION
       displayName: 'Generate unique package version'
