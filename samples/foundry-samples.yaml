@@ -3,14 +3,14 @@
 samples:
 - templatePath: ./chat-completion/csharp
   variants: 
-    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/entra
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/entra/basic
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
           deploymentName: gpt-4o
           useTokenCredentials: true
-    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/keyAuth
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/keyAuth/basic
       input: 
         type: object
         properties:
