@@ -383,17 +383,13 @@ stages:
 
     - script: |
         cd packages/sdk-samples-api
-        # Get current version from package.json
-        CURRENT_VERSION=$(node -p "require('./package.json').version")
-        echo "Current version in package.json: $CURRENT_VERSION"
         
-        # Always increment patch version for automated builds
-        # This ensures we never have version conflicts
-        npm version patch --no-git-tag-version
-        
-        NEW_VERSION=$(node -p "require('./package.json').version")
-        echo "New version: $NEW_VERSION"
-      displayName: 'Increment package version'
+        # Compose a version string using the base version and the build ID
+        BASE_VERSION=$(node -p "require('./package.json').version" | cut -d- -f1)
+        NEW_VERSION=\"$BASE_VERSION-ci.$(Build.BuildId)\"
+        echo "Setting version to $NEW_VERSION"
+        npm version --no-git-tag-version $NEW_VERSION
+      displayName: 'Generate unique package version'
 
     - script: |
         cd packages/sdk-samples-api

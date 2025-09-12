@@ -1,6 +1,6 @@
 {
   "name": "@azure-foundry/sample-library",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Pipeline-validated Azure SDK code samples library for programmatic discovery and retrieval",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
