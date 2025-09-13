@@ -447,6 +447,8 @@ function loadSampleContent(metadata: SampleMetadata): SampleContent {
   
   let sourceCode = '';
   let projectFile = '';
+  console.log(`Base samples path: ${basePath}`);
+  console.log(`Loading sample content from: ${samplePath}`);
   
   try {
     if (fs.existsSync(samplePath)) {
@@ -462,7 +464,9 @@ function loadSampleContent(metadata: SampleMetadata): SampleContent {
       const sourceExts = extensions[metadata.language] || ['.txt'];
       for (const ext of sourceExts) {
         const files = fs.readdirSync(samplePath).filter(f => f.endsWith(ext));
+        console.log(`Found ${files.length} source files with extension ${ext}`);
         if (files.length > 0) {
+          console.log(`Reading source file: ${files[0]}`);
           sourceCode = fs.readFileSync(path.join(samplePath, files[0]), 'utf8');
           break;
         }
