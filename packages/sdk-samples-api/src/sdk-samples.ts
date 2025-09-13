@@ -442,7 +442,7 @@ function getUniqueValues<K extends keyof SampleMetadata>(
  */
 function loadSampleContent(metadata: SampleMetadata): SampleContent {
   // Try to find the actual sample directory based on the metadata
-  const basePath = '/workspaces/template-samples/generated-samples';
+  const basePath = path.join(__dirname, '..', '..', 'samples');
   const samplePath = path.join(basePath, metadata.modelName || 'unknown', metadata.api, metadata.sdk, metadata.language, metadata.authType);
   
   let sourceCode = '';
