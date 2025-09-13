@@ -161,13 +161,15 @@ function extractSdkVersionFromDependencies(dependencies: Dependency[], sdk: stri
 }
 
 function getDefaultBasePath(): string {
-  // Check environment variable first
+    // Check environment variable first
   if (process.env.SAMPLES_BASE_PATH) {
     return process.env.SAMPLES_BASE_PATH;
   }
-  
+    // Try to find the actual sample directory based on the metadata
+  const basePath = path.join(__dirname, '..', 'samples');
+
   // Fall back to current working directory
-  return path.join(process.cwd(), 'samples');
+  return basePath;
 }
 
 function generateSampleMetadata(basePath?: string): SampleMetadata[] {
@@ -442,14 +444,16 @@ function getUniqueValues<K extends keyof SampleMetadata>(
  */
 function loadSampleContent(metadata: SampleMetadata): SampleContent {
   // Try to find the actual sample directory based on the metadata
-  const basePath = path.join(__dirname, '..', '..', 'samples');
+  const basePath = getDefaultBasePath();
   const samplePath = path.join(basePath, metadata.modelName || 'unknown', metadata.api, metadata.sdk, metadata.language, metadata.authType);
+
+  // console.log(`Base directory: ${__dirname}`);
+  // console.log(`Base samples path: ${basePath}`);
+  // console.log(`Loading sample content from: ${samplePath}`);
   
   let sourceCode = '';
   let projectFile = '';
-  console.log(`Base samples path: ${basePath}`);
-  console.log(`Loading sample content from: ${samplePath}`);
-  
+
   try {
     if (fs.existsSync(samplePath)) {
       // Read source code
