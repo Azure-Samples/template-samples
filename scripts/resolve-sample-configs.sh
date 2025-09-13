@@ -2,7 +2,7 @@
 set -e
 
 SAMPLE_DIR=$1
-LANGUAGE=$(echo "$SAMPLE_DIR" | cut -d'/' -f2)
+LANGUAGE=$2
 
 # Required language defaults
 LANGUAGE_DEFAULTS="generated-samples/$LANGUAGE/validation-config-defaults.json"

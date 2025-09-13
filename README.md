@@ -29,7 +29,7 @@ This repository serves as the hub for Azure OpenAI code sample templates that au
 ├── ci/                             # Azure DevOps pipeline configuration
 ├── samples/                         # Template source files
 │   ├── input-data.yaml              # Configuration for generating samples
-│   └── {sample-scenario-name}       # Individual sample templates
+│   └── {sample-name}                # Individual sample templates
 │       ├── csharp/                  # C# templates
 │       ├── python/                  # Python templates
 │       ├── {etc.}/                  # templates other supported languages
@@ -84,7 +84,7 @@ This repository serves as the hub for Azure OpenAI code sample templates that au
 
 1. **Create template directory**:
    ```bash
-   mkdir -p samples/my-new-sample-scenario/{csharp,python,java,go}
+   mkdir -p samples/my-new-sample/{csharp,python,java,go}
    ```
 
 2. **Create template files**:
@@ -150,6 +150,6 @@ The Azure DevOps pipeline automatically:
 The [`mockUI/`](mockUI/) directory contains a clean web interface for viewing and testing generated samples:
 
 - **Multi-language support** with syntax highlighting
-- **Scenario selection** via dropdown
+- **API and capability selection** via dropdown
 - **Real-time updates** when samples change
 - **Copy-to-clipboard** functionality

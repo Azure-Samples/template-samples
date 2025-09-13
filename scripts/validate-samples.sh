@@ -24,7 +24,7 @@ while IFS= read -r sample_dir; do
     if [ -d "$sample_dir" ]; then
         echo ""
         echo "=== Validating: $sample_dir ==="
-        if ./scripts/validate-single-sample.sh "$sample_dir" "$MAKE_SERVICE_CALLS"; then
+        if ./scripts/validate-single-sample.sh "$sample_dir" "$MAKE_SERVICE_CALLS" "$LANGUAGE"; then
             echo "✅ $sample_dir" >> validation-success.log
         else
             echo "❌ $sample_dir" >> validation-errors.log
