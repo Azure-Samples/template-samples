@@ -66,7 +66,7 @@ export interface SampleMetadata {
   modelName?: string;
   dependencies: Dependency[];
   description: string;
-  tags: string[];
+  scenarios: string[];
   apiVersion?: string;
   sdkVersion?: string;
 }

@@ -194,8 +194,8 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
           // Check if we've reached a sample directory (has source files)
           if (hasSampleFiles(newPath)) {
             // Parse the path: [model, api, sdk, language, authType]
-            if (newPathParts.length >= 5) {
-              const [modelName, api, sdk, language, authType] = newPathParts;
+            if (newPathParts.length >= 6) {
+              const [modelName, api, sdk, language, authType, scenario] = newPathParts;
               
               // Parse dependencies from project files
               const dependencies = parseDependencies(newPath, language);
@@ -207,14 +207,6 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
               // Extract versions
               const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
               const sdkVersion = extractSdkVersionFromDependencies(dependencies, sdk) || '0.0.0';
-              
-              // Generate tags
-              const tags = [
-                api.replace('-', ' '),
-                language,
-                authType,
-                ...modelCapabilities
-              ].filter(Boolean);
               
               // Create sample metadata
               const sample: SampleMetadata = {
@@ -228,7 +220,7 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
                 modelCapabilities,
                 dependencies,
                 description: generateDescription(modelName, api, language, authType, apiStyle, modelCapabilities),
-                tags,
+                scenarios: [scenario],
                 apiVersion,
                 sdkVersion
               };
@@ -276,7 +268,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Basic chat completion using Go SDK with key authentication',
-      tags: ['chat', 'completion', 'go', 'basic'],
+      scenarios: ['chat-completions', 'key auth', 'basic'],
       apiVersion: '2024-06-01',
       sdkVersion: 'v1.1.0'
     },
@@ -293,7 +285,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Async chat completion using Go SDK with key authentication',
-      tags: ['chat', 'completion', 'go', 'async'],
+      scenarios: ['chat-completions', 'key auth', 'streaming'],
       apiVersion: '2024-06-01',
       sdkVersion: 'v1.1.0'
     },
@@ -311,7 +303,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
         { name: 'Azure.Identity', version: '1.14.0', type: 'package' }
       ],
       description: 'Chat completion using C# SDK with Entra ID authentication',
-      tags: ['chat', 'completion', 'csharp', 'entra'],
+      scenarios: ['chat-completions','entra auth'],
       apiVersion: 'v1',
       sdkVersion: '2.1.0'
     }
