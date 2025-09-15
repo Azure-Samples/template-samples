@@ -6,17 +6,16 @@ package main
 	"log",
 	"os",
 	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
-	"github.com/openai/openai-go",
-	"github.com/openai/openai-go/azure"
+	"github.com/openai/openai-go/v2",
+	"github.com/openai/openai-go/v2/azure",
+	"github.com/openai/openai-go/v2/option",
 ) %>
 
 func main() {
 	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
-	<%= go.valueOrEnvironment(useEnvVars, "api_version", "AZURE_OPENAI_API_VERSION", apiVersion) %>
-	<%	if (useTokenCredentials) { %>
-	<% } else { %>
+	<%	if (!useTokenCredentials) { %>
 	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
-	<% } %>	
+	<% } %>
 	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
 
 	<% if (useTokenCredentials) { %>
@@ -26,13 +25,13 @@ func main() {
 		os.Exit(1)
 	}
 	client := openai.NewClient(
-		azure.WithEndpoint(endpoint, api_version),
+		option.WithBaseURL(endpoint),
 		azure.WithTokenCredential(token_credential),
 	)
 	<% } else { %>
 	client := openai.NewClient(
-		azure.WithEndpoint(endpoint, api_version),
-		azure.WithAPIKey(apiKey),
+		option.WithBaseURL(endpoint),
+		option.WithAPIKey(apiKey),
 	)
 	<% } %>
 

@@ -5,6 +5,7 @@ trigger:
   paths:
     include:
     - generated-samples/**
+    - packages/sdk-samples-api/**
 
 pr:
   branches:
@@ -118,16 +119,16 @@ stages:
         git fetch origin main:main || git fetch origin main
         
         # Get changed sample directories (compare working tree to main, not HEAD to main)
-        (git diff --name-only main; git ls-files --others --exclude-standard) | grep "^generated-samples/" | cut -d'/' -f1-4 | sort | uniq | while read dir; do [ -d "$dir" ] && echo "$dir"; done > changed_samples.txt || touch changed_samples.txt
+        (git diff --name-only main; git ls-files --others --exclude-standard) | grep "^generated-samples/" | xargs -n1 dirname | sort | uniq > changed_samples.txt || touch changed_samples.txt
         echo "Changed sample directories:"
         cat changed_samples.txt
 
         # Split by language
-        grep "^generated-samples/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
-        grep "^generated-samples/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
-        grep "^generated-samples/java/" changed_samples.txt > changed_java.txt || touch changed_java.txt
-        grep "^generated-samples/go/" changed_samples.txt > changed_go.txt || touch changed_go.txt
-        grep "^generated-samples/javascript/" changed_samples.txt > changed_javascript.txt || touch changed_javascript.txt
+        grep "/csharp/" changed_samples.txt > changed_csharp.txt || touch changed_csharp.txt
+        grep "/python/" changed_samples.txt > changed_python.txt || touch changed_python.txt
+        grep "/java/" changed_samples.txt > changed_java.txt || touch changed_java.txt
+        grep "/go/" changed_samples.txt > changed_go.txt || touch changed_go.txt
+        grep "/javascript/" changed_samples.txt > changed_javascript.txt || touch changed_javascript.txt
 
         echo "Changed C# samples:"
         cat changed_csharp.txt
@@ -217,6 +218,7 @@ stages:
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt" $(VALIDATE_WITH_SERVICE)
+
       displayName: 'Validate C# samples'
 
     - script: |
@@ -287,6 +289,7 @@ stages:
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(VALIDATE_WITH_SERVICE)
+
       displayName: 'Validate Python samples'
 
     - script: |
@@ -361,6 +364,7 @@ stages:
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
         ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt" $(VALIDATE_WITH_SERVICE)
+
       displayName: 'Validate Java samples'
 
     - script: |
@@ -373,95 +377,18 @@ stages:
       artifact: JavaResults
       condition: always()
 
-      # publish the validated samples to an Azure Artifacts feed
-    - task: UniversalPackages@0
-      displayName: 'Publish Java samples to feed'
-      inputs:
-        command: publish
-        publishDirectory: './generated-samples/java'
-        feedsToUse: 'internal'
-        vstsFeedPublish: '$(Project)/$(samples-feed)'
-        vstsFeedPackagePublish: 'java-samples'
-        versionOption: 'patch'
-
-  - job: ValidateGo
-    displayName: 'Validate Go Samples'
+  - job: PublishSampleLibrary
+    displayName: 'Publish Sample Library npm package'
     dependsOn: 
-    - DetectChanges
-    - PublishConfigs
-    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'], 'true')
-
-    steps:
-    - checkout: self
-    - task: GoTool@0
-      inputs:
-        version: '1.25.1'
-
-    - download: current
-      artifact: ChangedGo
-      displayName: 'Download list of changed Go samples'
-
-    - download: current
-      artifact: GeneratedSamples
-      displayName: 'Download generated samples'
-
-    - script: |
-        mkdir -p ./generated-samples/
-        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
-        echo "Copied downloaded samples to ./generated-samples/"
-      displayName: 'Copy sample artifacts to workspace'
-
-    - download: current
-      artifact: GeneratedConfigs
-      displayName: 'Download generated configurations'
-
-    - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Copy generated configurations to workspace'
-
-    - script: |
-        chmod +x scripts/*.sh
-        ./scripts/validate-samples.sh go "$(Pipeline.Workspace)/ChangedGo/changed_go.txt"
-      displayName: 'Validate Go samples'
-
-    - script: |
-        mkdir -p validation-results
-        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
-      displayName: 'Collect validation logs'
-      condition: always()
-
-    - publish: validation-results/
-      artifact: GoResults
-      condition: always()
-
-    - task: UniversalPackages@0
-      displayName: 'Publish Go samples to feed'
-      inputs:
-        command: publish
-        publishDirectory: './generated-samples/go'
-        feedsToUse: 'internal'
-        vstsFeedPublish: '$(Project)/$(samples-feed)'
-        vstsFeedPackagePublish: 'go-samples'
-        versionOption: 'patch'
-    
-  - job: ValidateJavascript
-    displayName: 'Validate Javascript Samples'
-    dependsOn: 
-    - DetectChanges
-    - PublishConfigs
-    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'], 'true')
-
+    - ValidateCSharp
+    - ValidatePython
     steps:
     - checkout: self
     - task: NodeTool@0
+      displayName: 'Install Node.js'
       inputs:
-        versionSource: 'spec'
-        versionSpec: '20.3.1'
-
-    - download: current
-      artifact: ChangedJavascript
-      displayName: 'Download list of changed Javascript samples'
-
+        versionSpec: '18.x'
+    
     - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
@@ -472,35 +399,34 @@ stages:
         echo "Copied downloaded samples to ./generated-samples/"
       displayName: 'Copy sample artifacts to workspace'
 
-    - download: current
-      artifact: GeneratedConfigs
-      displayName: 'Download generated configurations'
+    - script: |
+        # Copy generated samples into the npm package
+        mkdir -p packages/sdk-samples-api/samples
+        cp -r ./generated-samples/* packages/sdk-samples-api/samples/
+        echo "Copied samples into npm package directory"
+      displayName: 'Include samples in package'
 
     - script: |
-        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
-      displayName: 'Copy generated configurations to workspace'
+        cd packages/sdk-samples-api
+        
+        # Compose a version string using the base version and the build ID
+        BASE_VERSION=$(node -p "require('./package.json').version" | cut -d- -f1)
+        NEW_VERSION=${BASE_VERSION}-ci.$(Build.BuildId)
+        echo "Setting version to $NEW_VERSION"
+        npm version --no-git-tag-version $NEW_VERSION
+      displayName: 'Generate unique package version'
 
     - script: |
-        chmod +x scripts/*.sh
-        ./scripts/validate-samples.sh javascript "$(Pipeline.Workspace)/ChangedJavascript/changed_javascript.txt"
-      displayName: 'Validate Javascript samples'
+        cd packages/sdk-samples-api
+        npm install
+        npm run build
+      displayName: 'Build sample library package'
 
-    - script: |
-        mkdir -p validation-results
-        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
-      displayName: 'Collect validation logs'
-      condition: always()
-
-    - publish: validation-results/
-      artifact: JavascriptResults
-      condition: always()
-
-    - task: UniversalPackages@0
-      displayName: 'Publish Javascript samples to feed'
+    - task: Npm@1
+      displayName: 'Publish @azure-foundry/sample-library to Azure Artifacts'
       inputs:
-        command: publish
-        publishDirectory: './generated-samples/javascript'
-        feedsToUse: 'internal'
-        vstsFeedPublish: '$(Project)/$(samples-feed)'
-        vstsFeedPackagePublish: 'javascript-samples'
-        versionOption: 'patch'
+        command: 'publish'
+        workingDir: './packages/sdk-samples-api'
+        publishRegistry: 'useFeed'
+        publishFeed: '$(Project)/$(samples-feed)'
+

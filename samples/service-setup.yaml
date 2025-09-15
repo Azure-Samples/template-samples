@@ -9,23 +9,22 @@ variants:
 
 samples:
 - templatePath: ./chat-completion/csharp
-  variants:
-    - output: ../generated-samples/csharp/chat-completion/entra-auth
-      input:
+  variants: 
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/entra
+      input: 
         type: object
         properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
           useTokenCredentials: true
-          useEnvVars: true
-          deploymentName: AZURE_OPENAI_DEPLOYMENT
-- templatePath: ./chat-completion/csharp
-  variants:
-    - output: ../generated-samples/csharp/chat-completion/key-auth
-      input:
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/keyAuth
+      input: 
         type: object
         properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
           useTokenCredentials: false
           useEnvVars: true
-          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
 - templatePath: ./chat-completion-no-streaming/python
   variants:
     - output: ../generated-samples/python/chat-completion-no-streaming/basic
@@ -33,6 +32,6 @@ samples:
         type: object
         properties:
           useTokenCredentials: false
-          deploymentName: AZURE_OPENAI_DEPLOYMENT
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
           apiVersion: 2025-01-01-preview
           useEnvVars: true
