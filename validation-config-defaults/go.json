@@ -1,0 +1,14 @@
+{
+  "language": "go",
+  "preBuildSteps": [
+    "go mod tidy"
+  ],
+  "buildSteps": [
+    "go build *.go"
+  ],
+  "executeSteps": [
+    "go run *.go"
+  ],
+  "validateSteps": [
+  ]
+}
