@@ -75,17 +75,32 @@ function inferApiStyle(sampleDir: string, language: string): 'sync' | 'async' | 
 }
 
 /**
- * Infer model capabilities from code analysis
+ * Infer capability from code analysis
  */
-function inferModelCapabilities(sampleDir: string, language: string): string[] {
-  const capabilities: string[] = [];
-  
-  // TODO: Implement model capabilities inference
-  // This is where model catalog lookup could be done to determine capabilities
+function inferCapability(sampleDir: string, language: string): string {
+  // TODO: Implement capability inference
+  // This is where model catalog lookup could be done to determine capability
   // based on the model name extracted from the path or code analysis.
   // Needs more design work to determine the best approach.
   
-  return []; // TBD - return empty array for now
+  // Default to 'reasoning' for now
+  return 'reasoning';
+}
+
+/**
+ * Infer scenario from directory structure or code
+ */
+function inferScenario(api: string, sampleDir: string): string {
+  // Map API types to scenarios
+  const apiToScenario: { [key: string]: string } = {
+    'completions': 'chat-completions',
+    'responses': 'chat-completions',
+    'embeddings': 'embeddings',
+    'images': 'images',
+    'audio': 'audio'
+  };
+  
+  return apiToScenario[api] || 'chat-completions';
 }
 
 /**
@@ -97,11 +112,11 @@ function generateDescription(
   language: string, 
   authType: string, 
   apiStyle?: string,
-  capabilities?: string[]
+  capability?: string
 ): string {
   const authDesc = authType === 'entra' ? 'Entra ID authentication' : 'API key authentication';
   const styleDesc = apiStyle === 'async' ? 'asynchronous' : 'synchronous';
-  const capDesc = capabilities && capabilities.length > 0 ? ` with ${capabilities.join(', ')}` : '';
+  const capDesc = capability ? ` with ${capability}` : '';
 
   return `${styleDesc.charAt(0).toUpperCase() + styleDesc.slice(1)} ${api} using ${language.toUpperCase()} SDK with ${authDesc}${capDesc}`;
 }
@@ -195,14 +210,15 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
           if (hasSampleFiles(newPath)) {
             // Parse the path: [model, api, sdk, language, authType]
             if (newPathParts.length >= 6) {
-              const [modelName, api, sdk, language, authType, scenario] = newPathParts;
+              const [modelName, api, sdk, language, authType] = newPathParts;
               
               // Parse dependencies from project files
               const dependencies = parseDependencies(newPath, language);
               
               // Infer additional metadata
-              const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
-              const modelCapabilities = inferModelCapabilities(newPath, language);
+              const apiStyle = inferApiStyle(newPath, language);
+              const capability = inferCapability(newPath, language);
+              const scenario = inferScenario(api, newPath);
               
               // Extract versions
               const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
@@ -217,10 +233,10 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
                 authType,
                 apiStyle,
                 modelName,
-                modelCapabilities,
+                capability,
                 dependencies,
-                description: generateDescription(modelName, api, language, authType, apiStyle, modelCapabilities),
-                scenarios: [scenario],
+                description: generateDescription(modelName, api, language, authType, apiStyle, capability),
+                scenario,
                 apiVersion,
                 sdkVersion
               };
@@ -262,13 +278,13 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       authType: 'key',
       apiStyle: 'sync',
       modelName: 'gpt-4o',
-      modelCapabilities: ['reasoning', 'tool-calling'],
+      capability: 'reasoning',
       dependencies: [
         { name: 'github.com/Azure/azure-sdk-for-go/sdk/azidentity', version: 'v1.10.0', type: 'package' },
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Basic chat completion using Go SDK with key authentication',
-      scenarios: ['chat-completions', 'key auth', 'basic'],
+      scenario: 'chat-completions',
       apiVersion: '2024-06-01',
       sdkVersion: 'v1.1.0'
     },
@@ -279,13 +295,13 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       api: 'completions',
       authType: 'key',
       apiStyle: 'async',
-      modelCapabilities: ['reasoning', 'tool-calling'],
+      capability: 'streaming',
       dependencies: [
         { name: 'github.com/Azure/azure-sdk-for-go/sdk/azidentity', version: 'v1.10.0', type: 'package' },
         { name: 'github.com/openai/openai-go', version: 'v1.1.0', type: 'package' }
       ],
       description: 'Async chat completion using Go SDK with key authentication',
-      scenarios: ['chat-completions', 'key auth', 'streaming'],
+      scenario: 'chat-completions',
       apiVersion: '2024-06-01',
       sdkVersion: 'v1.1.0'
     },
@@ -296,14 +312,14 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       api: 'completions',
       authType: 'entra',
       apiStyle: 'sync',
-      modelCapabilities: ['reasoning', 'tool-calling'],
+      capability: 'tool-calling',
       dependencies: [
         { name: 'OpenAI', version: '2.1.0', type: 'package' },
         { name: 'Azure.AI.OpenAI', version: '2.1.0', type: 'package' },
         { name: 'Azure.Identity', version: '1.14.0', type: 'package' }
       ],
       description: 'Chat completion using C# SDK with Entra ID authentication',
-      scenarios: ['chat-completions','entra auth'],
+      scenario: 'chat-completions',
       apiVersion: 'v1',
       sdkVersion: '2.1.0'
     }
@@ -399,13 +415,14 @@ function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): 
     if (query.apiVersion && sample.apiVersion !== query.apiVersion) return false;
     if (query.sdkVersion && sample.sdkVersion !== query.sdkVersion) return false;
     
-    // Check model capabilities (sample must have all requested capabilities)
-    if (query.modelCapabilities && query.modelCapabilities.length > 0) {
-      const hasAllCapabilities = query.modelCapabilities.every(capability => 
-        sample.modelCapabilities.includes(capability)
-      );
-      if (!hasAllCapabilities) return false;
+    // Check capabilities match (OR logic: sample's capability must be in the requested capabilities list)
+    // This allows querying for samples with any of multiple capabilities
+    if (query.capabilities && query.capabilities.length > 0) {
+      if (!query.capabilities.includes(sample.capability)) return false;
     }
+    
+    // Check scenario match
+    if (query.scenario && sample.scenario !== query.scenario) return false;
 
     return true;
   });
@@ -565,7 +582,16 @@ export class SdkSamples {
     if (filters.sdk) query.sdk = filters.sdk;
     if (filters.api) query.api = filters.api;
     
-    return getUniqueValues(sampleMetadataIndex, 'modelCapabilities', query);
+    return getUniqueValues(sampleMetadataIndex, 'capability', query);
+  }
+
+  static getAvailableScenarios(filters: CapabilityFilters = {}): string[] {
+    initializeIndex();
+    const query: Partial<SampleQuery> = {};
+    if (filters.sdk) query.sdk = filters.sdk;
+    if (filters.api) query.api = filters.api;
+    
+    return getUniqueValues(sampleMetadataIndex, 'scenario', query);
   }
 
   static getAvailableApiVersions(filters: VersionFilters = {}): string[] {

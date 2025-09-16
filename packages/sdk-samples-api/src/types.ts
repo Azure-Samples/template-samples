@@ -48,7 +48,8 @@ export interface SampleQuery {
   api?: string;               // 'completions', 'responses', 'embeddings', 'images', 'audio'
   authType?: string;          // 'entra', 'key'
   apiStyle?: string;          // 'sync', 'async'
-  modelCapabilities?: string[]; // 'reasoning', 'tool-calling', 'streaming', 'vision'
+  capabilities?: string[];    // ['tool-calling', 'reasoning', 'streaming', 'vision']
+  scenario?: string;          // 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database'
   modelName?: string;         // 'gpt-4', 'gpt-4o', 'o1-mini', 'text-embedding-ada-002', etc.
   apiVersion?: string;        // '2024-06-01', '2023-12-01-preview', etc.
   sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
@@ -62,11 +63,11 @@ export interface SampleMetadata {
   api: string;
   authType: string;
   apiStyle?: string;
-  modelCapabilities: string[];
   modelName?: string;
   dependencies: Dependency[];
   description: string;
-  scenarios: string[];
+  capability: string;   // one of: 'tool-calling', 'reasoning', 'streaming', 'vision'
+  scenario: string;     // one of: 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database'
   apiVersion?: string;
   sdkVersion?: string;
 }
