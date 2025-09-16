@@ -231,17 +231,6 @@ stages:
       artifact: CSharpResults
       condition: always()
 
-      # publish the validated samples to an Azure Artifacts feed
-    - task: UniversalPackages@0
-      displayName: 'Publish Csharp samples to feed'
-      inputs:
-        command: publish
-        publishDirectory: './generated-samples/csharp'
-        feedsToUse: 'internal'
-        vstsFeedPublish: '$(Project)/$(samples-feed)'
-        vstsFeedPackagePublish: 'csharp-samples'
-        versionOption: 'patch'
-
   - job: ValidatePython
     displayName: 'Validate Python Samples'
     dependsOn: 
@@ -301,18 +290,6 @@ stages:
     - publish: validation-results/
       artifact: PythonResults
       condition: always()
-
-    - task: UniversalPackages@0
-      displayName: 'Publish Python samples to feed'
-      # Only publish if all samples were successfully validated
-      condition: succeeded()
-      inputs:
-        command: publish
-        publishDirectory: './generated-samples/python'
-        feedsToUse: 'internal'
-        vstsFeedPublish: '$(Project)/$(samples-feed)'
-        vstsFeedPackagePublish: 'python-samples'
-        versionOption: 'patch'
 
   - job: ValidateJava
     displayName: 'Validate Java Samples'
