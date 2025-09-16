@@ -210,14 +210,13 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
           if (hasSampleFiles(newPath)) {
             // Parse the path: [model, api, sdk, language, authType]
             if (newPathParts.length >= 6) {
-              const [modelName, api, sdk, language, authType] = newPathParts;
+              const [modelName, api, sdk, language, authType, capability] = newPathParts;
               
               // Parse dependencies from project files
               const dependencies = parseDependencies(newPath, language);
               
               // Infer additional metadata
-              const apiStyle = inferApiStyle(newPath, language);
-              const capability = inferCapability(newPath, language);
+              const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
               const scenario = inferScenario(api, newPath);
               
               // Extract versions
@@ -454,7 +453,7 @@ function getUniqueValues<K extends keyof SampleMetadata>(
 function loadSampleContent(metadata: SampleMetadata): SampleContent {
   // Try to find the actual sample directory based on the metadata
   const basePath = getDefaultBasePath();
-  const samplePath = path.join(basePath, metadata.modelName || 'unknown', metadata.api, metadata.sdk, metadata.language, metadata.authType);
+  const samplePath = path.join(basePath, metadata.modelName || 'unknown', metadata.api, metadata.sdk, metadata.language, metadata.authType, metadata.capability);
 
   // console.log(`Base directory: ${__dirname}`);
   // console.log(`Base samples path: ${basePath}`);
