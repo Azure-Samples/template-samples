@@ -27,7 +27,7 @@ samples:
           useEnvVars: true
 - templatePath: ./chat-completion-no-streaming/python
   variants:
-    - output: ../generated-samples/python/chat-completion-no-streaming/basic
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/python/keyAuth
       input:
         type: object
         properties:
