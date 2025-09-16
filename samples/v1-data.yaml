@@ -21,6 +21,8 @@ samples:
           apiKey: <your-api-key>
           endpoint: <%= openai_v1_endpoint %>
           useTokenCredentials: true
+          extraParams:
+            temperature: 0.7
 - templatePath: ./chat-completion-no-streaming/python-v1/
   variants:
     - output: ../generated-samples/python-v1/chat-completion/entra-auth
