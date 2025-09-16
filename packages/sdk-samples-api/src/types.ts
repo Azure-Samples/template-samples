@@ -49,11 +49,11 @@ export interface SampleQuery {
   authType?: string;          // 'entra', 'key'
   apiStyle?: string;          // 'sync', 'async'
   capabilities?: string[];    // ['tool-calling', 'reasoning', 'streaming', 'vision']
-  scenario?: string;          // 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database'
+  scenario?: string;          // 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database', 'agents'
   modelName?: string;         // 'gpt-4', 'gpt-4o', 'o1-mini', 'text-embedding-ada-002', etc.
+  agentName?: string;         // 'math-tutor-agent', 'customer-service-agent', 'ai-assistant', etc.
   apiVersion?: string;        // '2024-06-01', '2023-12-01-preview', etc.
   sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
-  agentCapability?: boolean; // ???? for Hosted Agent or for Prompt Agent, etc.
 }
 
 export interface SampleMetadata {
@@ -64,10 +64,11 @@ export interface SampleMetadata {
   authType: string;
   apiStyle?: string;
   modelName?: string;
+  agentName?: string;   // For agent samples: 'my-agent', 'customer-service-agent', etc.
   dependencies: Dependency[];
   description: string;
   capability: string;   // one of: 'tool-calling', 'reasoning', 'streaming', 'vision'
-  scenario: string;     // one of: 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database'
+  scenario: string;     // one of: 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database', 'agents'
   apiVersion?: string;
   sdkVersion?: string;
 }
