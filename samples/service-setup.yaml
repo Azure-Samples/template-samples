@@ -10,7 +10,7 @@ variants:
 samples:
 - templatePath: ./chat-completion/csharp
   variants:
-    - output: ../generated-samples/default/chat-completions/openai/csharp/entra/streaming
+    - output: ../generated-samples/default/chat-completions/openai/csharp/entra/basic
       input: 
         type: object
         properties:
