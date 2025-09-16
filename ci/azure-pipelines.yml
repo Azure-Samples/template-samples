@@ -353,12 +353,138 @@ stages:
     - publish: validation-results/
       artifact: JavaResults
       condition: always()
+    
+  - job: ValidateJavascript
+    displayName: 'Validate Javascript Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    - GenerateSamples
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'], 'true')
+    variables:
+      # Map the output variables from GenerateSamples job
+      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+
+    steps:
+    - checkout: self
+    - task: NodeTool@0
+      inputs:
+        versionSource: 'spec'
+        versionSpec: '20.3.1'
+
+    - download: current
+      artifact: ChangedJavascript
+      displayName: 'Download list of changed Javascript samples'
+
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
+      displayName: 'Copy generated configurations to workspace'
+
+    - script: |
+        chmod +x scripts/*.sh
+        # Set environment variables for validation using the mapped variables
+        export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
+        export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
+        export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        ./scripts/validate-samples.sh javascript "$(Pipeline.Workspace)/ChangedJavascript/changed_javascript.txt" $(VALIDATE_WITH_SERVICE)
+
+      displayName: 'Validate Javascript samples'
+
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+
+    - publish: validation-results/
+      artifact: JavascriptResults
+      condition: always()
+
+  - job: ValidateGo
+    displayName: 'Validate Go Samples'
+    dependsOn: 
+    - DetectChanges
+    - PublishConfigs
+    - GenerateSamples
+    condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'], 'true')
+    variables:
+      # Map the output variables from GenerateSamples job
+      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+
+    steps:
+    - checkout: self
+    - task: GoTool@0
+      inputs:
+        version: '1.25.1'
+
+    - download: current
+      artifact: ChangedGo
+      displayName: 'Download list of changed Go samples'
+
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
+
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
+
+    - download: current
+      artifact: GeneratedConfigs
+      displayName: 'Download generated configurations'
+
+    - script: |
+        cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
+      displayName: 'Copy generated configurations to workspace'
+
+    - script: |
+        chmod +x scripts/*.sh
+        # Set environment variables for validation using the mapped variables
+        export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
+        export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
+        export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        ./scripts/validate-samples.sh go "$(Pipeline.Workspace)/ChangedGo/changed_go.txt" $(VALIDATE_WITH_SERVICE)
+
+      displayName: 'Validate Go samples'
+
+    - script: |
+        mkdir -p validation-results
+        cp validation-*.log validation-results/ 2>/dev/null || echo "No validation log files found"
+      displayName: 'Collect validation logs'
+      condition: always()
+
+    - publish: validation-results/
+      artifact: GoResults
+      condition: always()
 
   - job: PublishSampleLibrary
     displayName: 'Publish Sample Library npm package'
     dependsOn: 
     - ValidateCSharp
     - ValidatePython
+    - ValidateJava
+    - ValidateJavascript
+    - ValidateGo
     steps:
     - checkout: self
     - task: NodeTool@0
