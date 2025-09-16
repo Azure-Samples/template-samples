@@ -38,7 +38,6 @@ samples:
 - templatePath: ./chat-completion/go
   variants:
     - output: ../generated-samples/gpt-4o/chat-completions/openai/go/keyAuth
-      input: 
       input:
         type: object
         properties:
@@ -49,7 +48,6 @@ samples:
 - templatePath: ./chat-completion/java
   variants:
     - output: ../generated-samples/gpt-4o/chat-completions/openai/java/keyAuth
-      input: 
       input:
         type: object
         properties:
