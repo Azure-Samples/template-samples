@@ -3,8 +3,11 @@
   "preBuildSteps": [
     "pip install -r requirements.txt"
   ],
-  "validateSteps": [
+  "buildSteps": [
     "python -m py_compile *.py"
+  ],
+  "executeSteps": [
+    "python *.py"
   ],
   "dependencyUpdateCommand": "pip list --outdated"
 }

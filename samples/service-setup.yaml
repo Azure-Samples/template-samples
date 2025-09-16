@@ -1,0 +1,37 @@
+variants:
+  # Define a reusable configuration object
+  - name: defaultConfiguration
+    input:
+      type: object
+      properties:
+        deploymentName: <some-deployment-name>
+        endpoint: <%= endpoint %>
+
+samples:
+- templatePath: ./chat-completion/csharp
+  variants: 
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/entra
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: true
+    - output: ../generated-samples/gpt-4o/chat-completions/openai/csharp/keyAuth
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: false
+          useEnvVars: true
+- templatePath: ./chat-completion-no-streaming/python
+  variants:
+    - output: ../generated-samples/python/chat-completion-no-streaming/basic
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+          apiVersion: 2025-01-01-preview
+          useEnvVars: true
