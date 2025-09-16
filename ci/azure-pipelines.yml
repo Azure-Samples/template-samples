@@ -23,6 +23,7 @@ parameters:
     type: string
     default: 'input-data.yaml'
     values:
+      - 'foundry-samples.yaml'
       - 'input-data.yaml'
       - 'service-setup.yaml'
       - 'test-data.yaml'
