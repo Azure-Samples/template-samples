@@ -27,7 +27,7 @@ goSamples.forEach(sample => {
 
 console.log('\nFinding streaming samples:');
 const streamingSamples = SdkSamples.findSamples({
-  modelCapabilities: ['streaming']
+  capabilities: ['streaming']
 });
 streamingSamples.forEach(sample => {
   console.log(`- ${sample.id}: ${sample.description}`);
