@@ -526,11 +526,11 @@ stages:
     
     - script: |
         chmod +x scripts/remove-unvalidated-samples.sh
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/CSharpResults/validation-results/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/PythonResults/validation-results/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavaResults/validation-results/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavascriptResults/validation-results/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/GoResults/validation-results/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/CSharpResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/PythonResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavaResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavascriptResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/GoResults/validation-errors.log"
       displayName: 'Remove unvalidated samples'
         
 
