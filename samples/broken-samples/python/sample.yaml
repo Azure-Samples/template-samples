@@ -1,5 +1,0 @@
-template: sample.py.template
-type: python
-input:
-  - name: dummyProperty
-    type: string

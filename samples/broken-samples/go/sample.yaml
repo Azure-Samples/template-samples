@@ -1,5 +1,0 @@
-template: sample.go.template
-type: go
-input:
-  - name: dummyProperty
-    type: string

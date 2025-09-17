@@ -1,5 +1,0 @@
-template: sample.java.template
-type: java
-input:
-  - name: dummyProperty
-    type: string

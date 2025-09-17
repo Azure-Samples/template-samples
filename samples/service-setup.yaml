@@ -65,38 +65,3 @@ samples:
           deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
           apiVersion: 2025-01-01-preview
           useEnvVars: true
-- templatePath: ./broken-samples/python
-  variants:
-    - output: ../generated-samples/gpt-4o/broken-samples/openai/python/keyAuth
-      input:
-        type: object
-        properties:
-          dummyProperty: dummyValue
-- templatePath: ./broken-samples/javascript
-  variants:
-    - output: ../generated-samples/gpt-4o/broken-samples/openai/javascript/keyAuth
-      input:
-        type: object
-        properties:
-          dummyProperty: dummyValue
-- templatePath: ./broken-samples/go
-  variants:
-    - output: ../generated-samples/gpt-4o/broken-samples/openai/go/keyAuth
-      input:
-        type: object
-        properties:
-          dummyProperty: dummyValue
-- templatePath: ./broken-samples/java
-  variants:
-    - output: ../generated-samples/gpt-4o/broken-samples/openai/java/keyAuth
-      input:
-        type: object
-        properties:
-          dummyProperty: dummyValue
-- templatePath: ./broken-samples/csharp
-  variants:
-    - output: ../generated-samples/gpt-4o/broken-samples/openai/csharp/keyAuth
-      input:
-        type: object
-        properties:
-          dummyProperty: dummyValue

@@ -1,5 +1,0 @@
-template: sample.cs.template
-type: csharp
-input:
-  - name: dummyProperty
-    type: string
