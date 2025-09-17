@@ -1,12 +1,5 @@
-variants:
-  # Define a reusable configuration object
-  - name: defaultConfiguration
-    input:
-      type: object
-      properties:
-        deploymentName: <some-deployment-name>
-        endpoint: <%= endpoint %>
-
+# Output path must follow: <model>/<api>/<sdk>/<language>/<auth-type>/<capability>
+# e.g., gpt-4o/completion-api/openai/python/entra/streaming
 samples:
 - templatePath: ./chat-completion/csharp
   variants:
@@ -79,44 +72,4 @@ samples:
           endpoint: <%= endpoint %>
           deploymentName: o4-mini
           useTokenCredentials: false
-          useEnvVars: true
-- templatePath: ./chat-completion-no-streaming/python
-  variants:
-    - output: ../generated-samples/gpt-4o/chat-completions/openai/python/keyAuth
-      input:
-        type: object
-        properties:
-          useTokenCredentials: false
-          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
-          apiVersion: 2025-01-01-preview
-          useEnvVars: true
-- templatePath: ./chat-completion/go
-  variants:
-    - output: ../generated-samples/gpt-4o/chat-completions/openai/go/keyAuth
-      input:
-        type: object
-        properties:
-          useTokenCredentials: false
-          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
-          apiVersion: 2025-01-01-preview
-          useEnvVars: true
-- templatePath: ./chat-completion/java
-  variants:
-    - output: ../generated-samples/gpt-4o/chat-completions/openai/java/keyAuth
-      input:
-        type: object
-        properties:
-          useTokenCredentials: false
-          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
-          apiVersion: 2025-01-01-preview
-          useEnvVars: true
-- templatePath: ./chat-completion/javascript
-  variants:
-    - output: ../generated-samples/gpt-4o/chat-completions/openai/javascript/keyAuth
-      input:
-        type: object
-        properties:
-          useTokenCredentials: false
-          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
-          apiVersion: 2025-01-01-preview
           useEnvVars: true
