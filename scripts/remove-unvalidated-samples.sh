@@ -11,7 +11,6 @@ else
     exit 0
 fi
 
-
 while IFS= read -r line; do
   # skip lines that don't contain ❌
   if [[ "$line" != *❌* ]]; then 
