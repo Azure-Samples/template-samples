@@ -47,15 +47,15 @@ if [ "$MAKE_SERVICE_CALLS" = true ]; then
     done
 fi
 
-# Execute validation steps
-# echo ""
-# echo "--- Validation Steps ---"
-# echo "$CONFIG" | jq -r '.validateSteps[]?' | while IFS= read -r step; do
-#     if [ -n "$step" ] && [ "$step" != "null" ]; then
-#         echo "Executing: $step"
-#         eval "$step"
-#     fi
-# done
+#Execute validation steps
+echo ""
+echo "--- Validation Steps ---"
+echo "$CONFIG" | jq -r '.validateSteps[]?' | while IFS= read -r step; do
+    if [ -n "$step" ] && [ "$step" != "null" ]; then
+        echo "Executing: $step"
+        eval "$step"
+    fi
+done
 
 # Return to original directory
 cd "$ORIGINAL_DIR"
