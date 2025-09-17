@@ -1,0 +1,5 @@
+template: sample.js.template
+type: javascript
+input:
+  - name: dummyProperty
+    type: string
