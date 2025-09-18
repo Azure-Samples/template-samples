@@ -508,27 +508,27 @@ stages:
     - download: current
       artifact: CSharpResults
       displayName: 'Download C# validation results'
-      condition: eq($(hasCSharpChanges), 'true')
+      condition: eq(variables['hasCSharpChanges'], 'true')
 
     - download: current
       artifact: PythonResults
       displayName: 'Download Python validation results'
-      condition: eq($(hasPythonChanges), 'true')
+      condition: eq(variables['hasPythonChanges'], 'true')
 
     - download: current
       artifact: JavaResults
       displayName: 'Download Java validation results'
-      condition: eq($(hasJavaChanges), 'true')
+      condition: eq(variables['hasJavaChanges'], 'true')
 
     - download: current
       artifact: JavascriptResults
       displayName: 'Download Javascript validation results'
-      condition: eq($(hasJavascriptChanges), 'true')
+      condition: eq(variables['hasJavascriptChanges'], 'true')
 
     - download: current
       artifact: GoResults
       displayName: 'Download Go validation results'
-      condition: eq($(hasGoChanges), 'true')
+      condition: eq(variables['hasGoChanges'], 'true')
 
     - script: |
         mkdir -p ./generated-samples/
