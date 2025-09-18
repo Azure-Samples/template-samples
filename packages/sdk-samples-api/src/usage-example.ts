@@ -17,7 +17,7 @@ const samples = SdkSamples.getSamplesByQuery({
   authType: 'entra',
   language: 'csharp',
   apiStyle: 'sync',
-  modelCapabilities: capabilities.length > 0 ? [capabilities[0]] : []
+  capabilities: capabilities.length > 0 ? [capabilities[0]] : []
 });
 
 console.log(`\nFound ${samples.length} matching samples:`);
@@ -45,7 +45,8 @@ if (samples.length > 0) {
   console.log(`- API: ${firstSample.metadata.api}`);
   console.log(`- Auth Type: ${firstSample.metadata.authType}`);
   console.log(`- API Style: ${firstSample.metadata.apiStyle}`);
-  console.log(`- Capabilities: ${firstSample.metadata.modelCapabilities.join(', ') || 'None'}`);
+  console.log(`- Capability: ${firstSample.metadata.capability || 'None'}`);
+  console.log(`- Scenario: ${firstSample.metadata.scenario || 'Not specified'}`);
   console.log(`- API Version: ${firstSample.metadata.apiVersion || 'Not specified'}`);
   console.log(`- SDK Version: ${firstSample.metadata.sdkVersion || 'Not specified'}`);
 }
@@ -71,10 +72,17 @@ asyncSamples.forEach(sample => {
 });
 
 // Find all streaming samples
-const streamingSamples = SdkSamples.findSamples({ modelCapabilities: ['streaming'] });
+const streamingSamples = SdkSamples.findSamples({ capabilities: ['streaming'] });
 console.log(`\nFound ${streamingSamples.length} streaming samples:`);
 streamingSamples.forEach(sample => {
   console.log(`- ${sample.language} ${sample.api} API (streaming)`);
+});
+
+// Find samples with multiple capabilities (OR logic - matches any of the requested capabilities)
+const multiCapabilitySamples = SdkSamples.findSamples({ capabilities: ['streaming', 'reasoning'] });
+console.log(`\nFound ${multiCapabilitySamples.length} samples with streaming OR reasoning capabilities:`);
+multiCapabilitySamples.forEach(sample => {
+  console.log(`- ${sample.language} ${sample.api} API (${sample.capability})`);
 });
 
 // Find responses API samples
