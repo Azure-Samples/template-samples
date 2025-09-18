@@ -488,6 +488,12 @@ stages:
     - ValidateJavascript
     - ValidateGo
     condition: always()
+    variables:
+      hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
+      hasPythonChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'] ]
+      hasJavaChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'] ]
+      hasJavascriptChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'] ]
+      hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
     steps:
     - checkout: self
     - task: NodeTool@0
@@ -502,27 +508,27 @@ stages:
     - download: current
       artifact: CSharpResults
       displayName: 'Download C# validation results'
-      condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'], 'true')
+      condition: eq($(hasCSharpChanges), 'true')
 
     - download: current
       artifact: PythonResults
       displayName: 'Download Python validation results'
-      condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'], 'true')
+      condition: eq($(hasPythonChanges), 'true')
 
     - download: current
       artifact: JavaResults
       displayName: 'Download Java validation results'
-      condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'], 'true')
+      condition: eq($(hasJavaChanges), 'true')
 
     - download: current
       artifact: JavascriptResults
       displayName: 'Download Javascript validation results'
-      condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'], 'true')
+      condition: eq($(hasJavascriptChanges), 'true')
 
     - download: current
       artifact: GoResults
       displayName: 'Download Go validation results'
-      condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'], 'true')
+      condition: eq($(hasGoChanges), 'true')
 
     - script: |
         mkdir -p ./generated-samples/
