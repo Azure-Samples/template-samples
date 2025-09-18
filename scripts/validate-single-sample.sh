@@ -47,7 +47,7 @@ if [ "$MAKE_SERVICE_CALLS" = true ]; then
     done
 fi
 
-#Execute validation steps
+# Execute validation steps
 # echo ""
 # echo "--- Validation Steps ---"
 # echo "$CONFIG" | jq -r '.validateSteps[]?' | while IFS= read -r step; do
