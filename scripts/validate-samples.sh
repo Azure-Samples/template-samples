@@ -43,7 +43,8 @@ fi
 if [ -s validation-errors.log ]; then
     echo "Failed $(wc -l < validation-errors.log) samples:"
     cat validation-errors.log
-    exit 1
+    echo "##vso[task.complete result=SucceededWithIssues;]Sample validation failures found"
+    exit 0
 fi
 
 echo "All $LANGUAGE samples passed!"

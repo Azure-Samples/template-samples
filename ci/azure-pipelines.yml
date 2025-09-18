@@ -486,6 +486,7 @@ stages:
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
+    condition: always()
     steps:
     - checkout: self
     - task: NodeTool@0
@@ -497,11 +498,41 @@ stages:
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
+    - download: current
+      artifact: CSharpResults
+      displayName: 'Download C# validation results'
+
+    - download: current
+      artifact: PythonResults
+      displayName: 'Download Python validation results'
+
+    - download: current
+      artifact: JavaResults
+      displayName: 'Download Java validation results'
+
+    - download: current
+      artifact: JavascriptResults
+      displayName: 'Download Javascript validation results'
+
+    - download: current
+      artifact: GoResults
+      displayName: 'Download Go validation results'
+
     - script: |
         mkdir -p ./generated-samples/
         cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
         echo "Copied downloaded samples to ./generated-samples/"
       displayName: 'Copy sample artifacts to workspace'
+    
+    - script: |
+        chmod +x scripts/remove-unvalidated-samples.sh
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/CSharpResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/PythonResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavaResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavascriptResults/validation-errors.log"
+        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/GoResults/validation-errors.log"
+      displayName: 'Remove unvalidated samples'
+        
 
     - script: |
         # Copy generated samples into the npm package
