@@ -481,12 +481,19 @@ stages:
   - job: PublishSampleLibrary
     displayName: 'Publish Sample Library npm package'
     dependsOn: 
+    - DetectChanges
     - ValidateCSharp
     - ValidatePython
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
     condition: always()
+    variables:
+      hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
+      hasPythonChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'] ]
+      hasJavaChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'] ]
+      hasJavascriptChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'] ]
+      hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
     steps:
     - checkout: self
     - task: NodeTool@0
@@ -501,22 +508,27 @@ stages:
     - download: current
       artifact: CSharpResults
       displayName: 'Download C# validation results'
+      condition: eq(variables['hasCSharpChanges'], 'true')
 
     - download: current
       artifact: PythonResults
       displayName: 'Download Python validation results'
+      condition: eq(variables['hasPythonChanges'], 'true')
 
     - download: current
       artifact: JavaResults
       displayName: 'Download Java validation results'
+      condition: eq(variables['hasJavaChanges'], 'true')
 
     - download: current
       artifact: JavascriptResults
       displayName: 'Download Javascript validation results'
+      condition: eq(variables['hasJavascriptChanges'], 'true')
 
     - download: current
       artifact: GoResults
       displayName: 'Download Go validation results'
+      condition: eq(variables['hasGoChanges'], 'true')
 
     - script: |
         mkdir -p ./generated-samples/
