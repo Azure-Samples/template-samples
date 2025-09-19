@@ -488,11 +488,11 @@ stages:
     - ValidateGo
     condition: |
       and(
-        in(dependencies.ValidateCSharp.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped', 'Canceled'),
-        in(dependencies.ValidatePython.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped', 'Canceled'),
-        in(dependencies.ValidateJava.result, not(canceled())),
-        in(dependencies.ValidateJavascript.result, not(canceled())),
-        in(dependencies.ValidateGo.result, not(canceled()))
+        in(dependencies.ValidateCSharp.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'),
+        in(dependencies.ValidatePython.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'),
+        in(dependencies.ValidateJava.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'),
+        in(dependencies.ValidateJavascript.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'),
+        in(dependencies.ValidateGo.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped')
       )
     steps:
     - checkout: self
