@@ -155,3 +155,30 @@ samples:
           endpoint: <%= endpoint %>
           deploymentName: o4-mini
           useTokenCredentials: true
+- templatePath: ../sample-templates/chat-completion/java
+  variants:
+    - output: ../generated-samples/default/completions/openai/java/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
+# - templatePath: ../sample-templates/chat-completion/javascript
+#   variants:
+#     - output: ../generated-samples/default/completions/openai/javascript/entra/basic
+#       input:
+#         type: object
+#         properties:
+#           deploymentName: <%= deploymentName %>
+#           endpoint: <%= endpoint %>
+#           useTokenCredentials: true
+- templatePath: ../sample-templates/chat-completion/go
+  variants:
+    - output: ../generated-samples/default/completions/openai/go/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
