@@ -41,7 +41,7 @@ ChatClient client = new(
 <% } %>
 
 <% if (extraParams) { %>
-ChatCompletionsOptions options = new ChatCompletionsOptions{
+ChatCompletionOptions options = new ChatCompletionOptions{
     <% if (extraParams.temperature) { %>
     Temperature=(float)<%= extraParams.temperature %>,
     <% } %>
@@ -69,7 +69,7 @@ ChatCompletion completion = client.CompleteChat(
          new UserChatMessage("Hi, can you help me?"),
          new AssistantChatMessage("Arrr! Of course, me hearty! What can I do for ye?"),
          new UserChatMessage("What's the best way to train a parrot?"),
-     ]);
+     ]<% if (extraParams) { %>, options<% } %>);
 
 Console.WriteLine($"Model={completion.Model}");
 foreach (ChatMessageContentPart contentPart in completion.Content)

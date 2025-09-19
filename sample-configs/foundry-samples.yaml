@@ -20,8 +20,6 @@ samples:
           apiKey: <your-api-key>
           endpoint: <%= endpoint %>
           useTokenCredentials: false
-          extraParams:
-            temperature: 0.7
     - output: ../generated-samples/gpt-4o/completions/openai/csharp/entra/basic
       input: 
         type: object
