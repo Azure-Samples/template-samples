@@ -49,7 +49,7 @@ stages:
     - script: |
         echo "Generating samples with input: $(TEMPLATE_CONFIG_INPUT)"
         # Generate samples using che batch command
-        che batch samples/$(TEMPLATE_CONFIG_INPUT)
+        che batch sample-configs/$(TEMPLATE_CONFIG_INPUT)
       displayName: 'Generate samples'
 
     - publish: generated-samples/
@@ -487,6 +487,8 @@ stages:
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
+    # We depend on all validation jobs to finish before publishing,
+    # And we publish regardless of any of them failing or being skipped.
     condition: always()
     variables:
       hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
