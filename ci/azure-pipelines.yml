@@ -486,6 +486,8 @@ stages:
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
+    # We depend on all validation jobs to finish before publishing,
+    # And we publish regardless of any of them failing or being skipped.
     condition: |
       and(
         in(dependencies.ValidateCSharp.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped'),
