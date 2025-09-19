@@ -182,3 +182,71 @@ samples:
           deploymentName: <%= deploymentName %>
           endpoint: <%= endpoint %>
           useTokenCredentials: true
+- templatePath: ../sample-templates/image-generation/python
+  variants:
+    - output: ../generated-samples/default/images/openai/python/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/python/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/image-generation/csharp
+  variants:
+    - output: ../generated-samples/default/images/openai/csharp/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/csharp/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/image-generation/java
+  variants:
+    - output: ../generated-samples/default/images/openai/java/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/java/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/image-generation/go
+  variants:
+    - output: ../generated-samples/default/images/openai/go/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/go/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>

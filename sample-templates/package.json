@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@caleuche/cli": "^0.4.1"
+  }
+}

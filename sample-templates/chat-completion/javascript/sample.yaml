@@ -1,5 +1,5 @@
 template: sample.js.template
-type: javascript
+type: js
 dependencies:
   - name: openai
     version: 5.19.1
