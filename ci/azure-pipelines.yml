@@ -486,6 +486,14 @@ stages:
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
+    condition: |
+      and(
+        in(dependencies.ValidateCSharp.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped', 'Canceled'),
+        in(dependencies.ValidatePython.result, 'Succeeded', 'SucceededWithIssues', 'Failed', 'Skipped', 'Canceled'),
+        in(dependencies.ValidateJava.result, not(canceled())),
+        in(dependencies.ValidateJavascript.result, not(canceled())),
+        in(dependencies.ValidateGo.result, not(canceled()))
+      )
     steps:
     - checkout: self
     - task: NodeTool@0
