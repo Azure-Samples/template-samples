@@ -454,10 +454,6 @@ function loadSampleContent(metadata: SampleMetadata): SampleContent {
   // Try to find the actual sample directory based on the metadata
   const basePath = getDefaultBasePath();
   const samplePath = path.join(basePath, metadata.modelName || 'unknown', metadata.api, metadata.sdk, metadata.language, metadata.authType, metadata.capability);
-
-  // console.log(`Base directory: ${__dirname}`);
-  // console.log(`Base samples path: ${basePath}`);
-  // console.log(`Loading sample content from: ${samplePath}`);
   
   let sourceCode = '';
   let projectFile = '';
@@ -476,9 +472,7 @@ function loadSampleContent(metadata: SampleMetadata): SampleContent {
       const sourceExts = extensions[metadata.language] || ['.txt'];
       for (const ext of sourceExts) {
         const files = fs.readdirSync(samplePath).filter(f => f.endsWith(ext));
-        console.log(`Found ${files.length} source files with extension ${ext}`);
         if (files.length > 0) {
-          console.log(`Reading source file: ${files[0]}`);
           sourceCode = fs.readFileSync(path.join(samplePath, files[0]), 'utf8');
           break;
         }

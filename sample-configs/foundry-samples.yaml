@@ -1,0 +1,252 @@
+# Output path must follow: <model>/<api>/<sdk>/<language>/<auth-type>/<capability>
+# e.g., gpt-4o/completion-api/openai/python/entra/streaming
+samples:
+- templatePath: ../sample-templates/chat-completion/csharp
+  variants:
+    - output: ../generated-samples/default/completions/openai/csharp/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
+          extraParams:
+            temperature: 0.7
+    - output: ../generated-samples/default/completions/openai/csharp/keyAuth/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: false
+    - output: ../generated-samples/gpt-4o/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: true
+    - output: ../generated-samples/gpt-4o/completions/openai/csharp/keyAuth/basic
+      input: 
+        type: object
+        properties:
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: false
+    - output: ../generated-samples/gpt-4.1/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4.1
+          useTokenCredentials: true
+    - output: ../generated-samples/Phi-4/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: Phi-4
+          useTokenCredentials: true
+    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: DeepSeek-R1-0528
+          useTokenCredentials: true
+    - output: ../generated-samples/grok-3/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: grok-3
+          useTokenCredentials: true
+    - output: ../generated-samples/gpt-4.1-mini/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4.1-mini
+          useTokenCredentials: true
+    - output: ../generated-samples/o4-mini/completions/openai/csharp/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: o4-mini
+          useTokenCredentials: true
+- templatePath: ../sample-templates/chat-completion/python
+  variants:
+    - output: ../generated-samples/default/completions/openai/python/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
+          extraParams:
+            temperature: 0.7
+    - output: ../generated-samples/default/completions/openai/python/keyAuth/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: false
+          extraParams:
+            temperature: 0.7
+    - output: ../generated-samples/gpt-4o/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: true
+    - output: ../generated-samples/gpt-4o/completions/openai/python/keyAuth/basic
+      input: 
+        type: object
+        properties:
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4o
+          useTokenCredentials: false
+    - output: ../generated-samples/gpt-4.1/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4.1
+          useTokenCredentials: true
+    - output: ../generated-samples/Phi-4/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: Phi-4
+          useTokenCredentials: true
+    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: DeepSeek-R1-0528
+          useTokenCredentials: true
+    - output: ../generated-samples/grok-3/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: grok-3
+          useTokenCredentials: true
+    - output: ../generated-samples/gpt-4.1-mini/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-4.1-mini
+          useTokenCredentials: true
+    - output: ../generated-samples/o4-mini/completions/openai/python/entra/basic
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: o4-mini
+          useTokenCredentials: true
+- templatePath: ../sample-templates/chat-completion/java
+  variants:
+    - output: ../generated-samples/default/completions/openai/java/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
+- templatePath: ../sample-templates/chat-completion/javascript
+  variants:
+    - output: ../generated-samples/default/completions/openai/javascript/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
+- templatePath: ../sample-templates/chat-completion/go
+  variants:
+    - output: ../generated-samples/default/completions/openai/go/entra/basic
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: true
+- templatePath: ../sample-templates/image-generation/python
+  variants:
+    - output: ../generated-samples/default/images/openai/python/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/python/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/image-generation/csharp
+  variants:
+    - output: ../generated-samples/default/images/openai/csharp/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/csharp/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/image-generation/java
+  variants:
+    - output: ../generated-samples/default/images/openai/java/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/java/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/image-generation/go
+  variants:
+    - output: ../generated-samples/default/images/openai/go/entra/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+    - output: ../generated-samples/default/images/openai/go/keyAuth/generation
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
