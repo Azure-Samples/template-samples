@@ -21,7 +21,7 @@ parameters:
   - name: templateConfigInput
     displayName: 'Template Configuration Input File'
     type: string
-    default: 'input-data.yaml'
+    default: 'test-data.yaml'
     values:
       - 'foundry-samples.yaml'
       - 'input-data.yaml'
