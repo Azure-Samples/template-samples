@@ -1,0 +1,86 @@
+# ------------------------------------
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
+# ------------------------------------
+
+"""
+DESCRIPTION:
+    This sample demonstrates how to use basic agent operations from
+    the Azure Agents service using a synchronous client.
+
+USAGE:
+    python sample.py
+
+    Before running the sample:
+
+    pip install azure-ai-projects azure-ai-agents azure-identity
+
+    Set these environment variables with your own values:
+    1) PROJECT_ENDPOINT - The Azure AI Project endpoint, as found in the Overview
+                          page of your Azure AI Foundry portal.
+    2) MODEL_DEPLOYMENT_NAME - The deployment name of the AI model, as found under the "Name" column in
+       the "Models + endpoints" tab in your Azure AI Foundry project.
+"""
+import os
+import time
+from azure.ai.projects import AIProjectClient
+from azure.identity import DefaultAzureCredential
+from azure.ai.agents.models import  AgentThreadCreationOptions, ThreadMessageOptions, ListSortOrder
+
+endpoint = os.environ.get("PROJECT_ENDPOINT")
+if not endpoint:
+  raise ValueError("Please set the PROJECT_ENDPOINT environment variable.")
+
+model = os.environ.get("MODEL_DEPLOYMENT_NAME")
+if not model:
+  raise ValueError("Please set the MODEL_DEPLOYMENT_NAME environment variable.")
+
+
+project_client = AIProjectClient(
+    endpoint=endpoint,
+    credential=DefaultAzureCredential(),
+)
+
+with project_client:
+    agents_client = project_client.agents
+
+    # [START create_agent]
+    agent = agents_client.create_agent(
+        model=model,
+        name="my-agent",
+        instructions="You are helpful agent",
+    )
+    # [END create_agent]
+    print(f"Created agent, agent ID: {agent.id}")
+
+    # [START create_thread_and_run]
+    # Prepare the initial user message
+    initial_message = ThreadMessageOptions(role="user", content="Hello! Can you tell me a joke?")
+
+    # Create a new thread and immediately start a run on it
+    run = agents_client.create_thread_and_run(
+        agent_id=agent.id,
+        thread=AgentThreadCreationOptions(messages=[initial_message]),
+    )
+    # [END create_thread_and_run]
+
+    # Poll the run as long as run status is queued or in progress
+    while run.status in ["queued", "in_progress", "requires_action"]:
+        # Wait for a second
+        time.sleep(1)
+        run = agents_client.runs.get(thread_id=thread.id, run_id=run.id)
+        # [END create_run]
+        print(f"Run status: {run.status}")
+    if run.status == "failed":
+        print(f"Run error: {run.last_error}")
+
+    # [START list_messages]
+    messages = agents_client.messages.list(thread_id=thread.id, order=ListSortOrder.ASCENDING)
+    for msg in messages:
+        if msg.text_messages:
+            last_text = msg.text_messages[-1]
+            print(f"{msg.role}: {last_text.text.value}")
+    # [END list_messages]
+
+    agents_client.delete_agent(agent.id)
+    print("Deleted agent")
