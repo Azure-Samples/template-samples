@@ -11,6 +11,7 @@ console.log('Available auth types:', SdkSamples.getAvailableAuthTypes());
 console.log('Available capabilities:', SdkSamples.getAvailableCapabilities({ sdk: 'openai', api: 'completions' }));
 console.log('Available API versions:', SdkSamples.getAvailableApiVersions({ sdk: 'openai' }));
 console.log('Available SDK versions for C#:', SdkSamples.getAvailableSdkVersions({ language: 'csharp' }));
+console.log('Available resource types:', SdkSamples.getAvailableResourceTypes());
 
 console.log('\n--- Query Examples ---\n');
 
@@ -112,3 +113,41 @@ csharpV2Samples.forEach(sample => {
 });
 
 console.log('\nAPI test completed!');
+
+// Additional tests for resourceType functionality
+console.log('\n--- ResourceType Tests ---\n');
+
+// Test resourceType filtering
+console.log('Finding samples by resourceType:');
+const openAIResourceSamples = SdkSamples.findSamples({ resourceType: 'openai' });
+console.log(`Found ${openAIResourceSamples.length} samples with resourceType 'openai':`);
+openAIResourceSamples.forEach(sample => {
+  console.log(`- ${sample.id}: ${sample.description} (resourceType: ${sample.resourceType})`);
+});
+
+// Test combined filtering with resourceType
+console.log('\nCombining resourceType with other filters:');
+const filteredSamples = SdkSamples.findSamples({
+  resourceType: 'openai',
+  language: 'go',
+  authType: 'key'
+});
+console.log(`Found ${filteredSamples.length} Go samples with OpenAI resourceType and key auth:`);
+filteredSamples.forEach(sample => {
+  console.log(`- ${sample.id} (resourceType: ${sample.resourceType}, language: ${sample.language}, authType: ${sample.authType})`);
+});
+
+// Test resourceType in sample content
+console.log('\nTesting resourceType in getSample:');
+const sampleWithResourceType = SdkSamples.getSample('go-chat-completion-openai-completions-key-sync');
+if (sampleWithResourceType) {
+  console.log('Sample resourceType:', sampleWithResourceType.metadata.resourceType);
+}
+
+// Test available resource types
+console.log('\nAvailable resource types:');
+const allSamples = SdkSamples.findSamples({});
+const resourceTypes = [...new Set(allSamples.map(s => s.resourceType).filter(Boolean))];
+console.log('Resource types:', resourceTypes);
+
+console.log('\nResourceType functionality test completed!');
