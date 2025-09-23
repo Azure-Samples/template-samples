@@ -250,7 +250,7 @@ samples:
           endpoint: <%= endpoint %>
           apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
-- templatePath: ./agents-basic/python
+- templatePath: ../sample-templates/agents-basic/python
   variants:
     - output: ../generated-samples/default/responses/projects/python/entra/agents
       input: 
@@ -259,7 +259,7 @@ samples:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
           agentID: <%= agentID %>
-- templatePath: ./agents-basic/csharp
+- templatePath: ../sample-templates/agents-basic/csharp
   variants:
     - output: ../generated-samples/default/responses/projects/csharp/entra/agents
       input: 
