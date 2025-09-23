@@ -65,21 +65,3 @@ samples:
           deploymentName: gpt-4.1-mini
           useTokenCredentials: false
           useEnvVars: true
-- templatePath: ./agents-basic/python
-  variants:
-    - output: ../generated-samples/default/responses/projects/python/entra/agents
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
-          agentID: <%= agentID %>
-- templatePath: ./agents-basic/csharp
-  variants:
-    - output: ../generated-samples/default/responses/projects/csharp/entra/agents
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
-          agentID: <%= agentID %>
