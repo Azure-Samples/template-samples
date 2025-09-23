@@ -108,10 +108,10 @@ function inferResourceType(modelName: string, api: string, sampleDir: string) {
   // if api is "agents"
   if (api.toLowerCase() === 'agents') {
     if (modelName.toLowerCase() === 'hub') {
-      return 'Hub';
+      return 'hub';
     }
     else if (modelName.toLowerCase() === 'fdp') {
-      return 'FDP';
+      return 'fdp';
     }
   }
 }
@@ -489,7 +489,8 @@ function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): 
     if (query.modelName && sample.modelName !== query.modelName) return false;
     if (query.apiVersion && sample.apiVersion !== query.apiVersion) return false;
     if (query.sdkVersion && sample.sdkVersion !== query.sdkVersion) return false;
-    
+    if (query.resourceType && sample.resourceType !== query.resourceType) return false;
+
     // Check capabilities match (OR logic: sample's capability must be in the requested capabilities list)
     // This allows querying for samples with any of multiple capabilities
     if (query.capabilities && query.capabilities.length > 0) {
