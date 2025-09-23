@@ -104,6 +104,20 @@ function inferScenario(api: string, sampleDir: string): string {
 }
 
 /**
+ * Infer resource type from SDK and API combination
+ */
+function inferResourceType(sdk: string, api: string): string {
+  // Map SDK and API combinations to Azure resource types
+  const sdkToResourceType: { [key: string]: string } = {
+    'openai': 'openai',
+    'projects': 'azure-ai',
+    'cognitive-services': 'cognitive-services'
+  };
+  
+  return sdkToResourceType[sdk] || 'openai';
+}
+
+/**
  * Generate description from directory path and code
  */
 function generateDescription(
@@ -237,7 +251,8 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
                 description: generateDescription(modelName, api, language, authType, apiStyle, capability),
                 scenario,
                 apiVersion,
-                sdkVersion
+                sdkVersion,
+                resourceType: inferResourceType(sdk, api) // Add resourceType based on SDK and API
               };
               
               samples.push(sample);
@@ -285,7 +300,8 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       description: 'Basic chat completion using Go SDK with key authentication',
       scenario: 'chat-completions',
       apiVersion: '2024-06-01',
-      sdkVersion: 'v1.1.0'
+      sdkVersion: 'v1.1.0',
+      resourceType: 'openai'
     },
     {
       id: 'go-chat-completion-async-openai-completions-key-async',
@@ -302,7 +318,8 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       description: 'Async chat completion using Go SDK with key authentication',
       scenario: 'chat-completions',
       apiVersion: '2024-06-01',
-      sdkVersion: 'v1.1.0'
+      sdkVersion: 'v1.1.0',
+      resourceType: 'openai'
     },
     {
       id: 'csharp-chat-completion-openai-completions-entra-sync',
@@ -320,7 +337,8 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       description: 'Chat completion using C# SDK with Entra ID authentication',
       scenario: 'chat-completions',
       apiVersion: 'v1',
-      sdkVersion: '2.1.0'
+      sdkVersion: '2.1.0',
+      resourceType: 'openai'
     }
   ];
 
@@ -413,6 +431,7 @@ function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): 
     if (query.modelName && sample.modelName !== query.modelName) return false;
     if (query.apiVersion && sample.apiVersion !== query.apiVersion) return false;
     if (query.sdkVersion && sample.sdkVersion !== query.sdkVersion) return false;
+    if (query.resourceType !== undefined && query.resourceType !== null && query.resourceType.trim() && sample.resourceType !== query.resourceType) return false;
     
     // Check capabilities match (OR logic: sample's capability must be in the requested capabilities list)
     // This allows querying for samples with any of multiple capabilities
@@ -605,6 +624,16 @@ export class SdkSamples {
     if (filters.language) query.language = filters.language;
     
     return getUniqueValues(sampleMetadataIndex, 'sdkVersion', query);
+  }
+
+  static getAvailableResourceTypes(filters: VersionFilters = {}): string[] {
+    initializeIndex();
+    const query: Partial<SampleQuery> = {};
+    if (filters.sdk) query.sdk = filters.sdk;
+    if (filters.api) query.api = filters.api;
+    if (filters.language) query.language = filters.language;
+    
+    return getUniqueValues(sampleMetadataIndex, 'resourceType', query);
   }
 
   // Model-related methods
