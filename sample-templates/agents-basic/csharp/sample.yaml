@@ -1,0 +1,22 @@
+template: sample.cs.template
+type: csharp
+dependencies:
+  - name: Azure.Identity
+    version: 1.16.0
+  - name: Azure.AI.Projects
+    version: 1.0.0-beta.11
+  - name: Azure.AI.Agents.Persistent
+    version: 1.2.0-beta.5
+input:
+  - name: endpoint
+    type: string
+    required: false
+    description: "Endpoint URL for the Azure AI service"
+  - name: agentID
+    type: string
+    required: false
+    description: "ID of the agent to use"
+  - name: agentName
+    type: string
+    required: false
+    description: "Name of the agent to use"

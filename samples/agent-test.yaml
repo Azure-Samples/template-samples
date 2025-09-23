@@ -1,0 +1,29 @@
+# Output path must follow: <model>/<api>/<sdk>/<language>/<auth-type>/<capability>
+samples:
+- templatePath: ./agents-basic/python
+  variants: 
+    - output: ../generated-samples/gpt-4o/projects/openai/python/entra/agents/basic/env-vars
+      input: 
+        type: object
+        properties:
+          model: gpt-4o
+          endpoint: <%= endpoint %>
+    - output: ../generated-samples/gpt-4o/projects/openai/python/entra/agents/create-thread-and-run
+      input: 
+        type: object
+        properties:
+          useCreateThreadAndRun: true
+    - output: ../generated-samples/gpt-4o/projects/openai/python/entra/agents/create-thread-and-process-run
+      input: 
+        type: object
+        properties:
+          useCreateThreadAndProcessRun: true
+    - output: ../generated-samples/gpt-4o/projects/openai/python/entra/agents/basic/no-env-vars
+      input: 
+        type: object
+        properties:
+          model: gpt-4o
+          endpoint: <%= endpoint %>
+          useEnvVars: false
+
+
