@@ -237,7 +237,7 @@ samples:
           deploymentName: <%= deploymentName %>
 - templatePath: ../sample-templates/agents-basic/python
   variants:
-    - output: ../generated-samples/default/responses/projects/python/entra/agents
+    - output: ../generated-samples/default/agents/projects/python/entra/agents
       input: 
         type: object
         properties:
@@ -246,7 +246,7 @@ samples:
           agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
-    - output: ../generated-samples/default/responses/projects/csharp/entra/agents
+    - output: ../generated-samples/default/agents/projects/csharp/entra/agents
       input: 
         type: object
         properties:
@@ -255,7 +255,7 @@ samples:
           agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
-    - output: ../generated-samples/default/responses/projects/javascript/entra/agents
+    - output: ../generated-samples/default/agents/projects/javascript/entra/agents
       input: 
         type: object
         properties:

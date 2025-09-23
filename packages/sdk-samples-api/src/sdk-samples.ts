@@ -96,7 +96,8 @@ function inferScenario(api: string, sampleDir: string): string {
     'completions': 'chat-completions',
     'embeddings': 'embeddings',
     'images': 'images',
-    'audio': 'audio'
+    'audio': 'audio',
+    'agents': 'agents'
   };
   
   return apiToScenario[api] || '';
