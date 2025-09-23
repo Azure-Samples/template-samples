@@ -3,14 +3,14 @@ import { DefaultAzureCredential } from "@azure/identity";
 
 async function runAgentConversation() {
   const project = new AIProjectClient(
-    "https://kleung-test-aifoundry.services.ai.azure.com/api/projects/test-aifoundry",
+    "<%= endpoint%>",
     new DefaultAzureCredential());
 
-  const agent = await project.agents.getAgent("asst_v1DFNByaXqgyayITw7Rkv9je");
+  const agent = await project.agents.getAgent("<%= agentId %>>");
 
   const thread = await project.agents.threads.create();
 
-  const message = await project.agents.messages.create(thread.id, "user", "Hi Agent889");
+  const message = await project.agents.messages.create(thread.id, "user", "Hi <%= agentName %>");
 
   // Create run
   let run = await project.agents.runs.create(thread.id, agent.id);

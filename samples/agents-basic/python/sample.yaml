@@ -10,23 +10,15 @@ dependencies:
   - name: azure-ai-projects
     version: 1.0.0
 input:
-  - name: useEnvVars
-    type: boolean
-    default: true
-    description: "Use environment variables for configuration"
-  - name: useCreateThreadAndRun
-    type: boolean
-    default: false
-    description: "Use create thread and run method to start the agent"
-  - name: useCreateThreadAndProcessRun
-    type: boolean
-    default: false
-    description: "Use create thread and process run method to start the agent"
   - name: endpoint
     type: string
     required: false
-    description: "Endpoint URL for the API"
-  - name: model
+    description: "Endpoint URL for the Azure AI service"
+  - name: agentID
     type: string
     required: false
-    description: "Model name to use for the agent"
+    description: "ID of the agent to use"
+  - name: agentName
+    type: string
+    required: false
+    description: "Name of the agent to use"
