@@ -1,0 +1,44 @@
+import { AIProjectClient } from "@azure/ai-projects";
+import { DefaultAzureCredential } from "@azure/identity";
+
+async function runAgentConversation() {
+  const project = new AIProjectClient(
+    "<%= endpoint%>",
+    new DefaultAzureCredential());
+
+  const agent = await project.agents.getAgent("<%= agentID %>");
+
+  const thread = await project.agents.threads.create();
+
+  const message = await project.agents.messages.create(thread.id, "user", "Hi <%= agentName %>");
+
+  // Create run
+  let run = await project.agents.runs.create(thread.id, agent.id);
+
+  // Poll until the run reaches a terminal status
+  while (run.status === "queued" || run.status === "in_progress") {
+    // Wait for a second
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    run = await project.agents.runs.get(thread.id, run.id);
+  }
+
+  if (run.status === "failed") {
+    console.error(`Run failed: `, run.lastError);
+  }
+
+  // Retrieve messages
+  const messages = await project.agents.messages.list(thread.id, { order: "asc" });
+
+  // Display messages
+  for await (const m of messages) {
+    const content = m.content.find((c) => c.type === "text" && "text" in c);
+    if (content) {
+      console.log("placeholder content");
+    }
+  }
+}
+
+// Main execution
+runAgentConversation().catch(error => {
+  console.error("An error occurred:", error);
+});

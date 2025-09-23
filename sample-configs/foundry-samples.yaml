@@ -268,3 +268,12 @@ samples:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
           agentID: <%= agentID %>
+- templatePath: ../sample-templates/agents-basic/javascript
+  variants:
+    - output: ../generated-samples/default/responses/projects/javascript/entra/agents
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          agentName: <%= agentName %>
+          agentID: <%= agentID %>
