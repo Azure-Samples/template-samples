@@ -98,63 +98,21 @@ samples:
           useTokenCredentials: false
           extraParams:
             temperature: 0.7
-    - output: ../generated-samples/gpt-4o/completions/openai/python/entra/basic
+    - output: ../generated-samples/gpt-5/completions/openai/python/entra/basic
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
-          deploymentName: gpt-4o
+          deploymentName: gpt-5
           useTokenCredentials: true
-    - output: ../generated-samples/gpt-4o/completions/openai/python/keyAuth/basic
+    - output: ../generated-samples/gpt-5/completions/openai/python/keyAuth/basic
       input: 
         type: object
         properties:
           apiKey: <your-api-key>
           endpoint: <%= endpoint %>
-          deploymentName: gpt-4o
+          deploymentName: gpt-5
           useTokenCredentials: false
-    - output: ../generated-samples/gpt-4.1/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: gpt-4.1
-          useTokenCredentials: true
-    - output: ../generated-samples/Phi-4/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: Phi-4
-          useTokenCredentials: true
-    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: DeepSeek-R1-0528
-          useTokenCredentials: true
-    - output: ../generated-samples/grok-3/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: grok-3
-          useTokenCredentials: true
-    - output: ../generated-samples/gpt-4.1-mini/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: gpt-4.1-mini
-          useTokenCredentials: true
-    - output: ../generated-samples/o4-mini/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: o4-mini
-          useTokenCredentials: true
 - templatePath: ../sample-templates/chat-completion/java
   variants:
     - output: ../generated-samples/default/completions/openai/java/entra/basic
