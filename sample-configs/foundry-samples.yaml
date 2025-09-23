@@ -250,3 +250,15 @@ samples:
           endpoint: <%= endpoint %>
           apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
+- templatePath: ../sample-templates/agents/csharp
+  variants:
+    - output: ../generated-samples/hub/agents/projects/csharp/entra/basic
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+    - output: ../generated-samples/fdp/agents/projects/csharp/entra/basic
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>

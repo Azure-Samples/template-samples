@@ -70,6 +70,7 @@ export interface SampleMetadata {
   scenario: string;     // one of: 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database'
   apiVersion?: string;
   sdkVersion?: string;
+  resourceType?: string; // used to differentiate FDP and Hub samples
 }
 
 export interface Dependency {

@@ -94,13 +94,25 @@ function inferScenario(api: string, sampleDir: string): string {
   // Map API types to scenarios
   const apiToScenario: { [key: string]: string } = {
     'completions': 'chat-completions',
-    'responses': 'chat-completions',
     'embeddings': 'embeddings',
     'images': 'images',
     'audio': 'audio'
   };
   
-  return apiToScenario[api] || 'chat-completions';
+  return apiToScenario[api] || '';
+}
+
+// Temporary function to infer Foundry resource type based on model name and api
+function inferResourceType(modelName: string, api: string, sampleDir: string) {
+  // if api is "agents"
+  if (api.toLowerCase() === 'agents') {
+    if (modelName.toLowerCase() === 'hub') {
+      return 'Hub';
+    }
+    else if (modelName.toLowerCase() === 'fdp') {
+      return 'FDP';
+    }
+  }
 }
 
 /**
@@ -218,6 +230,8 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
               // Infer additional metadata
               const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
               const scenario = inferScenario(api, newPath);
+
+              const resourceType = inferResourceType(modelName, api, newPath);
               
               // Extract versions
               const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
@@ -237,7 +251,8 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
                 description: generateDescription(modelName, api, language, authType, apiStyle, capability),
                 scenario,
                 apiVersion,
-                sdkVersion
+                sdkVersion,
+                resourceType
               };
               
               samples.push(sample);
