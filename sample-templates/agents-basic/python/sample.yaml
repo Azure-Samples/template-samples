@@ -1,0 +1,24 @@
+template: sample.py.template
+type: python
+dependencies:
+  - name: openai
+    version: 1.101.0
+  - name: azure-identity
+    version: 1.24.0
+  - name: azure-ai-agents
+    version: 1.1.0
+  - name: azure-ai-projects
+    version: 1.0.0
+input:
+  - name: endpoint
+    type: string
+    required: false
+    description: "Endpoint URL for the Azure AI service"
+  - name: agentID
+    type: string
+    required: false
+    description: "ID of the agent to use"
+  - name: agentName
+    type: string
+    required: false
+    description: "Name of the agent to use"
