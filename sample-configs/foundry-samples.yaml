@@ -277,3 +277,19 @@ samples:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
           agentID: <%= agentID %>
+- templatePath: ../sample-templates/agents-basic/csharp
+  variants:
+    - output: ../generated-samples/hub/agents/projects/csharp/entra/basic
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          agentName: <%= agentName %>
+          agentID: <%= agentID %>
+    - output: ../generated-samples/fdp/agents/projects/csharp/entra/basic
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          agentName: <%= agentName %>
+          agentID: <%= agentID %>
