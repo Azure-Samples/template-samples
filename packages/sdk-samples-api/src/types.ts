@@ -59,6 +59,7 @@ export interface SampleQuery {
 
 export interface SampleMetadata {
   id: string;
+  samplePath: string;
   language: string;
   sdk: string;
   api: string;
