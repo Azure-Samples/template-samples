@@ -237,7 +237,7 @@ samples:
           deploymentName: <%= deploymentName %>
 - templatePath: ../sample-templates/agents-basic/python
   variants:
-    - output: ../generated-samples/default/agents/projects/python/entra/agents
+    - output: ../generated-samples/default/agents/projects/python/entra/getAgent
       input: 
         type: object
         properties:
@@ -246,7 +246,7 @@ samples:
           agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
-    - output: ../generated-samples/default/agents/projects/csharp/entra/agents
+    - output: ../generated-samples/default/agents/projects/csharp/entra/getAgent
       input: 
         type: object
         properties:
@@ -255,7 +255,7 @@ samples:
           agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
-    - output: ../generated-samples/default/agents/projects/javascript/entra/agents
+    - output: ../generated-samples/default/agents/projects/javascript/entra/getAgent
       input: 
         type: object
         properties:
@@ -264,14 +264,14 @@ samples:
           agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
-    - output: ../generated-samples/hub/agents/projects/csharp/entra/basic
+    - output: ../generated-samples/hub/agents/projects/csharp/entra/getAgent
       input:
         type: object
         properties:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
           agentID: <%= agentID %>
-    - output: ../generated-samples/fdp/agents/projects/csharp/entra/basic
+    - output: ../generated-samples/fdp/agents/projects/csharp/entra/getAgent
       input:
         type: object
         properties:
