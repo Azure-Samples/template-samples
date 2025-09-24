@@ -63,6 +63,21 @@ function parseDependencies(sampleDir: string, language: string): Dependency[] {
   return dependencies;
 }
 
+function parseTagsYaml(sampleDir: string): { [key: string]: any } {
+  const tagsFilePath = path.join(sampleDir, 'tags.yaml');
+  if (fs.existsSync(tagsFilePath)) {
+    try {
+      const yaml = require('js-yaml');
+      const fileContents = fs.readFileSync(tagsFilePath, 'utf8');
+      const data = yaml.load(fileContents);
+      return data as { [key: string]: any };
+    } catch (error) {
+      console.warn(`Failed to parse tags.yaml in ${sampleDir}:`, error);
+    }
+  }
+  return {};
+} 
+
 /**
  * Infer API style from directory structure or code
  */
@@ -196,7 +211,7 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
     return generateMockSampleMetadata();
   }
   
-  // Walk the directory structure: <model>/<api>/<sdk>/<language>/<auth-type>/
+  // Walk the directory structure
   const walkDirectory = (currentPath: string, pathParts: string[] = []) => {
     try {
       const entries = fs.readdirSync(currentPath, { withFileTypes: true });
@@ -208,40 +223,45 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
           
           // Check if we've reached a sample directory (has source files)
           if (hasSampleFiles(newPath)) {
-            // Parse the path: [model, api, sdk, language, authType]
-            if (newPathParts.length >= 6) {
-              const [modelName, api, sdk, language, authType, capability] = newPathParts;
-              
-              // Parse dependencies from project files
-              const dependencies = parseDependencies(newPath, language);
-              
-              // Infer additional metadata
-              const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
-              const scenario = inferScenario(api, newPath);
-              
-              // Extract versions
-              const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
-              const sdkVersion = extractSdkVersionFromDependencies(dependencies, sdk) || '0.0.0';
-              
-              // Create sample metadata
-              const sample: SampleMetadata = {
-                id: `${language}-${api}-${sdk}-${authType}-${modelName}`.replace(/[^a-z0-9-]/gi, '-'),
-                language,
-                sdk,
-                api,
-                authType,
-                apiStyle,
-                modelName,
-                capability,
-                dependencies,
-                description: generateDescription(modelName, api, language, authType, apiStyle, capability),
-                scenario,
-                apiVersion,
-                sdkVersion
-              };
-              
-              samples.push(sample);
-            }
+            const { modelName, 
+                    api, 
+                    sdk, 
+                    language, 
+                    authType, 
+                    capability, 
+                    ...extraTags
+                  } = parseTagsYaml(newPath);
+            
+            // Parse dependencies from project files
+            const dependencies = parseDependencies(newPath, language);
+            
+            // Infer additional metadata
+            const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
+            const scenario = inferScenario(api, newPath);
+            
+            // Extract versions
+            const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
+            const sdkVersion = extractSdkVersionFromDependencies(dependencies, sdk) || '0.0.0';
+            
+            // Create sample metadata
+            const sample: SampleMetadata = {
+              id: `${language}-${api}-${sdk}-${authType}-${modelName}`.replace(/[^a-z0-9-]/gi, '-'),
+              language,
+              sdk,
+              api,
+              authType,
+              apiStyle,
+              modelName,
+              capability,
+              dependencies,
+              description: generateDescription(modelName, api, language, authType, apiStyle, capability),
+              scenario,
+              apiVersion,
+              sdkVersion,
+              ...extraTags
+            };
+
+            samples.push(sample);
           } else {
             // Continue walking deeper
             walkDirectory(newPath, newPathParts);
