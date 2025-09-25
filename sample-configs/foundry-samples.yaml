@@ -3,7 +3,7 @@
 samples:
 - templatePath: ../sample-templates/chat-completion/csharp
   variants:
-    - output: ../generated-samples/default/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample1
       input:
         type: object
         properties:
@@ -19,7 +19,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/default/completions/openai/csharp/keyAuth/basic
+    - output: ../generated-samples/csharp/chat-completion/sample2
       input:
         type: object
         properties:
@@ -34,7 +34,7 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
-    - output: ../generated-samples/gpt-4o/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample3
       input: 
         type: object
         properties:
@@ -48,7 +48,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/gpt-4o/completions/openai/csharp/keyAuth/basic
+    - output: ../generated-samples/csharp/chat-completion/sample4
       input: 
         type: object
         properties:
@@ -63,7 +63,7 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
-    - output: ../generated-samples/gpt-4.1/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample5
       input: 
         type: object
         properties:
@@ -77,7 +77,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/Phi-4/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample6
       input: 
         type: object
         properties:
@@ -91,7 +91,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample7
       input: 
         type: object
         properties:
@@ -105,7 +105,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/grok-3/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample8
       input: 
         type: object
         properties:
@@ -119,7 +119,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/gpt-4.1-mini/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample9
       input: 
         type: object
         properties:
@@ -133,7 +133,7 @@ samples:
         language: csharp
         authType: entra
         capability: basic
-    - output: ../generated-samples/o4-mini/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample10
       input: 
         type: object
         properties:
@@ -149,7 +149,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat-completion/python
   variants:
-    - output: ../generated-samples/default/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample1
       input:
         type: object
         properties:
@@ -165,7 +165,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/default/completions/openai/python/keyAuth/basic
+    - output: ../generated-samples/python/chat-completion/sample2
       input:
         type: object
         properties:
@@ -182,7 +182,7 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
-    - output: ../generated-samples/gpt-4o/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample3
       input: 
         type: object
         properties:
@@ -196,7 +196,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/gpt-4o/completions/openai/python/keyAuth/basic
+    - output: ../generated-samples/python/chat-completion/sample4
       input: 
         type: object
         properties:
@@ -211,7 +211,7 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
-    - output: ../generated-samples/gpt-4.1/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample5
       input: 
         type: object
         properties:
@@ -225,7 +225,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/Phi-4/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample6
       input: 
         type: object
         properties:
@@ -239,7 +239,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample7
       input: 
         type: object
         properties:
@@ -253,7 +253,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/grok-3/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample8
       input: 
         type: object
         properties:
@@ -267,7 +267,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/gpt-4.1-mini/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample9
       input: 
         type: object
         properties:
@@ -281,7 +281,7 @@ samples:
         language: python
         authType: entra
         capability: basic
-    - output: ../generated-samples/o4-mini/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample10
       input: 
         type: object
         properties:
@@ -297,7 +297,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat-completion/java
   variants:
-    - output: ../generated-samples/default/completions/openai/java/entra/basic
+    - output: ../generated-samples/java/chat-completion/sample1
       input:
         type: object
         properties:
@@ -313,7 +313,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat-completion/javascript
   variants:
-    - output: ../generated-samples/default/completions/openai/javascript/entra/basic
+    - output: ../generated-samples/javascript/chat-completion/sample1
       input:
         type: object
         properties:
@@ -329,7 +329,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat-completion/go
   variants:
-    - output: ../generated-samples/default/completions/openai/go/entra/basic
+    - output: ../generated-samples/go/chat-completion/sample1
       input:
         type: object
         properties:
@@ -345,7 +345,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/image-generation/python
   variants:
-    - output: ../generated-samples/default/images/openai/python/entra/generation
+    - output: ../generated-samples/python/images/sample1
       input:
         type: object
         properties:
@@ -359,7 +359,7 @@ samples:
         language: python
         authType: entra
         capability: generation
-    - output: ../generated-samples/default/images/openai/python/keyAuth/generation
+    - output: ../generated-samples/python/images/sample2
       input:
         type: object
         properties:
@@ -376,7 +376,7 @@ samples:
         capability: generation
 - templatePath: ../sample-templates/image-generation/csharp
   variants:
-    - output: ../generated-samples/default/images/openai/csharp/entra/generation
+    - output: ../generated-samples/csharp/images/sample1
       input:
         type: object
         properties:
@@ -390,7 +390,7 @@ samples:
         language: csharp
         authType: entra
         capability: generation
-    - output: ../generated-samples/default/images/openai/csharp/keyAuth/generation
+    - output: ../generated-samples/csharp/images/sample2
       input:
         type: object
         properties:
@@ -407,7 +407,7 @@ samples:
         capability: generation
 - templatePath: ../sample-templates/image-generation/java
   variants:
-    - output: ../generated-samples/default/images/openai/java/entra/generation
+    - output: ../generated-samples/java/images/sample1
       input:
         type: object
         properties:
@@ -421,7 +421,7 @@ samples:
         language: java
         authType: entra
         capability: generation
-    - output: ../generated-samples/default/images/openai/java/keyAuth/generation
+    - output: ../generated-samples/java/images/sample2
       input:
         type: object
         properties:
@@ -438,7 +438,7 @@ samples:
         capability: generation
 - templatePath: ../sample-templates/image-generation/go
   variants:
-    - output: ../generated-samples/default/images/openai/go/entra/generation
+    - output: ../generated-samples/go/images/sample1
       input:
         type: object
         properties:
@@ -452,7 +452,7 @@ samples:
         language: go
         authType: entra
         capability: generation
-    - output: ../generated-samples/default/images/openai/go/keyAuth/generation
+    - output: ../generated-samples/go/images/sample2
       input:
         type: object
         properties:
@@ -469,13 +469,13 @@ samples:
         capability: generation
 - templatePath: ../sample-templates/agents-basic/python
   variants:
-    - output: ../generated-samples/default/responses/projects/python/entra/agents
+    - output: ../generated-samples/python/agents/sample1
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          agentID: <%= agentId %>
       tags:
         modelName: default
         api: agents
@@ -485,13 +485,13 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
-    - output: ../generated-samples/default/responses/projects/csharp/entra/agents
+    - output: ../generated-samples/csharp/agents/sample1
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          agentID: <%= agentId %>
       tags:
         modelName: default
         api: agents
@@ -501,13 +501,13 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
-    - output: ../generated-samples/default/responses/projects/javascript/entra/agents
+    - output: ../generated-samples/javascript/agents/sample1
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          agentID: <%= agentId %>
       tags:
         modelName: default
         api: agents
