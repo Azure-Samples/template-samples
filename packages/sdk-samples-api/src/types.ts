@@ -55,10 +55,12 @@ export interface SampleQuery {
   sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
   agentCapability?: boolean; // ???? for Hosted Agent or for Prompt Agent, etc.
   resourceType?: string;      // used to differentiate FDP and Hub samples
+  [key: string]: any;         // allows extra custom filters
 }
 
 export interface SampleMetadata {
   id: string;
+  samplePath: string;
   language: string;
   sdk: string;
   api: string;
@@ -72,6 +74,7 @@ export interface SampleMetadata {
   apiVersion?: string;
   sdkVersion?: string;
   resourceType?: string; // used to differentiate FDP and Hub samples
+  [key: string]: any; // allows extra fields from tags.yaml
 }
 
 export interface Dependency {

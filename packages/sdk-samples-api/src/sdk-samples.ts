@@ -63,6 +63,21 @@ function parseDependencies(sampleDir: string, language: string): Dependency[] {
   return dependencies;
 }
 
+function parseTagsYaml(sampleDir: string): { [key: string]: any } {
+  const tagsFilePath = path.join(sampleDir, 'tags.yaml');
+  if (fs.existsSync(tagsFilePath)) {
+    try {
+      const yaml = require('js-yaml');
+      const fileContents = fs.readFileSync(tagsFilePath, 'utf8');
+      const data = yaml.load(fileContents);
+      return data as { [key: string]: any };
+    } catch (error) {
+      console.warn(`Failed to parse tags.yaml in ${sampleDir}:`, error);
+    }
+  }
+  return {};
+} 
+
 /**
  * Infer API style from directory structure or code
  */
@@ -209,7 +224,7 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
     return generateMockSampleMetadata();
   }
   
-  // Walk the directory structure: <model>/<api>/<sdk>/<language>/<auth-type>/
+  // Walk the directory structure
   const walkDirectory = (currentPath: string, pathParts: string[] = []) => {
     try {
       const entries = fs.readdirSync(currentPath, { withFileTypes: true });
@@ -221,43 +236,46 @@ function generateSampleMetadata(basePath?: string): SampleMetadata[] {
           
           // Check if we've reached a sample directory (has source files)
           if (hasSampleFiles(newPath)) {
-            // Parse the path: [model, api, sdk, language, authType]
-            if (newPathParts.length >= 6) {
-              const [modelName, api, sdk, language, authType, capability] = newPathParts;
-              
-              // Parse dependencies from project files
-              const dependencies = parseDependencies(newPath, language);
-              
-              // Infer additional metadata
-              const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
-              const scenario = inferScenario(api, newPath);
+            const { modelName, 
+                    api, 
+                    sdk, 
+                    language, 
+                    authType, 
+                    capability, 
+                    ...extraTags
+                  } = parseTagsYaml(newPath);
+            
+            // Parse dependencies from project files
+            const dependencies = parseDependencies(newPath, language);
+            
+            // Infer additional metadata
+            const apiStyle = 'ignore-TBD'; // inferApiStyle(newPath, language);
+            const scenario = inferScenario(api, newPath);
+            
+            // Extract versions
+            const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
+            const sdkVersion = extractSdkVersionFromDependencies(dependencies, sdk) || '0.0.0';
+            
+            // Create sample metadata
+            const sample: SampleMetadata = {
+              id: `${language}-${api}-${sdk}-${authType}-${modelName}`.replace(/[^a-z0-9-]/gi, '-'),
+              samplePath: newPath,
+              language,
+              sdk,
+              api,
+              authType,
+              apiStyle,
+              modelName,
+              capability,
+              dependencies,
+              description: generateDescription(modelName, api, language, authType, apiStyle, capability),
+              scenario,
+              apiVersion,
+              sdkVersion,
+              ...extraTags
+            };
 
-              const resourceType = inferResourceType(modelName, api, newPath);
-              
-              // Extract versions
-              const apiVersion = extractApiVersionFromDependencies(dependencies) || 'v1';
-              const sdkVersion = extractSdkVersionFromDependencies(dependencies, sdk) || '0.0.0';
-              
-              // Create sample metadata
-              const sample: SampleMetadata = {
-                id: `${language}-${api}-${sdk}-${authType}-${modelName}`.replace(/[^a-z0-9-]/gi, '-'),
-                language,
-                sdk,
-                api,
-                authType,
-                apiStyle,
-                modelName,
-                capability,
-                dependencies,
-                description: generateDescription(modelName, api, language, authType, apiStyle, capability),
-                scenario,
-                apiVersion,
-                sdkVersion,
-                resourceType
-              };
-              
-              samples.push(sample);
-            }
+            samples.push(sample);
           } else {
             // Continue walking deeper
             walkDirectory(newPath, newPathParts);
@@ -287,6 +305,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
   const mockSamples: SampleMetadata[] = [
     {
       id: 'go-chat-completion-openai-completions-key-sync',
+      samplePath: '/path/to/sample', // Placeholder path
       language: 'go',
       sdk: 'openai',
       api: 'completions',
@@ -306,6 +325,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
     },
     {
       id: 'go-chat-completion-async-openai-completions-key-async',
+      samplePath: '/path/to/sample', // Placeholder path
       language: 'go',
       sdk: 'openai',
       api: 'completions',
@@ -324,6 +344,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
     },
     {
       id: 'csharp-chat-completion-openai-completions-entra-sync',
+      samplePath: '/path/to/sample', // Placeholder path
       language: 'csharp',
       sdk: 'openai',
       api: 'completions',
@@ -481,25 +502,18 @@ function filterSamples(samples: SampleMetadata[], query: Partial<SampleQuery>): 
   
   return samples.filter(sample => {
     // Check each query parameter
-    if (query.language && sample.language !== query.language) return false;
-    if (query.sdk && sample.sdk !== query.sdk) return false;
-    if (query.api && sample.api !== query.api) return false;
-    if (query.authType && sample.authType !== query.authType) return false;
-    if (query.apiStyle && sample.apiStyle !== query.apiStyle) return false;
-    if (query.modelName && sample.modelName !== query.modelName) return false;
-    if (query.apiVersion && sample.apiVersion !== query.apiVersion) return false;
-    if (query.sdkVersion && sample.sdkVersion !== query.sdkVersion) return false;
-    if (query.resourceType && sample.resourceType !== query.resourceType) return false;
-
-    // Check capabilities match (OR logic: sample's capability must be in the requested capabilities list)
-    // This allows querying for samples with any of multiple capabilities
-    if (query.capabilities && query.capabilities.length > 0) {
-      if (!query.capabilities.includes(sample.capability)) return false;
+    for (const key of Object.keys(query)) {
+      if (key === 'capabilities') {
+        // Check capabilities match (OR logic: sample's capability must be in the requested capabilities list)
+        // This allows querying for samples with any of multiple capabilities
+        if (query.capabilities && query.capabilities.length > 0) {
+          if (!query.capabilities.includes(sample.capability)) return false;
+        }
+      } else {
+        // Exact match for other fields
+        if (sample[key] !== query[key]) return false;
+      }
     }
-    
-    // Check scenario match
-    if (query.scenario && sample.scenario !== query.scenario) return false;
-
     return true;
   });
 }
@@ -528,47 +542,49 @@ function getUniqueValues<K extends keyof SampleMetadata>(
  * Load sample content (source code, project files, etc.)
  */
 function loadSampleContent(metadata: SampleMetadata): SampleContent {
-  // Try to find the actual sample directory based on the metadata
-  const basePath = getDefaultBasePath();
-  const samplePath = path.join(basePath, metadata.modelName || 'unknown', metadata.api, metadata.sdk, metadata.language, metadata.authType, metadata.capability);
+  const samplePath = metadata.samplePath;
   
   let sourceCode = '';
   let projectFile = '';
 
   try {
-    if (fs.existsSync(samplePath)) {
-      // Read source code
-      const extensions: { [key: string]: string[] } = {
-        csharp: ['.cs'],
-        go: ['.go'],
-        python: ['.py'],
-        java: ['.java'],
-        javascript: ['.js', '.ts']
-      };
-      
-      const sourceExts = extensions[metadata.language] || ['.txt'];
-      for (const ext of sourceExts) {
-        const files = fs.readdirSync(samplePath).filter(f => f.endsWith(ext));
-        if (files.length > 0) {
-          sourceCode = fs.readFileSync(path.join(samplePath, files[0]), 'utf8');
-          break;
+    if(samplePath){
+      if (fs.existsSync(samplePath)) {
+        // Read source code
+        const extensions: { [key: string]: string[] } = {
+          csharp: ['.cs'],
+          go: ['.go'],
+          python: ['.py'],
+          java: ['.java'],
+          javascript: ['.js', '.ts']
+        };
+        
+        const sourceExts = extensions[metadata.language] || ['.txt'];
+        for (const ext of sourceExts) {
+          const files = fs.readdirSync(samplePath).filter(f => f.endsWith(ext));
+          if (files.length > 0) {
+            sourceCode = fs.readFileSync(path.join(samplePath, files[0]), 'utf8');
+            break;
+          }
+        }
+        
+        // Read project file
+        const projectFiles: { [key: string]: string } = {
+          csharp: 'Sample.csproj',
+          python: 'requirements.txt',
+          go: 'go.mod',
+          java: 'pom.xml',
+          javascript: 'package.json'
+        };
+        
+        const projectFileName = projectFiles[metadata.language];
+        const projectFilePath = path.join(samplePath, projectFileName);
+        if (fs.existsSync(projectFilePath)) {
+          projectFile = fs.readFileSync(projectFilePath, 'utf8');
         }
       }
-      
-      // Read project file
-      const projectFiles: { [key: string]: string } = {
-        csharp: 'Sample.csproj',
-        python: 'requirements.txt',
-        go: 'go.mod',
-        java: 'pom.xml',
-        javascript: 'package.json'
-      };
-      
-      const projectFileName = projectFiles[metadata.language];
-      const projectFilePath = path.join(samplePath, projectFileName);
-      if (fs.existsSync(projectFilePath)) {
-        projectFile = fs.readFileSync(projectFilePath, 'utf8');
-      }
+    } else {
+      console.warn(`Sample path not defined for sample ID: ${metadata.id}`);
     }
   } catch (error) {
     console.warn(`Failed to load sample content for ${metadata.id}:`, error);

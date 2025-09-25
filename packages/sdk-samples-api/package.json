@@ -40,5 +40,8 @@
     "type": "git",
     "url": "https://github.com/Azure-Samples/template-samples.git",
     "directory": "packages/sdk-samples-api"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
   }
 }
