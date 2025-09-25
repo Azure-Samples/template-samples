@@ -109,13 +109,26 @@ function inferScenario(api: string, sampleDir: string): string {
   // Map API types to scenarios
   const apiToScenario: { [key: string]: string } = {
     'completions': 'chat-completions',
-    'responses': 'chat-completions',
     'embeddings': 'embeddings',
     'images': 'images',
-    'audio': 'audio'
+    'audio': 'audio',
+    'agents': 'agents'
   };
   
-  return apiToScenario[api] || 'chat-completions';
+  return apiToScenario[api] || '';
+}
+
+// Temporary function to infer Foundry resource type based on model name and api
+function inferResourceType(modelName: string, api: string, sampleDir: string) {
+  // if api is "agents"
+  if (api.toLowerCase() === 'agents') {
+    if (modelName.toLowerCase() === 'hub') {
+      return 'hub';
+    }
+    else if (modelName.toLowerCase() === 'fdp') {
+      return 'fdp';
+    }
+  }
 }
 
 /**
@@ -307,7 +320,8 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       description: 'Basic chat completion using Go SDK with key authentication',
       scenario: 'chat-completions',
       apiVersion: '2024-06-01',
-      sdkVersion: 'v1.1.0'
+      sdkVersion: 'v1.1.0',
+      resourceType: undefined
     },
     {
       id: 'go-chat-completion-async-openai-completions-key-async',
@@ -325,7 +339,8 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       description: 'Async chat completion using Go SDK with key authentication',
       scenario: 'chat-completions',
       apiVersion: '2024-06-01',
-      sdkVersion: 'v1.1.0'
+      sdkVersion: 'v1.1.0',
+      resourceType: undefined
     },
     {
       id: 'csharp-chat-completion-openai-completions-entra-sync',
@@ -344,7 +359,65 @@ function generateMockSampleMetadata(): SampleMetadata[] {
       description: 'Chat completion using C# SDK with Entra ID authentication',
       scenario: 'chat-completions',
       apiVersion: 'v1',
-      sdkVersion: '2.1.0'
+      sdkVersion: '2.1.0',
+      resourceType: undefined
+    },
+    {
+      id: 'csharp-agents-projects-hub-entra-sync',
+      language: 'csharp',
+      sdk: 'projects',
+      api: 'agents',
+      authType: 'entra',
+      apiStyle: 'sync',
+      modelName: 'hub',
+      capability: 'reasoning',
+      dependencies: [
+        { name: 'Azure.AI.Projects', version: '1.0.0', type: 'package' },
+        { name: 'Azure.Identity', version: '1.14.0', type: 'package' }
+      ],
+      description: 'Hub agent using Projects SDK with Entra ID authentication',
+      scenario: 'agents',
+      apiVersion: '2024-06-01',
+      sdkVersion: '1.0.0',
+      resourceType: 'Hub'
+    },
+    {
+      id: 'python-agents-projects-fdp-key-async',
+      language: 'python',
+      sdk: 'projects',
+      api: 'agents',
+      authType: 'key',
+      apiStyle: 'async',
+      modelName: 'fdp',
+      capability: 'tool-calling',
+      dependencies: [
+        { name: 'azure-ai-projects', version: '1.0.0', type: 'package' },
+        { name: 'azure-identity', version: '1.14.0', type: 'package' }
+      ],
+      description: 'FDP agent using Projects SDK with API key authentication',
+      scenario: 'agents',
+      apiVersion: '2024-06-01',
+      sdkVersion: '1.0.0',
+      resourceType: 'FDP'
+    },
+    {
+      id: 'go-agents-projects-hub-entra-async',
+      language: 'go',
+      sdk: 'projects',
+      api: 'agents',
+      authType: 'entra',
+      apiStyle: 'async',
+      modelName: 'hub',
+      capability: 'streaming',
+      dependencies: [
+        { name: 'github.com/Azure/azure-sdk-for-go/sdk/ai/azprojects', version: 'v1.0.0', type: 'package' },
+        { name: 'github.com/Azure/azure-sdk-for-go/sdk/azidentity', version: 'v1.10.0', type: 'package' }
+      ],
+      description: 'Hub agent using Go Projects SDK with Entra ID authentication',
+      scenario: 'agents',
+      apiVersion: '2024-06-01',
+      sdkVersion: 'v1.0.0',
+      resourceType: 'Hub'
     }
   ];
 
