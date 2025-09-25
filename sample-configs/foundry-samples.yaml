@@ -266,7 +266,7 @@ samples:
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
+          userMessage: <%= userMessage %>
           agentID: <%= agentId %>
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
