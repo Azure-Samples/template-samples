@@ -17,4 +17,4 @@ input:
   - name: userMessage
     type: string
     required: false
-    description: "Name of the agent to use"
+    description: "Message to send to the agent"
