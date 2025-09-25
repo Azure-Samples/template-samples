@@ -54,6 +54,7 @@ export interface SampleQuery {
   apiVersion?: string;        // '2024-06-01', '2023-12-01-preview', etc.
   sdkVersion?: string;        // SDK library version: '2.1.0', 'v1.1.0', etc.
   agentCapability?: boolean; // ???? for Hosted Agent or for Prompt Agent, etc.
+  resourceType?: string;      // used to differentiate FDP and Hub samples
 }
 
 export interface SampleMetadata {
@@ -70,6 +71,7 @@ export interface SampleMetadata {
   scenario: string;     // one of: 'chat-completions', 'embeddings', 'images', 'audio', 'vector-database'
   apiVersion?: string;
   sdkVersion?: string;
+  resourceType?: string; // used to differentiate FDP and Hub samples
 }
 
 export interface Dependency {
