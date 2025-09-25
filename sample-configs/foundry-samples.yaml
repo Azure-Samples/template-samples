@@ -3,7 +3,7 @@
 samples:
 - templatePath: ../sample-templates/chat-completion/csharp
   variants:
-    - output: ../generated-samples/default/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/csharp/chat-completion/sample1
       input:
         type: object
         properties:
@@ -12,7 +12,14 @@ samples:
           useTokenCredentials: true
           extraParams:
             temperature: 0.7
-    - output: ../generated-samples/default/completions/openai/csharp/keyAuth/basic
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample2
       input:
         type: object
         properties:
@@ -20,66 +27,45 @@ samples:
           apiKey: <your-api-key>
           endpoint: <%= endpoint %>
           useTokenCredentials: false
-    - output: ../generated-samples/gpt-4o/completions/openai/csharp/entra/basic
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample3
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
-          deploymentName: gpt-4o
+          deploymentName: gpt-5
           useTokenCredentials: true
-    - output: ../generated-samples/gpt-4o/completions/openai/csharp/keyAuth/basic
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample4
       input: 
         type: object
         properties:
           apiKey: <your-api-key>
           endpoint: <%= endpoint %>
-          deploymentName: gpt-4o
+          deploymentName: gpt-5
           useTokenCredentials: false
-    - output: ../generated-samples/gpt-4.1/completions/openai/csharp/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: gpt-4.1
-          useTokenCredentials: true
-    - output: ../generated-samples/Phi-4/completions/openai/csharp/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: Phi-4
-          useTokenCredentials: true
-    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/csharp/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: DeepSeek-R1-0528
-          useTokenCredentials: true
-    - output: ../generated-samples/grok-3/completions/openai/csharp/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: grok-3
-          useTokenCredentials: true
-    - output: ../generated-samples/gpt-4.1-mini/completions/openai/csharp/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: gpt-4.1-mini
-          useTokenCredentials: true
-    - output: ../generated-samples/o4-mini/completions/openai/csharp/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: o4-mini
-          useTokenCredentials: true
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+        capability: basic
 - templatePath: ../sample-templates/chat-completion/python
   variants:
-    - output: ../generated-samples/default/completions/openai/python/entra/basic
+    - output: ../generated-samples/python/chat-completion/sample1
       input:
         type: object
         properties:
@@ -88,7 +74,14 @@ samples:
           useTokenCredentials: true
           extraParams:
             temperature: 0.7
-    - output: ../generated-samples/default/completions/openai/python/keyAuth/basic
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: python
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/python/chat-completion/sample2
       input:
         type: object
         properties:
@@ -98,100 +91,239 @@ samples:
           useTokenCredentials: false
           extraParams:
             temperature: 0.7
-    - output: ../generated-samples/gpt-4o/completions/openai/python/entra/basic
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: python
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/python/chat-completion/sample3
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
-          deploymentName: gpt-4o
+          deploymentName: gpt-5
           useTokenCredentials: true
-    - output: ../generated-samples/gpt-4o/completions/openai/python/keyAuth/basic
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: python
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/python/chat-completion/sample4
       input: 
         type: object
         properties:
           apiKey: <your-api-key>
           endpoint: <%= endpoint %>
-          deploymentName: gpt-4o
+          deploymentName: gpt-5
           useTokenCredentials: false
-    - output: ../generated-samples/gpt-4.1/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: gpt-4.1
-          useTokenCredentials: true
-    - output: ../generated-samples/Phi-4/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: Phi-4
-          useTokenCredentials: true
-    - output: ../generated-samples/DeepSeek-R1-0528/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: DeepSeek-R1-0528
-          useTokenCredentials: true
-    - output: ../generated-samples/grok-3/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: grok-3
-          useTokenCredentials: true
-    - output: ../generated-samples/gpt-4.1-mini/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: gpt-4.1-mini
-          useTokenCredentials: true
-    - output: ../generated-samples/o4-mini/completions/openai/python/entra/basic
-      input: 
-        type: object
-        properties:
-          endpoint: <%= endpoint %>
-          deploymentName: o4-mini
-          useTokenCredentials: true
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: python
+        authType: keyAuth
+        capability: basic
 - templatePath: ../sample-templates/chat-completion/java
   variants:
-    - output: ../generated-samples/default/completions/openai/java/entra/basic
+    - output: ../generated-samples/java/chat-completion/sample1
       input:
         type: object
         properties:
           deploymentName: <%= deploymentName %>
           endpoint: <%= endpoint %>
           useTokenCredentials: true
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: java
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/java/chat-completion/sample2
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: false
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: java
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/java/chat-completion/sample3
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-5
+          useTokenCredentials: true
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: java
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/java/chat-completion/sample4
+      input: 
+        type: object
+        properties:
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-5
+          useTokenCredentials: false
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: java
+        authType: keyAuth
+        capability: basic
 - templatePath: ../sample-templates/chat-completion/javascript
   variants:
-    - output: ../generated-samples/default/completions/openai/javascript/entra/basic
+    - output: ../generated-samples/javascript/chat-completion/sample1
       input:
         type: object
         properties:
           deploymentName: <%= deploymentName %>
           endpoint: <%= endpoint %>
           useTokenCredentials: true
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: javascript
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample2
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          useTokenCredentials: false
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: javascript
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample3
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-5
+          useTokenCredentials: true
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: javascript
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample4
+      input: 
+        type: object
+        properties:
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-5
+          useTokenCredentials: false
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: javascript
+        authType: keyAuth
+        capability: basic
 - templatePath: ../sample-templates/chat-completion/go
   variants:
-    - output: ../generated-samples/default/completions/openai/go/entra/basic
+    - output: ../generated-samples/go/chat-completion/sample1
       input:
         type: object
         properties:
           deploymentName: <%= deploymentName %>
           endpoint: <%= endpoint %>
           useTokenCredentials: true
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: go
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/go/chat-completion/sample2
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %  >
+          useTokenCredentials: false
+      tags:
+        modelName: default
+        api: completions
+        sdk: openai
+        language: go
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/go/chat-completion/sample3
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-5
+          useTokenCredentials: true
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: go
+        authType: entra
+        capability: basic
+    - output: ../generated-samples/go/chat-completion/sample4
+      input: 
+        type: object
+        properties:
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          deploymentName: gpt-5
+          useTokenCredentials: false
+      tags:
+        modelName: gpt-5
+        api: completions
+        sdk: openai
+        language: go
+        authType: keyAuth
+        capability: basic
 - templatePath: ../sample-templates/image-generation/python
   variants:
-    - output: ../generated-samples/default/images/openai/python/entra/generation
+    - output: ../generated-samples/python/images/sample1
       input:
         type: object
         properties:
           useTokenCredentials: true
           endpoint: <%= endpoint %>
           deploymentName: <%= deploymentName %>
-    - output: ../generated-samples/default/images/openai/python/keyAuth/generation
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: python
+        authType: entra
+        capability: generation
+    - output: ../generated-samples/python/images/sample2
       input:
         type: object
         properties:
@@ -199,16 +331,30 @@ samples:
           endpoint: <%= endpoint %>
           apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: python
+        authType: keyAuth
+        capability: generation
 - templatePath: ../sample-templates/image-generation/csharp
   variants:
-    - output: ../generated-samples/default/images/openai/csharp/entra/generation
+    - output: ../generated-samples/csharp/images/sample1
       input:
         type: object
         properties:
           useTokenCredentials: true
           endpoint: <%= endpoint %>
           deploymentName: <%= deploymentName %>
-    - output: ../generated-samples/default/images/openai/csharp/keyAuth/generation
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: generation
+    - output: ../generated-samples/csharp/images/sample2
       input:
         type: object
         properties:
@@ -216,16 +362,30 @@ samples:
           endpoint: <%= endpoint %>
           apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+        capability: generation
 - templatePath: ../sample-templates/image-generation/java
   variants:
-    - output: ../generated-samples/default/images/openai/java/entra/generation
+    - output: ../generated-samples/java/images/sample1
       input:
         type: object
         properties:
           useTokenCredentials: true
           endpoint: <%= endpoint %>
           deploymentName: <%= deploymentName %>
-    - output: ../generated-samples/default/images/openai/java/keyAuth/generation
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: java
+        authType: entra
+        capability: generation
+    - output: ../generated-samples/java/images/sample2
       input:
         type: object
         properties:
@@ -233,16 +393,30 @@ samples:
           endpoint: <%= endpoint %>
           apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: java
+        authType: keyAuth
+        capability: generation
 - templatePath: ../sample-templates/image-generation/go
   variants:
-    - output: ../generated-samples/default/images/openai/go/entra/generation
+    - output: ../generated-samples/go/images/sample1
       input:
         type: object
         properties:
           useTokenCredentials: true
           endpoint: <%= endpoint %>
           deploymentName: <%= deploymentName %>
-    - output: ../generated-samples/default/images/openai/go/keyAuth/generation
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: go
+        authType: entra
+        capability: generation
+    - output: ../generated-samples/go/images/sample2
       input:
         type: object
         properties:
@@ -250,30 +424,83 @@ samples:
           endpoint: <%= endpoint %>
           apiKey: <your-api-key>
           deploymentName: <%= deploymentName %>
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: go
+        authType: keyAuth
+        capability: generation
 - templatePath: ../sample-templates/agents-basic/python
   variants:
-    - output: ../generated-samples/default/responses/projects/python/entra/agents
+    - output: ../generated-samples/python/agents/sample1
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
+      tags:
+        api: agents
+        sdk: openai
+        capability: getAgent
+        language: python
+        authType: entra
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
-    - output: ../generated-samples/default/responses/projects/csharp/entra/agents
+    - output: ../generated-samples/csharp/agents/sample1
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
+      tags:
+        api: agents
+        sdk: openai
+        capability: getAgent
+        language: csharp
+        authType: entra
+    - output: ../generated-samples/csharp/agents/sample2
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          userMessage: <%= userMessage %>
           agentID: <%= agentID %>
+      tags:
+        api: agents
+        sdk: openai
+        capability: getAgent
+        language: csharp
+        authType: entra
+        resourceType: hub
+    - output: ../generated-samples/csharp/agents/sample3
+      input:
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
+      tags:
+        api: agents
+        sdk: openai
+        capability: getAgent
+        language: csharp
+        authType: entra
+        resourceType: fdp
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
-    - output: ../generated-samples/default/responses/projects/javascript/entra/agents
+    - output: ../generated-samples/javascript/agents/sample1
       input: 
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
+      tags:
+        api: agents
+        sdk: openai
+        capability: getAgent
+        language: javascript
+        authType: entra
