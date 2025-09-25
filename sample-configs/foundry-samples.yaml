@@ -1,5 +1,3 @@
-# Output path must follow: <model>/<api>/<sdk>/<language>/<auth-type>/<capability>
-# e.g., gpt-4o/completion-api/openai/python/entra/streaming
 samples:
 - templatePath: ../sample-templates/chat-completion/csharp
   variants:
