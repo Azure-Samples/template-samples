@@ -10,7 +10,7 @@ async function runAgentConversation() {
 
   const thread = await project.agents.threads.create();
 
-  const message = await project.agents.messages.create(thread.id, "user", "Hi <%= agentName %>");
+  const message = await project.agents.messages.create(thread.id, "user", "<%= userMessage %>");
 
   // Create run
   let run = await project.agents.runs.create(thread.id, agent.id);
