@@ -278,8 +278,8 @@ samples:
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
     - output: ../generated-samples/default/agents/projects/csharp/entra/getAgent
@@ -287,8 +287,8 @@ samples:
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
-          agentID: <%= agentID %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
     - output: ../generated-samples/fdp/agents/projects/csharp/entra/getAgent
       input:
         type: object
