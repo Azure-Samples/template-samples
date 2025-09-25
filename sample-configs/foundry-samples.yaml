@@ -257,8 +257,8 @@ samples:
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
           userMessage: <%= userMessage %>
+          agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
     - output: ../generated-samples/default/responses/projects/csharp/entra/agents
@@ -267,7 +267,7 @@ samples:
         properties:
           endpoint: <%= endpoint %>
           agentName: <%= agentName %>
-          userMessage: <%= userMessage %>
+          agentID: <%= agentID %>
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
     - output: ../generated-samples/default/responses/projects/javascript/entra/agents
@@ -275,5 +275,5 @@ samples:
         type: object
         properties:
           endpoint: <%= endpoint %>
-          agentName: <%= agentName %>
           userMessage: <%= userMessage %>
+          agentID: <%= agentID %>
