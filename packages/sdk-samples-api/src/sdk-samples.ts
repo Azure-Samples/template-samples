@@ -364,6 +364,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
     },
     {
       id: 'csharp-agents-projects-hub-entra-sync',
+      samplePath: '/path/to/sample', // Placeholder path
       language: 'csharp',
       sdk: 'projects',
       api: 'agents',
@@ -383,6 +384,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
     },
     {
       id: 'python-agents-projects-fdp-key-async',
+      samplePath: '/path/to/sample', // Placeholder path
       language: 'python',
       sdk: 'projects',
       api: 'agents',
@@ -402,6 +404,7 @@ function generateMockSampleMetadata(): SampleMetadata[] {
     },
     {
       id: 'go-agents-projects-hub-entra-async',
+      samplePath: '/path/to/sample', // Placeholder path
       language: 'go',
       sdk: 'projects',
       api: 'agents',
