@@ -18,7 +18,7 @@ async Task RunAgentConversation()
     PersistentThreadMessage messageResponse = agentsClient.Messages.CreateMessage(
         thread.Id,
         MessageRole.User,
-        "Hi <%= agentName %>");
+        "<%= userMessage %>");
 
     ThreadRun run = agentsClient.Runs.CreateRun(
         thread.Id,
