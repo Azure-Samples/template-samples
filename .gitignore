@@ -3,6 +3,16 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Repo-specific exclusions
+packages/sdk-samples-api/samples/*
+packages/sdk-samples-api/node-modules/*
+packages/sdk-samples-api/dist/*
+
+# ⚠️  WARNING: DO NOT UNCOMMENT THE LINE BELOW! ⚠️ 
+# Excluding generated-samples/* will break the CI pipeline change detection
+# For local development only: uncomment temporarily, but NEVER commit it
+# generated-samples/*
+
 # User-specific files
 *.rsuser
 *.suo
@@ -202,7 +212,7 @@ PublishScripts/
 # NuGet Symbol Packages
 *.snupkg
 # The packages folder can be ignored because of Package Restore
-**/[Pp]ackages/*
+# **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed

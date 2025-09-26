@@ -2,12 +2,9 @@ package main
 
 <%= go.includes(
 	"context",
-	"fmt",
-	"log",
-	"os",
 	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
 	"github.com/openai/openai-go/v2",
-	"github.com/openai/openai-go/v2/azure",
+	{ module: "github.com/openai/openai-go/v2/azure", condition: useTokenCredentials },
 	"github.com/openai/openai-go/v2/option",
 ) %>
 
@@ -22,8 +19,7 @@ func main() {
 	<% if (useTokenCredentials) { %>
 	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
-		fmt.Println("Error creating credential:", err)
-		os.Exit(1)
+		panic(err)
 	}
 	client := openai.NewClient(
 		option.WithBaseURL(endpoint),

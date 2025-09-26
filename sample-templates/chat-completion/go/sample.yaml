@@ -3,7 +3,7 @@ type: go
 dependencies:
   - name: github.com/Azure/azure-sdk-for-go/sdk/azidentity
     version: v1.11.0
-  - name: github.com/openai/openai-go
+  - name: github.com/openai/openai-go/v2
     version: v2.1.1
 input:
   - name: useTokenCredentials
