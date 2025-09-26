@@ -7,8 +7,11 @@
 packages/sdk-samples-api/samples/*
 packages/sdk-samples-api/node-modules/*
 packages/sdk-samples-api/dist/*
-# Excluding "generated-samples" will interfere with how the pipeline scans for changes
-# generated-samples/* -- Don't do this! --
+
+# ⚠️  WARNING: DO NOT UNCOMMENT THE LINE BELOW! ⚠️ 
+# Excluding generated-samples/* will break the CI pipeline change detection
+# For local development only: uncomment temporarily, but NEVER commit it
+# generated-samples/*
 
 # User-specific files
 *.rsuser
