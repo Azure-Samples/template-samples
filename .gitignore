@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Repo-specific ignores
+packages/sdk-samples-api/dist/*
+packages/sdk-samples-api/samples/*
+# ⚠️  WARNING: DO NOT UNCOMMENT THE LINE BELOW! ⚠️ 
+# Excluding generated-samples/* will break the CI pipeline change detection
+# For local development only: uncomment temporarily, but NEVER commit it
+# generated-samples/*
+
 # User-specific files
 *.rsuser
 *.suo
