@@ -4,7 +4,7 @@ dependencies:
   - name: com.openai:openai-java
     version: 3.0.3
   - name: com.azure:azure-identity
-    version: 1.17.0
+    version: 1.18.0
 input:
   - name: useTokenCredentials
     type: boolean
