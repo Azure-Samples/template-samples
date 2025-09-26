@@ -7,7 +7,8 @@
 packages/sdk-samples-api/samples/*
 packages/sdk-samples-api/node-modules/*
 packages/sdk-samples-api/dist/*
-generated-samples/*
+# Excluding "generated-samples" will interfere with how the pipeline scans for changes
+# generated-samples/* -- Don't do this! --
 
 # User-specific files
 *.rsuser
