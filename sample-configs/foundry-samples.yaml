@@ -1,4 +1,39 @@
 samples:
+- templatePath: ../sample-templates/chat/responses/csharp/
+  variants:
+    - output: ../generated-samples/chat-responses/csharp/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/chat-responses/csharp/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: basic
 - templatePath: ../sample-templates/chat/completions/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion/sample1
