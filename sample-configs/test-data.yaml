@@ -29,3 +29,25 @@ samples:
         sdk: openai
         language: csharp
         authType: entra
+- templatePath: ../sample-templates/chat/responses/csharp/
+  variants:
+    - output: ../generated-samples/chat-responses/csharp/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+          useTokenCredentials: false
+          apiKey: $(AZURE_OPENAI_KEY)
+          useEnvVars: true
+          extraParams:
+            Temperature: 0.7
+            TopP: 0.95
+            FrequencyPenalty: 0
+            PresencePenalty: 0
+            MaxOutputTokenCount: 1024
+      tags:
+        modelName: $(AZURE_OPENAI_DEPLOYMENT)
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: keyAuth
