@@ -1,5 +1,5 @@
 samples:
-- templatePath: ../sample-templates/chat-completion/csharp
+- templatePath: ../sample-templates/chat/completions/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion/sample1
       input:
@@ -61,7 +61,7 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/python
+- templatePath: ../sample-templates/chat/completions/python
   variants:
     - output: ../generated-samples/python/chat-completion/sample1
       input:
@@ -125,7 +125,7 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/java
+- templatePath: ../sample-templates/chat/completions/java
   variants:
     - output: ../generated-samples/java/chat-completion/sample1
       input:
@@ -185,7 +185,7 @@ samples:
         language: java
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/javascript
+- templatePath: ../sample-templates/chat/completions/javascript
   variants:
     - output: ../generated-samples/javascript/chat-completion/sample1
       input:
@@ -245,7 +245,7 @@ samples:
         language: javascript
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/go
+- templatePath: ../sample-templates/chat/completions/go
   variants:
     - output: ../generated-samples/go/chat-completion/sample1
       input:
