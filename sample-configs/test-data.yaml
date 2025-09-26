@@ -10,12 +10,12 @@ variants:
 samples:
 - templatePath: ../sample-templates/chat-completion/csharp
   variants:
-    - output: ../generated-samples/default/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/chat-completions/csharp/entra/basic
       input:
         type: object
         properties:
-          deploymentName: <%= deploymentName %>
-          endpoint: <%= endpoint %>
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+          endpoint: $(AZURE_OPENAI_ENDPOINT)
           useTokenCredentials: true
           extraParams:
             temperature: 0.7
@@ -24,3 +24,9 @@ samples:
             PresencePenalty: 0
             N: 1
             MaxTokens: 1024
+      tags:
+        modelName: $(AZURE_OPENAI_DEPLOYMENT)
+        api: completions
+        sdk: openai
+        language: csharp
+        authType: entra
