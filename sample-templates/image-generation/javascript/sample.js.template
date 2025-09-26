@@ -1,0 +1,36 @@
+import OpenAI from "openai";
+<% if (useTokenCredentials) { %>
+import { getBearerTokenProvider, DefaultAzureCredential } from "@azure/identity";
+<% } %>
+import fs from "fs";
+
+<%= javascript.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+<%= javascript.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+<% if (!useTokenCredentials) { %>
+<%= javascript.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
+<% } else { %>
+const tokenProvider = getBearerTokenProvider(
+    new DefaultAzureCredential(),
+    'https://cognitiveservices.azure.com/.default');
+<% } %>
+
+const openai = new OpenAI({
+    baseURL: endpoint,
+    <% if (useTokenCredentials) {%>
+    apiKey: tokenProvider
+    <% } else { %>
+    apiKey: apiKey
+    <% } %>
+});
+
+const prompt = "A cute baby polar bear.";
+
+const result = await openai.images.generate({
+    model: deploymentName,
+    prompt,
+});
+
+// Save the image to a file
+const image_base64 = result.data[0].b64_json;
+const image_bytes = Buffer.from(image_base64, "base64");
+fs.writeFileSync("output.png", image_bytes);
