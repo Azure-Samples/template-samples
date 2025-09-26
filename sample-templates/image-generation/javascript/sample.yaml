@@ -1,10 +1,10 @@
-template: sample.go.template
-type: go
+template: sample.js.template
+type: javascript
 dependencies:
-  - name: github.com/Azure/azure-sdk-for-go/sdk/azidentity
-    version: v1.11.0
-  - name: github.com/openai/openai-go/v2
-    version: v2.1.1
+  - name: openai
+    version: 5.19.1
+  - name: "@azure/identity"
+    version: 4.11.1
 input:
   - name: useTokenCredentials
     type: boolean

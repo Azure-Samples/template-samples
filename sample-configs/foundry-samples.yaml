@@ -464,6 +464,37 @@ samples:
         language: go
         authType: keyAuth
         capability: generation
+- templatePath: ../sample-templates/image-generation/javascript
+  variants:
+    - output: ../generated-samples/javascript/images/sample1
+      input:
+        type: object
+        properties:
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          deploymentName: <%= deploymentName %>
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: javascript
+        authType: entra
+        capability: generation
+    - output: ../generated-samples/javascript/images/sample2
+      input:
+        type: object
+        properties:
+          useTokenCredentials: false
+          endpoint: <%= endpoint %>
+          apiKey: <your-api-key>
+          deploymentName: <%= deploymentName %>
+      tags:
+        modelName: default
+        api: images
+        sdk: openai
+        language: javascript
+        authType: keyAuth
+        capability: generation
 - templatePath: ../sample-templates/agents-basic/python
   variants:
     - output: ../generated-samples/python/agents/sample1
