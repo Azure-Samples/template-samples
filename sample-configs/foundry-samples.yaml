@@ -506,10 +506,11 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: python
         authType: entra
+        scenario: agents
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
     - output: ../generated-samples/csharp/agents/sample1
@@ -521,10 +522,11 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
+        scenario: agents
     - output: ../generated-samples/csharp/agents/sample2
       input:
         type: object
@@ -534,11 +536,12 @@ samples:
           agentID: <%= agentID %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
         resourceType: hub
+        scenario: agents
     - output: ../generated-samples/csharp/agents/sample3
       input:
         type: object
@@ -548,11 +551,12 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
         resourceType: fdp
+        scenario: agents
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
     - output: ../generated-samples/javascript/agents/sample1
@@ -564,7 +568,8 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: javascript
         authType: entra
+        scenario: agents
