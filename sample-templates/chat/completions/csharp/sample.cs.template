@@ -45,8 +45,8 @@ ChatCompletionOptions options = new ChatCompletionOptions{
     <% if (extraParams.temperature) { %>
     Temperature=(float)<%= extraParams.temperature %>,
     <% } %>
-    <% if (extraParams.MaxTokens) { %>
-    MaxTokens=<%= extraParams.MaxTokens %>,
+    <% if (extraParams.MaxOutputTokenCount) { %>
+    MaxOutputTokenCount=<%= extraParams.MaxOutputTokenCount %>,
     <% } %>
     <% if (extraParams.TopP) { %>
     TopP=(float)<%= extraParams.TopP %>,
@@ -56,9 +56,6 @@ ChatCompletionOptions options = new ChatCompletionOptions{
     <% } %>
     <% if (extraParams.PresencePenalty) { %>
     PresencePenalty=(float)<%= extraParams.PresencePenalty %>,
-    <% } %>
-    <% if (extraParams.N) { %>
-    N=<%= extraParams.N %>,
     <% } %>
 };
 <% } %>

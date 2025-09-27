@@ -1,5 +1,40 @@
 samples:
-- templatePath: ../sample-templates/chat-completion/csharp
+- templatePath: ../sample-templates/chat/responses/csharp/
+  variants:
+    - output: ../generated-samples/chat-responses/csharp/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/chat-responses/csharp/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: basic
+- templatePath: ../sample-templates/chat/completions/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion/sample1
       input:
@@ -61,7 +96,7 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/python
+- templatePath: ../sample-templates/chat/completions/python
   variants:
     - output: ../generated-samples/python/chat-completion/sample1
       input:
@@ -125,7 +160,7 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/java
+- templatePath: ../sample-templates/chat/completions/java
   variants:
     - output: ../generated-samples/java/chat-completion/sample1
       input:
@@ -185,7 +220,7 @@ samples:
         language: java
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/javascript
+- templatePath: ../sample-templates/chat/completions/javascript
   variants:
     - output: ../generated-samples/javascript/chat-completion/sample1
       input:
@@ -245,7 +280,7 @@ samples:
         language: javascript
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/go
+- templatePath: ../sample-templates/chat/completions/go
   variants:
     - output: ../generated-samples/go/chat-completion/sample1
       input:
@@ -471,10 +506,11 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: python
         authType: entra
+        scenario: agents
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
     - output: ../generated-samples/csharp/agents/sample1
@@ -486,10 +522,11 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
+        scenario: agents
     - output: ../generated-samples/csharp/agents/sample2
       input:
         type: object
@@ -499,11 +536,12 @@ samples:
           agentID: <%= agentID %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
         resourceType: hub
+        scenario: agents
     - output: ../generated-samples/csharp/agents/sample3
       input:
         type: object
@@ -513,11 +551,12 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
         resourceType: fdp
+        scenario: agents
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
     - output: ../generated-samples/javascript/agents/sample1
@@ -529,7 +568,8 @@ samples:
           agentID: <%= agentId %>
       tags:
         api: agents
-        sdk: openai
+        sdk: projects
         capability: getAgent
         language: javascript
         authType: entra
+        scenario: agents
