@@ -525,7 +525,6 @@ samples:
         capability: getAgent
         language: csharp
         authType: entra
-        scenario: agents
     - output: ../generated-samples/csharp/agents/sample2
       input:
         type: object
