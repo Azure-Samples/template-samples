@@ -510,7 +510,6 @@ samples:
         capability: getAgent
         language: python
         authType: entra
-        scenario: agents
 - templatePath: ../sample-templates/agents-basic/csharp
   variants:
     - output: ../generated-samples/csharp/agents/sample1
@@ -541,7 +540,6 @@ samples:
         language: csharp
         authType: entra
         resourceType: hub
-        scenario: agents
     - output: ../generated-samples/csharp/agents/sample3
       input:
         type: object
@@ -556,7 +554,6 @@ samples:
         language: csharp
         authType: entra
         resourceType: fdp
-        scenario: agents
 - templatePath: ../sample-templates/agents-basic/javascript
   variants:
     - output: ../generated-samples/javascript/agents/sample1
@@ -572,4 +569,3 @@ samples:
         capability: getAgent
         language: javascript
         authType: entra
-        scenario: agents
