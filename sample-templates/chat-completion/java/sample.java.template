@@ -24,7 +24,7 @@ public class Sample {
         <% if (!useTokenCredentials) { %>
         OpenAIClient client = OpenAIOkHttpClient.builder()
                 .baseUrl(endpoint)
-                .credential(AzureApiKeyCredential.create("{your-api-key}"))
+                .credential(AzureApiKeyCredential.create(apiKey))
                 .build();
         <% 
         } else { %>
