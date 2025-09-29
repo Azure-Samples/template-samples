@@ -505,8 +505,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: python
         authType: entra
@@ -520,8 +520,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
@@ -533,8 +533,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentID %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
@@ -547,8 +547,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
@@ -563,8 +563,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: javascript
         authType: entra
