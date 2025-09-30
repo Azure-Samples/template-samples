@@ -36,4 +36,4 @@ response = client.responses.create(
     <% } %>
 )
 
-print(f"answer: {response.output[0].text}")
+print(f"answer: {response.output[0]}")

@@ -1,4 +1,39 @@
 samples:
+- templatePath: ../sample-templates/chat/responses/python/
+  variants:
+    - output: ../generated-samples/chat-responses/python/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: keyAuth
+        language: python
+        capability: basic
+    - output: ../generated-samples/chat-responses/python/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: entra
+        language: python
+        capability: basic
 - templatePath: ../sample-templates/chat/responses/csharp/
   variants:
     - output: ../generated-samples/chat-responses/csharp/keyAuth/
