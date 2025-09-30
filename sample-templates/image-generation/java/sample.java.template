@@ -3,6 +3,10 @@ import com.openai.client.okhttp.OpenAIOkHttpClient;
 import com.openai.models.images.ImageGenerateParams;
 import com.openai.models.images.ImageModel;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 
 <% if (useTokenCredentials) { %>import com.azure.identity.AuthenticationUtil;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -15,15 +19,15 @@ public class Sample {
     public static void main(String[] args) {
 
     <%= java.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
     <%if (!useTokenCredentials) { %>
     <%= java.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
     <%}%>
-    <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
 
         <% if (!useTokenCredentials) { %>
         OpenAIClient client = OpenAIOkHttpClient.builder()
                 .baseUrl(endpoint)
-                .credential(AzureApiKeyCredential.create("{your-api-key}"))
+                .credential(AzureApiKeyCredential.create(apiKey))
                 .build();
         <% 
         } else { %>
@@ -36,15 +40,22 @@ public class Sample {
         <%} %>
 
         ImageGenerateParams imageGenerateParams = ImageGenerateParams.builder()
-                .responseFormat(ImageGenerateParams.ResponseFormat.URL)
+                <% if (deploymentName == "dall-e-3" || deploymentName == "dall-e-2") { %>
+                .responseFormat(ImageGenerateParams.ResponseFormat.B64_JSON)
+                <% } %>
                 .prompt("A cute baby polar bear")
                 .model(deploymentName)
-                .size(ImageGenerateParams.Size._512X512)
                 .n(1)
                 .build();
 
-        client.images().generate(imageGenerateParams).data().orElseThrow().stream()
-                .flatMap(image -> image.url().stream())
-                .forEach(System.out::println);
+        client.images().generate(imageGenerateParams).data().orElseThrow().forEach(image -> {
+                try {   
+                        String base64String = image.b64Json().orElseThrow();
+                        byte[] imageData = Base64.getDecoder().decode(base64String);
+                        Files.write(Paths.get("output.png"), imageData);
+                } catch (IOException e) {
+                        e.printStackTrace();
+                }
+        });
     }
 }

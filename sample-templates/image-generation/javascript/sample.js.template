@@ -28,6 +28,9 @@ const prompt = "A cute baby polar bear.";
 const result = await openai.images.generate({
     model: deploymentName,
     prompt,
+    <% if (deploymentName === "dall-e-3" || deploymentName === "dall-e-2") { %>
+    response_format: "b64_json",
+    <% } %>
 });
 
 // Save the image to a file
