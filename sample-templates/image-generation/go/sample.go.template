@@ -12,11 +12,11 @@ package main
 
 func main() {
 	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
 	<%	if (useTokenCredentials) { %>
 	<% } else { %>
 	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 	<% } %>
-	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
 
 	<% if (useTokenCredentials) { %>
 	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
