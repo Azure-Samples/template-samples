@@ -1,0 +1,46 @@
+```caleuche-template-js
+import OpenAI from "openai";
+<% if (useTokenCredentials) { %>
+import { getBearerTokenProvider, DefaultAzureCredential } from "@azure/identity";
+<% } %>
+
+<%= javascript.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+<%= javascript.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+<% if (!useTokenCredentials) { %>
+<%= javascript.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
+<% } else { %>
+const tokenProvider = getBearerTokenProvider(
+    new DefaultAzureCredential(),
+    'https://cognitiveservices.azure.com/.default');
+<% } %>
+
+const openai = new OpenAI({
+    baseURL: endpoint,
+    <% if (useTokenCredentials) {%>
+    apiKey: tokenProvider
+    <% } else { %>
+    apiKey: apiKey
+    <% } %>
+});
+
+async function main() {
+  const response = await openai.responses.create({
+    model: deploymentName,
+    input: [
+      {
+        type: "user",
+        content: "What's the weather like today for my current location?"
+      }
+    ],
+    <% if (extraParams) { %>
+    <% if (extraParams.temperature) { %>
+    temperature: <%= extraParams.temperature %>,
+    <% } %>
+    <% } %>
+  });
+
+  console.log(`${response.getOutputText()}`);
+}
+
+main();
+```
