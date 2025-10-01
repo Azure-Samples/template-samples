@@ -1,4 +1,3 @@
-```caleuche-template-js
 import OpenAI from "openai";
 <% if (useTokenCredentials) { %>
 import { getBearerTokenProvider, DefaultAzureCredential } from "@azure/identity";
@@ -24,23 +23,20 @@ const openai = new OpenAI({
 });
 
 async function main() {
-  const response = await openai.responses.create({
-    model: deploymentName,
-    input: [
-      {
-        type: "user",
-        content: "What's the weather like today for my current location?"
-      }
-    ],
-    <% if (extraParams) { %>
-    <% if (extraParams.temperature) { %>
-    temperature: <%= extraParams.temperature %>,
-    <% } %>
-    <% } %>
-  });
+  const runner = openai.responses
+    .stream({
+      model: deploymentName,
+      input: 'solve 8x + 31 = 2',
+    })
+    .on('event', (event) => console.log(event))
+    .on('response.output_text.delta', (diff) => process.stdout.write(diff.delta));
 
-  console.log(`${response.getOutputText()}`);
+  for await (const event of runner) {
+    console.log('event', event);
+  }
+
+  const result = await runner.finalResponse();
+  console.log(result);
 }
 
 main();
-```

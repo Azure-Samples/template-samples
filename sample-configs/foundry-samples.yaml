@@ -40,8 +40,6 @@ samples:
           useTokenCredentials: false
           apiKey: <your-api-key>
           endpoint: <%= endpoint %>
-          extraParams:
-            Temperature: 0.7
       tags:
         modelName: default
         api: responses
@@ -56,8 +54,6 @@ samples:
           deploymentName: <%= deploymentName %>
           useTokenCredentials: true
           endpoint: <%= endpoint %>
-          extraParams:
-            Temperature: 0.7
       tags:
         modelName: default
         api: responses
@@ -65,39 +61,35 @@ samples:
         authType: entra
         language: go
         capability: basic
-# - templatePath: ../sample-templates/chat/responses/javascript/
-#   variants:
-#     - output: ../generated-samples/chat-responses/javascript/keyAuth/
-#       input:
-#         type: object
-#         properties:
-#           deploymentName: <%= deploymentName %>
-#           useTokenCredentials: false
-#           apiKey: <your-api-key>
-#           endpoint: <%= endpoint %>
-#           extraParams:
-#             Temperature: 0.7
-#       tags:
-#         modelName: default
-#         api: responses
-#         language: javascript
-#         sdk: openai
-#         authType: keyAuth
-#     - output: ../generated-samples/chat-responses/javascript/entra/
-#       input:
-#         type: object
-#         properties:
-#           deploymentName: <%= deploymentName %>
-#           useTokenCredentials: true
-#           endpoint: <%= endpoint %>
-#           extraParams:
-#             Temperature: 0.7
-#       tags:
-#         modelName: default
-#         api: responses
-#         language: javascript
-#         sdk: openai
-#         authType: entra
+- templatePath: ../sample-templates/chat/responses/javascript/
+  variants:
+    - output: ../generated-samples/chat-responses/js/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        language: javascript
+        sdk: openai
+        authType: keyAuth
+    - output: ../generated-samples/chat-responses/js/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        language: javascript
+        sdk: openai
+        authType: entra
 - templatePath: ../sample-templates/chat/responses/python/
   variants:
     - output: ../generated-samples/chat-responses/python/keyAuth/
