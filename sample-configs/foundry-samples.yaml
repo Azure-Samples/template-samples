@@ -1,7 +1,7 @@
 samples:
 - templatePath: ../sample-templates/chat/responses/java/
   variants:
-    - output: ../generated-samples/chat-responses/java/keyAuth/
+    - output: ../generated-samples/java/chat-responses/keyAuth/
       input:
         type: object
         properties:
@@ -16,7 +16,7 @@ samples:
         authType: keyAuth
         language: java
         capability: basic
-    - output: ../generated-samples/chat-responses/java/entra/
+    - output: ../generated-samples/java/chat-responses/entra/
       input:
         type: object
         properties:
@@ -32,7 +32,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat/responses/go/
   variants:
-    - output: ../generated-samples/chat-responses/go/keyAuth/
+    - output: ../generated-samples/go/chat-responses/keyAuth/
       input:
         type: object
         properties:
@@ -47,7 +47,7 @@ samples:
         authType: keyAuth
         language: go
         capability: basic
-    - output: ../generated-samples/chat-responses/go/entra/
+    - output: ../generated-samples/go/chat-responses/entra/
       input:
         type: object
         properties:
@@ -63,7 +63,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
-    - output: ../generated-samples/chat-responses/js/keyAuth/
+    - output: ../generated-samples/javascript/chat-responses/keyAuth/
       input:
         type: object
         properties:
@@ -77,7 +77,8 @@ samples:
         language: javascript
         sdk: openai
         authType: keyAuth
-    - output: ../generated-samples/chat-responses/js/entra/
+        capability: basic
+    - output: ../generated-samples/javascript/chat-responses/entra/
       input:
         type: object
         properties:
@@ -90,9 +91,10 @@ samples:
         language: javascript
         sdk: openai
         authType: entra
+        capability: basic
 - templatePath: ../sample-templates/chat/responses/python/
   variants:
-    - output: ../generated-samples/chat-responses/python/keyAuth/
+    - output: ../generated-samples/python/chat-responses/keyAuth/
       input:
         type: object
         properties:
@@ -109,7 +111,7 @@ samples:
         authType: keyAuth
         language: python
         capability: basic
-    - output: ../generated-samples/chat-responses/python/entra/
+    - output: ../generated-samples/python/chat-responses/entra/
       input:
         type: object
         properties:
@@ -127,7 +129,7 @@ samples:
         capability: basic
 - templatePath: ../sample-templates/chat/responses/csharp/
   variants:
-    - output: ../generated-samples/chat-responses/csharp/keyAuth/
+    - output: ../generated-samples/csharp/chat-responses/keyAuth/
       input:
         type: object
         properties:
@@ -144,7 +146,7 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
-    - output: ../generated-samples/chat-responses/csharp/entra/
+    - output: ../generated-samples/csharp/chat-responses/entra/
       input:
         type: object
         properties:
