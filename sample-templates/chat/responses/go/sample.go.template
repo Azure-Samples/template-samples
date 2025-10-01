@@ -2,13 +2,13 @@ package main
 
 <%= go.includes(
 	"context",
-	"fmt",
-	"log",
-	"os",
+    "fmt",
+
 	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
-	"github.com/openai/openai-go/v2",
-	{ module: "github.com/openai/openai-go/v2/azure", condition: useTokenCredentials },
-	"github.com/openai/openai-go/v2/option",
+	{ module: "github.com/openai/openai-go/v3/azure", condition: useTokenCredentials },
+	"github.com/openai/openai-go/v3",
+	"github.com/openai/openai-go/v3/option",
+	"github.com/openai/openai-go/v3/responses",
 ) %>
 
 func main() {
@@ -22,9 +22,10 @@ func main() {
 	<% if (useTokenCredentials) { %>
 	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
-		fmt.Println("Error creating credential:", err)
-		os.Exit(1)
+		println("Error creating credential.")
+		panic(err)
 	}
+
 	client := openai.NewClient(
 		option.WithBaseURL(endpoint),
 		azure.WithTokenCredential(token_credential),
@@ -35,27 +36,18 @@ func main() {
 		option.WithAPIKey(apiKey),
 		)
 	<% } %>
+	ctx := context.Background()
 
-	resp, err := client.Responses.New(context.TODO(), openai.ResponseNewParams{
-		Model: openai.ResponseModel(deploymentName),
-		Input: []openai.ResponseInputUnion{
-			{
-				OfUser: &openai.ResponseInputUser{
-					Content: openai.String("What's the capital of France?"),
-				},
-			},
-		},
-		<% if (extraParams) { %>
-		<% if (extraParams.Temperature) { %>
-		Temperature: openai.Float(<%= extraParams.Temperature %>),
-		<% } %>
-		<% } %>
+	question := "Write me a haiku about computers"
+
+	resp, err := client.Responses.New(ctx, responses.ResponseNewParams{
+		Input: responses.ResponseNewParamsInputUnion{OfString: openai.String(question)},
+		Model: deploymentName,
 	})
 
 	if err != nil {
-		log.Printf("ERROR: %s", err)
-		return
+		panic(err)
 	}
 
-	fmt.Printf("answer: %s\n", resp.GetOutputText())
+	println(resp.OutputText())
 }
