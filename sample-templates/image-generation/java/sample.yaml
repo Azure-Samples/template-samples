@@ -2,7 +2,7 @@ template: sample.java.template
 type: java
 dependencies:
   - name: com.openai:openai-java
-    version: 3.0.3
+    version: 3.7.1
   - name: com.azure:azure-identity
     version: 1.18.0
 input:

@@ -18,7 +18,7 @@ token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://co
 <% if (useTokenCredentials) { %>
 client = OpenAI(
     base_url=endpoint,
-    api_key_provider=token_provider
+    api_key=token_provider
 )
 <% } else { %>
 client = OpenAI(
@@ -31,7 +31,10 @@ img = client.images.generate(
     model=deployment_name,
     prompt="A cute baby polar bear",
     n=1,
-    size="1024x1024"
+    size="1024x1024",
+    <% if (deploymentName == "dall-e-3" || deploymentName == "dall-e-2") { %>
+    response_format="b64_json"
+    <% } %>
 )
 
 image_bytes = base64.b64decode(img.data[0].b64_json)

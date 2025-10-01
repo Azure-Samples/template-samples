@@ -14,8 +14,8 @@ using System.ClientModel;
 
 #pragma warning disable OPENAI001
 
-<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT_NAME", deploymentName) %>
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT_NAME", deploymentName) %>
 <%if (useTokenCredentials) { %>
 <% } else { %>
 <%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
@@ -46,15 +46,17 @@ ImageClient client = new(
 string prompt = "A cute baby polar bear";
 
 ImageGenerationOptions options = new()
-{
+{   
+    Size = GeneratedImageSize.W1024xH1024,
+    <% if (deploymentName == "dall-e-3" || deploymentName == "dall-e-2") { %>
     Quality = GeneratedImageQuality.High,
-    Size = GeneratedImageSize.W1792xH1024,
     Style = GeneratedImageStyle.Vivid,
     ResponseFormat = GeneratedImageFormat.Bytes
+    <% } %>
 };
 
 GeneratedImage image = client.GenerateImage(prompt, options);
 BinaryData bytes = image.ImageBytes;
 
-using FileStream stream = File.OpenWrite($"{Guid.NewGuid()}.png");
+using FileStream stream = File.OpenWrite("output.png");
 bytes.ToStream().CopyTo(stream);
