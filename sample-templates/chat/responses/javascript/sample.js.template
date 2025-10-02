@@ -1,0 +1,42 @@
+import OpenAI from "openai";
+<% if (useTokenCredentials) { %>
+import { getBearerTokenProvider, DefaultAzureCredential } from "@azure/identity";
+<% } %>
+
+<%= javascript.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
+<%= javascript.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+<% if (!useTokenCredentials) { %>
+<%= javascript.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
+<% } else { %>
+const tokenProvider = getBearerTokenProvider(
+    new DefaultAzureCredential(),
+    'https://cognitiveservices.azure.com/.default');
+<% } %>
+
+const openai = new OpenAI({
+    baseURL: endpoint,
+    <% if (useTokenCredentials) {%>
+    apiKey: tokenProvider
+    <% } else { %>
+    apiKey: apiKey
+    <% } %>
+});
+
+async function main() {
+  const runner = openai.responses
+    .stream({
+      model: deploymentName,
+      input: 'solve 8x + 31 = 2',
+    })
+    .on('event', (event) => console.log(event))
+    .on('response.output_text.delta', (diff) => process.stdout.write(diff.delta));
+
+  for await (const event of runner) {
+    console.log('event', event);
+  }
+
+  const result = await runner.finalResponse();
+  console.log(result);
+}
+
+main();

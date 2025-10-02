@@ -8,19 +8,65 @@ variants:
         endpoint: <%= endpoint %>
 
 samples:
-- templatePath: ../sample-templates/chat-completion/csharp
+- templatePath: ../sample-templates/chat/completions/csharp/
   variants:
-    - output: ../generated-samples/default/completions/openai/csharp/entra/basic
+    - output: ../generated-samples/chat-completions/csharp/entra/
       input:
         type: object
         properties:
-          deploymentName: <%= deploymentName %>
-          endpoint: <%= endpoint %>
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+          endpoint: $(AZURE_OPENAI_ENDPOINT)
           useTokenCredentials: true
           extraParams:
             temperature: 0.7
             TopP: 0.95
             FrequencyPenalty: 0
             PresencePenalty: 0
-            N: 1
-            MaxTokens: 1024
+            MaxOutputTokenCount: 1024
+      tags:
+        modelName: $(AZURE_OPENAI_DEPLOYMENT)
+        api: completions
+        sdk: openai
+        language: csharp
+        authType: entra
+- templatePath: ../sample-templates/chat/responses/csharp/
+  variants:
+    - output: ../generated-samples/chat-responses/csharp/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+          useTokenCredentials: false
+          apiKey: $(AZURE_OPENAI_KEY)
+          useEnvVars: true
+          extraParams:
+            Temperature: 0.7
+            TopP: 0.95
+            FrequencyPenalty: 0
+            PresencePenalty: 0
+            MaxOutputTokenCount: 1024
+      tags:
+        modelName: $(AZURE_OPENAI_DEPLOYMENT)
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+    - output: ../generated-samples/chat-responses/csharp/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: $(AZURE_OPENAI_DEPLOYMENT)
+          useTokenCredentials: true
+          useEnvVars: true
+          extraParams:
+            Temperature: 0.7
+            TopP: 0.95
+            FrequencyPenalty: 0
+            PresencePenalty: 0
+            MaxOutputTokenCount: 1024
+      tags:
+        modelName: $(AZURE_OPENAI_DEPLOYMENT)
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: entra

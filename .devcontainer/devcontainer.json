@@ -12,6 +12,9 @@
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers/features/python:1": {}
 	},
+	"containerEnv": {
+		"MAVEN_OPTS": "-Dmaven.compiler.source=11 -Dmaven.compiler.target=11"
+	},
 	"customizations": {
 		"vscode": {
 			"extensions": [

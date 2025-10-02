@@ -1,5 +1,168 @@
 samples:
-- templatePath: ../sample-templates/chat-completion/csharp
+- templatePath: ../sample-templates/chat/responses/java/
+  variants:
+    - output: ../generated-samples/java/chat-responses/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: keyAuth
+        language: java
+        capability: basic
+    - output: ../generated-samples/java/chat-responses/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: entra
+        language: java
+        capability: basic
+- templatePath: ../sample-templates/chat/responses/go/
+  variants:
+    - output: ../generated-samples/go/chat-responses/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: keyAuth
+        language: go
+        capability: basic
+    - output: ../generated-samples/go/chat-responses/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: entra
+        language: go
+        capability: basic
+- templatePath: ../sample-templates/chat/responses/javascript/
+  variants:
+    - output: ../generated-samples/javascript/chat-responses/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        language: javascript
+        sdk: openai
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/javascript/chat-responses/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+      tags:
+        modelName: default
+        api: responses
+        language: javascript
+        sdk: openai
+        authType: entra
+        capability: basic
+- templatePath: ../sample-templates/chat/responses/python/
+  variants:
+    - output: ../generated-samples/python/chat-responses/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: keyAuth
+        language: python
+        capability: basic
+    - output: ../generated-samples/python/chat-responses/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        authType: entra
+        language: python
+        capability: basic
+- templatePath: ../sample-templates/chat/responses/csharp/
+  variants:
+    - output: ../generated-samples/csharp/chat-responses/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: keyAuth
+        capability: basic
+    - output: ../generated-samples/csharp/chat-responses/entra/
+      input:
+        type: object
+        properties:
+          deploymentName: <%= deploymentName %>
+          useTokenCredentials: true
+          endpoint: <%= endpoint %>
+          extraParams:
+            Temperature: 0.7
+      tags:
+        modelName: default
+        api: responses
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: basic
+- templatePath: ../sample-templates/chat/completions/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion/sample1
       input:
@@ -61,7 +224,7 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/python
+- templatePath: ../sample-templates/chat/completions/python
   variants:
     - output: ../generated-samples/python/chat-completion/sample1
       input:
@@ -125,7 +288,7 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/java
+- templatePath: ../sample-templates/chat/completions/java
   variants:
     - output: ../generated-samples/java/chat-completion/sample1
       input:
@@ -185,7 +348,7 @@ samples:
         language: java
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/javascript
+- templatePath: ../sample-templates/chat/completions/javascript
   variants:
     - output: ../generated-samples/javascript/chat-completion/sample1
       input:
@@ -245,7 +408,7 @@ samples:
         language: javascript
         authType: keyAuth
         capability: basic
-- templatePath: ../sample-templates/chat-completion/go
+- templatePath: ../sample-templates/chat/completions/go
   variants:
     - output: ../generated-samples/go/chat-completion/sample1
       input:
@@ -470,8 +633,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: python
         authType: entra
@@ -485,8 +648,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
@@ -498,8 +661,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentID %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
@@ -512,8 +675,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: csharp
         authType: entra
@@ -528,8 +691,8 @@ samples:
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
       tags:
-        api: agents
-        sdk: openai
+        scenario: agents
+        sdk: projects
         capability: getAgent
         language: javascript
         authType: entra
