@@ -485,76 +485,74 @@ stages:
       artifact: GoResults
       condition: always()
 
-  - job: PublishSampleLibrary
-    displayName: 'Publish Sample Library npm package'
-    dependsOn: 
-    - DetectChanges
-    - ValidateCSharp
-    - ValidatePython
-    - ValidateJava
-    - ValidateJavascript
-    - ValidateGo
-    # We depend on all validation jobs to finish before publishing,
-    # And we publish regardless of any of them failing or being skipped.
-    condition: always()
-    variables:
-      hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
-      hasPythonChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'] ]
-      hasJavaChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'] ]
-      hasJavascriptChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'] ]
-      hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
-    steps:
-    - checkout: self
-    - checkout: generated_output
-      persistCredentials: true
+  # - job: PublishSampleLibrary
+  #   displayName: 'Publish Sample Library npm package'
+  #   dependsOn: 
+  #   - DetectChanges
+  #   - ValidateCSharp
+  #   - ValidatePython
+  #   - ValidateJava
+  #   - ValidateJavascript
+  #   - ValidateGo
+  #   # We depend on all validation jobs to finish before publishing,
+  #   # And we publish regardless of any of them failing or being skipped.
+  #   condition: always()
+  #   variables:
+  #     hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
+  #     hasPythonChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'] ]
+  #     hasJavaChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'] ]
+  #     hasJavascriptChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'] ]
+  #     hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
+  #   steps:
+  #   - checkout: self
   #   - task: NodeTool@0
   #     displayName: 'Install Node.js'
   #     inputs:
   #       versionSpec: '18.x'
     
-    - download: current
-      artifact: GeneratedSamples
-      displayName: 'Download generated samples'
+  #   - download: current
+  #     artifact: GeneratedSamples
+  #     displayName: 'Download generated samples'
 
-    - download: current
-      artifact: CSharpResults
-      displayName: 'Download C# validation results'
-      condition: eq(variables['hasCSharpChanges'], 'true')
+  #   - download: current
+  #     artifact: CSharpResults
+  #     displayName: 'Download C# validation results'
+  #     condition: eq(variables['hasCSharpChanges'], 'true')
 
-    - download: current
-      artifact: PythonResults
-      displayName: 'Download Python validation results'
-      condition: eq(variables['hasPythonChanges'], 'true')
+  #   - download: current
+  #     artifact: PythonResults
+  #     displayName: 'Download Python validation results'
+  #     condition: eq(variables['hasPythonChanges'], 'true')
 
-    - download: current
-      artifact: JavaResults
-      displayName: 'Download Java validation results'
-      condition: eq(variables['hasJavaChanges'], 'true')
+  #   - download: current
+  #     artifact: JavaResults
+  #     displayName: 'Download Java validation results'
+  #     condition: eq(variables['hasJavaChanges'], 'true')
 
-    - download: current
-      artifact: JavascriptResults
-      displayName: 'Download Javascript validation results'
-      condition: eq(variables['hasJavascriptChanges'], 'true')
+  #   - download: current
+  #     artifact: JavascriptResults
+  #     displayName: 'Download Javascript validation results'
+  #     condition: eq(variables['hasJavascriptChanges'], 'true')
 
-    - download: current
-      artifact: GoResults
-      displayName: 'Download Go validation results'
-      condition: eq(variables['hasGoChanges'], 'true')
+  #   - download: current
+  #     artifact: GoResults
+  #     displayName: 'Download Go validation results'
+  #     condition: eq(variables['hasGoChanges'], 'true')
 
-    - script: |
-        mkdir -p ./generated-samples/
-        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
-        echo "Copied downloaded samples to ./generated-samples/"
-      displayName: 'Copy sample artifacts to workspace'
+  #   - script: |
+  #       mkdir -p ./generated-samples/
+  #       cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+  #       echo "Copied downloaded samples to ./generated-samples/"
+  #     displayName: 'Copy sample artifacts to workspace'
     
-    - script: |
-        chmod +x scripts/remove-unvalidated-samples.sh
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/CSharpResults/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/PythonResults/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavaResults/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavascriptResults/validation-errors.log"
-        ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/GoResults/validation-errors.log"
-      displayName: 'Remove unvalidated samples'
+  #   - script: |
+  #       chmod +x scripts/remove-unvalidated-samples.sh
+  #       ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/CSharpResults/validation-errors.log"
+  #       ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/PythonResults/validation-errors.log"
+  #       ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavaResults/validation-errors.log"
+  #       ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavascriptResults/validation-errors.log"
+  #       ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/GoResults/validation-errors.log"
+  #     displayName: 'Remove unvalidated samples'
         
 
   #   - script: |
@@ -600,7 +598,8 @@ stages:
     # And we publish regardless of any of them failing or being skipped.
     condition: always()
     steps:
-    - checkout: self
+    - checkout: generated_output
+      persistCredentials: true
 
     - download: current
       artifact: GeneratedSamples
@@ -613,4 +612,12 @@ stages:
       displayName: 'Copy sample artifacts to workspace'
 
     - script: |
-        git config --global user.email "
+        git checkout -b "update-samples-$(Build.BuildId)"
+        git add ./generated-samples/
+        git config user.name "azure-pipelines"
+        git config user.email "azure-pipelines@test.com"
+
+
+        git commit -m "Update generated samples - Build $(Build.BuildId)" || echo "No changes to commit"
+        git push origin "update-samples-$(Build.BuildId)"
+      displayName: 'Commit and push changes'
