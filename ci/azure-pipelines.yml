@@ -18,7 +18,7 @@ pool:
 resources:
   repositories:
     - repository: generated_output
-      endpoint: github.com_kaylieee
+      endpoint: Sample Gen GitHub Access
       type: github
       name: Azure-Samples/kleung-test-sample-pipeline
 
