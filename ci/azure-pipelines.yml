@@ -15,6 +15,13 @@ pr:
 pool:
   vmImage: 'ubuntu-latest'
 
+resources:
+  repositories:
+    - repository: generated_output
+      endpoint: github.com_kaylieee
+      type: github
+      name: Azure-Samples/kleung-test-sample-pipeline
+
 parameters:
   # this parameter allows selecting different input data files for generating samples,
   # selection happens as a dropdown in the ADO UI
@@ -498,10 +505,12 @@ stages:
       hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
     steps:
     - checkout: self
-    - task: NodeTool@0
-      displayName: 'Install Node.js'
-      inputs:
-        versionSpec: '18.x'
+    - checkout: generated_output
+      persistCredentials: true
+  #   - task: NodeTool@0
+  #     displayName: 'Install Node.js'
+  #     inputs:
+  #       versionSpec: '18.x'
     
     - download: current
       artifact: GeneratedSamples
@@ -548,34 +557,60 @@ stages:
       displayName: 'Remove unvalidated samples'
         
 
-    - script: |
-        # Copy generated samples into the npm package
-        mkdir -p packages/sdk-samples-api/samples
-        cp -r ./generated-samples/* packages/sdk-samples-api/samples/
-        echo "Copied samples into npm package directory"
-      displayName: 'Include samples in package'
+  #   - script: |
+  #       # Copy generated samples into the npm package
+  #       mkdir -p packages/sdk-samples-api/samples
+  #       cp -r ./generated-samples/* packages/sdk-samples-api/samples/
+  #       echo "Copied samples into npm package directory"
+  #     displayName: 'Include samples in package'
 
-    - script: |
-        cd packages/sdk-samples-api
+  #   - script: |
+  #       cd packages/sdk-samples-api
         
-        # Compose a version string using the base version and the build ID
-        BASE_VERSION=$(node -p "require('./package.json').version" | cut -d- -f1)
-        NEW_VERSION=${BASE_VERSION}-ci.$(Build.BuildId)
-        echo "Setting version to $NEW_VERSION"
-        npm version --no-git-tag-version $NEW_VERSION
-      displayName: 'Generate unique package version'
+  #       # Compose a version string using the base version and the build ID
+  #       BASE_VERSION=$(node -p "require('./package.json').version" | cut -d- -f1)
+  #       NEW_VERSION=${BASE_VERSION}-ci.$(Build.BuildId)
+  #       echo "Setting version to $NEW_VERSION"
+  #       npm version --no-git-tag-version $NEW_VERSION
+  #     displayName: 'Generate unique package version'
+
+  #   - script: |
+  #       cd packages/sdk-samples-api
+  #       npm install
+  #       npm run build
+  #     displayName: 'Build sample library package'
+
+  #   - task: Npm@1
+  #     displayName: 'Publish @azure-foundry/sample-library to Azure Artifacts'
+  #     inputs:
+  #       command: 'publish'
+  #       workingDir: './packages/sdk-samples-api'
+  #       publishRegistry: 'useFeed'
+  #       publishFeed: '$(Project)/$(samples-feed)'
+  - job: PublishSamples
+    displayName: 'Publish Generated Samples'
+    dependsOn: 
+    - DetectChanges
+    - ValidateCSharp
+    - ValidatePython
+    - ValidateJava
+    - ValidateJavascript
+    - ValidateGo
+    # We depend on all validation jobs to finish before publishing,
+    # And we publish regardless of any of them failing or being skipped.
+    condition: always()
+    steps:
+    - checkout: self
+
+    - download: current
+      artifact: GeneratedSamples
+      displayName: 'Download generated samples'
 
     - script: |
-        cd packages/sdk-samples-api
-        npm install
-        npm run build
-      displayName: 'Build sample library package'
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/GeneratedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
 
-    - task: Npm@1
-      displayName: 'Publish @azure-foundry/sample-library to Azure Artifacts'
-      inputs:
-        command: 'publish'
-        workingDir: './packages/sdk-samples-api'
-        publishRegistry: 'useFeed'
-        publishFeed: '$(Project)/$(samples-feed)'
-
+    - script: |
+        git config --global user.email "
