@@ -1,4 +1,18 @@
 samples:
+- templatePath: ../sample-templates/chat/responses/javascript/
+  variants:
+    - output: ../generated-samples/chat-responses/curl/keyAuth/
+      input:
+        type: object
+        properties:
+          deploymentName: <your-deployment-name>
+          useTokenCredentials: false
+          apiKey: <your-api-key>
+          endpoint: <your-endpoint>
+      tags:
+        language: curl
+        sdk: openai
+        api: responses
 - templatePath: ../sample-templates/chat/responses/java/
   variants:
     - output: ../generated-samples/java/chat-responses/keyAuth/
