@@ -5,13 +5,13 @@ samples:
       input:
         type: object
         properties:
-          deploymentName: <your-deployment-name>
+          deploymentName: <%= deploymentName %>
           useTokenCredentials: false
           apiKey: <your-api-key>
-          endpoint: <your-endpoint>
+          endpoint: <%= endpoint %>
       tags:
         language: curl
-        sdk: openai
+        sdk: rest
         api: responses
 - templatePath: ../sample-templates/chat/responses/java/
   variants:
