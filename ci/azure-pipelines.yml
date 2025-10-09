@@ -36,7 +36,7 @@ variables:
 
 stages:
 - stage: GenerateSamples
-  displayName: 'Generate and Validate Code Samples'
+  displayName: 'Generate Code Samples'
   jobs:
   - job: GenerateSamples
     displayName: 'Generate Code Samples'
@@ -109,7 +109,7 @@ stages:
     steps:
     - checkout: self
       fetchDepth: 0
-    - download: GenerateSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -198,7 +198,7 @@ stages:
       artifact: ChangedCSharp
       displayName: 'Download list of changed C# samples'
 
-    - download: GeneratedSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -258,7 +258,7 @@ stages:
       artifact: ChangedPython
       displayName: 'Download list of changed Python samples'
 
-    - download: GeneratedSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -320,7 +320,7 @@ stages:
       artifact: ChangedJava
       displayName: 'Download list of changed Java samples'
 
-    - download: GeneratedSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -381,7 +381,7 @@ stages:
       artifact: ChangedJavascript
       displayName: 'Download list of changed Javascript samples'
 
-    - download: GenerateSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -442,7 +442,7 @@ stages:
       artifact: ChangedGo
       displayName: 'Download list of changed Go samples'
 
-    - download: GenerateSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -496,7 +496,7 @@ stages:
       hasJavascriptChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'] ]
       hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
     steps:
-    - download: GenerateSamples
+    - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
 
@@ -559,7 +559,7 @@ stages:
       inputs:
         versionSpec: '18.x'
     
-    - download: ValidateSamples
+    - download: current
       artifact: ValidatedSamples
       displayName: 'Download validated samples'
 
