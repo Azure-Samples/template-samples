@@ -1,4 +1,17 @@
 samples:
+- templatePath: ../sample-templates/agents-basic/python
+  variants:
+    - output: ../generated-samples/workflow-placeholder
+      input: 
+        type: object
+        properties:
+          endpoint: <%= endpoint %>
+          userMessage: <%= userMessage %>
+          agentID: <%= agentId %>
+      tags:
+        language: python
+        sdk: projects
+        scenario: workflows
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
     - output: ../generated-samples/chat-responses/curl/keyAuth/
