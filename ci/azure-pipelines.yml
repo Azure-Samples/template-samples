@@ -489,6 +489,7 @@ stages:
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
+    condition: always()
     variables:
       hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
       hasPythonChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'] ]
