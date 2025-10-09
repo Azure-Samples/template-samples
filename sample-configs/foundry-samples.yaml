@@ -1,7 +1,7 @@
 samples:
 - templatePath: ../sample-templates/agents-basic/python
   variants:
-    - output: ../generated-samples/workflow-placeholder
+    - output: ../generated-samples/python/workflow-placeholder
       input: 
         type: object
         properties:
@@ -14,7 +14,7 @@ samples:
         scenario: workflows
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
-    - output: ../generated-samples/chat-responses/curl/keyAuth/
+    - output: ../generated-samples/javascript/curl-placeholder/keyAuth/
       input:
         type: object
         properties:
