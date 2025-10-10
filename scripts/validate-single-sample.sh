@@ -37,14 +37,29 @@ echo "$CONFIG" | jq -r '.buildSteps[]?' | while IFS= read -r step; do
 done
 
 if [ "$MAKE_SERVICE_CALLS" = true ]; then
-    echo ""
-    echo "--- Execution Steps ---"
-    echo "$CONFIG" | jq -r '.executeSteps[]?' | while IFS= read -r step; do
-        if [ -n "$step" ] && [ "$step" != "null" ]; then
-            echo "Executing: $step"
-            eval "$step"
+    # Only execute if this directory contains a subdirectory named 'test' or 'tests'
+    if [ -d "test" ] || [ -d "tests" ]; then
+        # change to test directory if it exists
+        if [ -d "test" ]; then
+            cd test
+        elif [ -d "tests" ]; then
+            cd tests
         fi
-    done
+        echo ""
+        echo "Service validation requested and detected 'test' directory. Proceeding with execution steps."
+        echo ""
+        echo "--- Execution Steps ---"
+        echo "$CONFIG" | jq -r '.executeSteps[]?' | while IFS= read -r step; do
+            if [ -n "$step" ] && [ "$step" != "null" ]; then
+                echo "Executing: $step"
+                eval "$step"
+            fi
+        done
+        # return to sample directory
+        cd ..
+    else
+        echo "Service validation requested but no 'test' directory found. Skipping execution steps."
+    fi
 fi
 
 # Execute validation steps
