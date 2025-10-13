@@ -16,7 +16,6 @@ token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://co
 <% if (endpointSuffix) { %>
 endpoint = endpoint + "<%= endpointSuffix %>"
 <% } %>
-print(f"endpoint: {endpoint}")
 <% if (useTokenCredentials) { %>
 client = OpenAI(
     base_url=endpoint,
