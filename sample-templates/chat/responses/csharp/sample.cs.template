@@ -17,7 +17,9 @@ using System.ClientModel;
 <% } else { %>
 <%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 <% } %>
-
+<% if (endpointSuffix) { %>
+endpoint = endpoint + "<%= endpointSuffix %>"
+<% } %>
 <% if (useTokenCredentials) { %>
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
