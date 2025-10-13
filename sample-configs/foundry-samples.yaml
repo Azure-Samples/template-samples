@@ -85,6 +85,10 @@ samples:
         authType: entra
         language: java
         capability: basic
+    - output: ../generated-samples/java/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/go/
   variants:
     - output: ../generated-samples/go/chat-responses/keyAuth/
@@ -120,6 +124,10 @@ samples:
         authType: entra
         language: go
         capability: basic
+    - output: ../generated-samples/go/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
     - output: ../generated-samples/javascript/chat-responses/keyAuth/
@@ -155,6 +163,10 @@ samples:
         sdk: openai
         authType: entra
         capability: basic
+    - output: ../generated-samples/javascript/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/python/
   variants:
     - output: ../generated-samples/python/chat-responses/keyAuth/
@@ -194,6 +206,10 @@ samples:
         authType: entra
         language: python
         capability: basic
+    - output: ../generated-samples/python/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/csharp/
   variants:
     - output: ../generated-samples/csharp/chat-responses/keyAuth/
@@ -233,6 +249,10 @@ samples:
         language: csharp
         authType: entra
         capability: basic
+    - output: ../generated-samples/csharp/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/completions/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion/sample1
@@ -251,6 +271,10 @@ samples:
         language: csharp
         authType: entra
         capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/csharp/chat-completion/sample2
       input:
         type: object
@@ -266,6 +290,10 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
     - output: ../generated-samples/csharp/chat-completion/sample3
       input: 
         type: object
@@ -280,6 +308,10 @@ samples:
         language: csharp
         authType: entra
         capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample3/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/csharp/chat-completion/sample4
       input: 
         type: object
@@ -295,6 +327,10 @@ samples:
         language: csharp
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/csharp/chat-completion/sample4/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/chat/completions/python
   variants:
     - output: ../generated-samples/python/chat-completion/sample1
@@ -313,6 +349,10 @@ samples:
         language: python
         authType: entra
         capability: basic
+    - output: ../generated-samples/python/chat-completion/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/python/chat-completion/sample2
       input:
         type: object
@@ -330,6 +370,10 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/python/chat-completion/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
     - output: ../generated-samples/python/chat-completion/sample3
       input: 
         type: object
@@ -344,6 +388,10 @@ samples:
         language: python
         authType: entra
         capability: basic
+    - output: ../generated-samples/python/chat-completion/sample3/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/python/chat-completion/sample4
       input: 
         type: object
@@ -359,6 +407,10 @@ samples:
         language: python
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/python/chat-completion/sample4/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/chat/completions/java
   variants:
     - output: ../generated-samples/java/chat-completion/sample1
@@ -375,6 +427,10 @@ samples:
         language: java
         authType: entra
         capability: basic
+    - output: ../generated-samples/java/chat-completion/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/java/chat-completion/sample2
       input:
         type: object
@@ -390,6 +446,10 @@ samples:
         language: java
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/java/chat-completion/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
     - output: ../generated-samples/java/chat-completion/sample3
       input: 
         type: object
@@ -404,6 +464,10 @@ samples:
         language: java
         authType: entra
         capability: basic
+    - output: ../generated-samples/java/chat-completion/sample3/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/java/chat-completion/sample4
       input: 
         type: object
@@ -419,6 +483,10 @@ samples:
         language: java
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/java/chat-completion/sample4/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/chat/completions/javascript
   variants:
     - output: ../generated-samples/javascript/chat-completion/sample1
@@ -435,6 +503,10 @@ samples:
         language: javascript
         authType: entra
         capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/javascript/chat-completion/sample2
       input:
         type: object
@@ -450,6 +522,10 @@ samples:
         language: javascript
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
     - output: ../generated-samples/javascript/chat-completion/sample3
       input: 
         type: object
@@ -464,6 +540,10 @@ samples:
         language: javascript
         authType: entra
         capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample3/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/javascript/chat-completion/sample4
       input: 
         type: object
@@ -479,6 +559,10 @@ samples:
         language: javascript
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/javascript/chat-completion/sample4/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/chat/completions/go
   variants:
     - output: ../generated-samples/go/chat-completion/sample1
@@ -495,6 +579,10 @@ samples:
         language: go
         authType: entra
         capability: basic
+    - output: ../generated-samples/go/chat-completion/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/go/chat-completion/sample2
       input:
         type: object
@@ -510,6 +598,10 @@ samples:
         language: go
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/go/chat-completion/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
     - output: ../generated-samples/go/chat-completion/sample3
       input: 
         type: object
@@ -524,6 +616,10 @@ samples:
         language: go
         authType: entra
         capability: basic
+    - output: ../generated-samples/go/chat-completion/sample3/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/go/chat-completion/sample4
       input: 
         type: object
@@ -539,6 +635,10 @@ samples:
         language: go
         authType: keyAuth
         capability: basic
+    - output: ../generated-samples/go/chat-completion/sample4/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/python
   variants:
     - output: ../generated-samples/python/images/sample1
@@ -555,6 +655,10 @@ samples:
         language: python
         authType: entra
         capability: generation
+    - output: ../generated-samples/python/images/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/python/images/sample2
       input:
         type: object
@@ -570,6 +674,10 @@ samples:
         language: python
         authType: keyAuth
         capability: generation
+    - output: ../generated-samples/python/images/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/csharp
   variants:
     - output: ../generated-samples/csharp/images/sample1
@@ -586,6 +694,10 @@ samples:
         language: csharp
         authType: entra
         capability: generation
+    - output: ../generated-samples/csharp/images/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/csharp/images/sample2
       input:
         type: object
@@ -601,6 +713,10 @@ samples:
         language: csharp
         authType: keyAuth
         capability: generation
+    - output: ../generated-samples/csharp/images/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/java
   variants:
     - output: ../generated-samples/java/images/sample1
@@ -617,6 +733,10 @@ samples:
         language: java
         authType: entra
         capability: generation
+    - output: ../generated-samples/java/images/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/java/images/sample2
       input:
         type: object
@@ -632,6 +752,10 @@ samples:
         language: java
         authType: keyAuth
         capability: generation
+    - output: ../generated-samples/java/images/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/go
   variants:
     - output: ../generated-samples/go/images/sample1
@@ -648,6 +772,10 @@ samples:
         language: go
         authType: entra
         capability: generation
+    - output: ../generated-samples/go/images/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/go/images/sample2
       input:
         type: object
@@ -663,6 +791,10 @@ samples:
         language: go
         authType: keyAuth
         capability: generation
+    - output: ../generated-samples/go/images/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/javascript
   variants:
     - output: ../generated-samples/javascript/images/sample1
@@ -679,6 +811,10 @@ samples:
         language: javascript
         authType: entra
         capability: generation
+    - output: ../generated-samples/javascript/images/sample1/test
+      input:
+        type: reference
+        value: serviceTestsEntra
     - output: ../generated-samples/javascript/images/sample2
       input:
         type: object
@@ -694,6 +830,10 @@ samples:
         language: javascript
         authType: keyAuth
         capability: generation
+    - output: ../generated-samples/javascript/images/sample2/test
+      input:
+        type: reference
+        value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/agents-basic/python
   variants:
     - output: ../generated-samples/python/agents/sample1
