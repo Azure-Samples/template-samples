@@ -35,6 +35,7 @@ samples:
         language: python
         sdk: projects
         scenario: workflows
+        capability: runWorkflow
 # PLACEHOLDER FOR CURL
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
