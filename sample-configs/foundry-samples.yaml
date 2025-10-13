@@ -4,17 +4,19 @@ variants:
       type: object
       properties:
         endpoint: ${AZURE_OPENAI_ENDPOINT}
-        deploymentName: ${AZURE_OPENAI_DEPLOYMENT}
+        deploymentName: ${AZURE_OPENAI_DEPLOYMENT_NAME}
         apiKey: ${AZURE_OPENAI_API_KEY}
         useTokenCredentials: true
+        useEnvVars: true
   - name: serviceTestsKeyAuth
     input:
       type: object
       properties:
         endpoint: ${AZURE_OPENAI_ENDPOINT}
-        deploymentName: ${AZURE_OPENAI_DEPLOYMENT}
+        deploymentName: ${AZURE_OPENAI_DEPLOYMENT_NAME}
         apiKey: ${AZURE_OPENAI_API_KEY}
         useTokenCredentials: false
+        useEnvVars: true
 
 samples:
 # PLACEHOLDER FOR WORKFLOWS
