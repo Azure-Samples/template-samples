@@ -21,7 +21,6 @@ using System.ClientModel;
 <% if (endpointSuffix) { %>
 endpoint = endpoint + "<%= endpointSuffix %>";
 <% } %>
-
 <% if (useTokenCredentials) { %>
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),

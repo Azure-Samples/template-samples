@@ -17,6 +17,7 @@ func main() {
 	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 	<% } %>
 	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+
 	<% if (endpointSuffix) { %>
 	endpoint = endpoint + "<%= endpointSuffix %>"
 	<% } %>

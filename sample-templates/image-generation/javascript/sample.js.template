@@ -17,7 +17,6 @@ const tokenProvider = getBearerTokenProvider(
 <% if (endpointSuffix) { %>
 endpoint = endpoint + "<%= endpointSuffix %>";
 <% } %>
-
 const openai = new OpenAI({
     baseURL: endpoint,
     <% if (useTokenCredentials) {%>

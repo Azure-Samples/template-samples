@@ -17,6 +17,7 @@ public class Sample {
     <%= java.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
     <%}%>
     <%= java.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+
         <% if (endpointSuffix) { %>
         endpoint = endpoint + "<%= endpointSuffix %>"
         <% } %>

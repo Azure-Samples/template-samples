@@ -17,6 +17,7 @@ using System.ClientModel;
 <% } else { %>
 <%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 <% } %>
+
 <% if (endpointSuffix) { %>
 endpoint = endpoint + "<%= endpointSuffix %>";
 <% } %>
