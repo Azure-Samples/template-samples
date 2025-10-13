@@ -58,7 +58,8 @@ if [ "$MAKE_SERVICE_CALLS" = true ]; then
         # return to sample directory
         cd ..
     else
-        echo "Service validation requested but no 'test' directory found. Skipping execution steps."
+        echo "❌ Service validation requested but no 'test' directory found. Skipping execution steps."
+        return 1
     fi
 fi
 
