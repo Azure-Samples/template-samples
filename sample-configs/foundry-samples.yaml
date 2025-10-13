@@ -85,6 +85,10 @@ samples:
         authType: entra
         language: java
         capability: basic
+    - output: ../generated-samples/java/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/go/
   variants:
     - output: ../generated-samples/go/chat-responses/keyAuth/
@@ -120,6 +124,10 @@ samples:
         authType: entra
         language: go
         capability: basic
+    - output: ../generated-samples/go/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
     - output: ../generated-samples/javascript/chat-responses/keyAuth/
@@ -155,6 +163,10 @@ samples:
         sdk: openai
         authType: entra
         capability: basic
+    - output: ../generated-samples/javascript/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/python/
   variants:
     - output: ../generated-samples/python/chat-responses/keyAuth/
@@ -194,6 +206,10 @@ samples:
         authType: entra
         language: python
         capability: basic
+    - output: ../generated-samples/python/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/responses/csharp/
   variants:
     - output: ../generated-samples/csharp/chat-responses/keyAuth/
@@ -233,6 +249,10 @@ samples:
         language: csharp
         authType: entra
         capability: basic
+    - output: ../generated-samples/csharp/chat-responses/entra/test
+      input:
+        type: reference
+        value: serviceTestsEntra
 - templatePath: ../sample-templates/chat/completions/csharp
   variants:
     - output: ../generated-samples/csharp/chat-completion/sample1
