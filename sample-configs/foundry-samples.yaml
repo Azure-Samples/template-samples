@@ -39,7 +39,7 @@ samples:
 # PLACEHOLDER FOR CURL
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
-    - output: ../generated-samples/chat-responses/curl/keyAuth/
+    - output: ../generated-samples/javascript/curl-placeholder/keyAuth/
       input:
         type: object
         properties:
