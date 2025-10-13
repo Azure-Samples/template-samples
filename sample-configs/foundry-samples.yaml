@@ -50,6 +50,7 @@ samples:
         language: curl
         sdk: rest
         api: responses
+# END PLACEHOLDERS --------------------------------------------
 - templatePath: ../sample-templates/chat/responses/java/
   variants:
     - output: ../generated-samples/java/chat-responses/keyAuth/
