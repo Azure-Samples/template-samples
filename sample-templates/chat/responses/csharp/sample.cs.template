@@ -11,7 +11,7 @@ using System.ClientModel;
 
 #pragma warning disable OPENAI001
 
-<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT_NAME", deploymentName) %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
 <%if (useTokenCredentials) { %>
 <% } else { %>

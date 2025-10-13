@@ -24,6 +24,9 @@ public class Sample {
     <%= java.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
     <%}%>
 
+        <% if (endpointSuffix) { %>
+        endpoint = endpoint + "<%= endpointSuffix %>";
+        <% } %>
         <% if (!useTokenCredentials) { %>
         OpenAIClient client = OpenAIOkHttpClient.builder()
                 .baseUrl(endpoint)

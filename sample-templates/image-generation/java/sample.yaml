@@ -31,3 +31,7 @@ input:
     type: object
     required: false
     description: "Additional parameters for the request"
+  - name: endpointSuffix
+    type: string
+    required: false
+    description: "Optional endpoint suffix for Azure OpenAI"

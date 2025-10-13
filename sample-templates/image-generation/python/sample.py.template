@@ -15,6 +15,10 @@ token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://co
 <%= python.valueOrEnvironment(useEnvVars, "api_key", "AZURE_OPENAI_API_KEY", apiKey) %>
 <% } %>
 
+<% if (endpointSuffix) { %>
+endpoint = endpoint + "<%= endpointSuffix %>"
+<% } %>
+
 <% if (useTokenCredentials) { %>
 client = OpenAI(
     base_url=endpoint,
