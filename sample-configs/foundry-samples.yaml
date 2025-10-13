@@ -4,7 +4,7 @@ variants:
       type: object
       properties:
         endpoint: ${AZURE_OPENAI_ENDPOINT}
-        endpointSuffix: "/openai/v1"
+        endpointSuffix: "openai/v1"
         deploymentName: ${AZURE_OPENAI_DEPLOYMENT_NAME}
         apiKey: ${AZURE_OPENAI_API_KEY}
         useTokenCredentials: true
@@ -14,7 +14,7 @@ variants:
       type: object
       properties:
         endpoint: ${AZURE_OPENAI_ENDPOINT}
-        endpointSuffix: "/openai/v1"
+        endpointSuffix: "openai/v1"
         deploymentName: ${AZURE_OPENAI_DEPLOYMENT_NAME}
         apiKey: ${AZURE_OPENAI_API_KEY}
         useTokenCredentials: false
