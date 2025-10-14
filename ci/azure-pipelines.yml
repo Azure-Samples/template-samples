@@ -60,9 +60,15 @@ stages:
       displayName: 'Get Azure OpenAI credentials'
       inputs:
         azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+        
+          # Azure DevOps injects these when addSpnToEnvironment: true
+          echo "Using client id: $servicePrincipalId"
+          echo "Tenant id: $tenantId"
+
           # Get endpoint from Azure OpenAI resource
           ENDPOINT=$(az cognitiveservices account show \
             --name $(AZURE_OPENAI_SERVICE) \
@@ -78,10 +84,18 @@ stages:
           # Get predefined deployment if available
           DEPLOYMENT=$(AZURE_OPENAI_DEPLOYMENT)
 
+          # # Get IDs for Entra auth
+          # AZURE_CLIENT_ID=$(az ad sp list --display-name "<APP_NAME>" --query "[0].appId" -o tsv)
+    
+          # AZURE_TENANT_ID=$(az account show --query tenantId -o tsv)
+
           # Set as pipeline variables for use in subsequent jobs
           echo "##vso[task.setvariable variable=AZURE_OPENAI_ENDPOINT;isOutput=true]$ENDPOINT"
           echo "##vso[task.setvariable variable=AZURE_OPENAI_API_KEY;isOutput=true]$API_KEY"
           echo "##vso[task.setvariable variable=AZURE_OPENAI_DEPLOYMENT;isOutput=true]$DEPLOYMENT"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID;issecret=false]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID;issecret=false]$tenantId"
+
       name: 'configureCredentials'
 
   - job: PublishConfigs
