@@ -258,6 +258,8 @@ stages:
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
       azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -292,6 +294,8 @@ stages:
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        export AZURE_CLIENT_ID=$(servicePrincipalId)
+        export AZURE_TENANT_ID=$(tenantId)
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(VALIDATE_WITH_SERVICE)
 
       displayName: 'Validate Python samples'
