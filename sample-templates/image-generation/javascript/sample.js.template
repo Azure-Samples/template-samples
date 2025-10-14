@@ -5,7 +5,7 @@ import { getBearerTokenProvider, DefaultAzureCredential } from "@azure/identity"
 import fs from "fs";
 
 <%= javascript.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint)%>
-<%= javascript.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName)%>
+<%= javascript.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_IMAGE_DEPLOYMENT", deploymentName)%>
 <% if (!useTokenCredentials) { %>
 <%= javascript.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey)%>
 <% } else { %>

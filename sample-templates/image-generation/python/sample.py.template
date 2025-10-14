@@ -8,7 +8,7 @@ from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 <% } %>
 
 <%= python.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
-<%= python.valueOrEnvironment(useEnvVars, "deployment_name", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+<%= python.valueOrEnvironment(useEnvVars, "deployment_name", "AZURE_OPENAI_IMAGE_DEPLOYMENT", deploymentName) %>
 <% if (useTokenCredentials) { %>
 token_provider = get_bearer_token_provider(DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default")
 <% } else { %>
