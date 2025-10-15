@@ -701,7 +701,6 @@ samples:
         type: object
         properties: 
           endpoint: ${AZURE_OPENAI_ENDPOINT}
-          endpointSuffix: "openai/v1"
           deploymentName: <%= deploymentName %>
           apiKey: ${AZURE_OPENAI_API_KEY}
           useTokenCredentials: true
@@ -727,7 +726,6 @@ samples:
         type: object
         properties: 
           endpoint: ${AZURE_OPENAI_ENDPOINT}
-          endpointSuffix: "openai/v1"
           deploymentName: <%= deploymentName %>
           apiKey: ${AZURE_OPENAI_API_KEY}
           useTokenCredentials: true
