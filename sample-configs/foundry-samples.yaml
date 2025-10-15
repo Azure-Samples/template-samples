@@ -682,7 +682,7 @@ samples:
         value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/csharp
   variants:
-    - output: ../generated-samples/csharp/images/entra
+    - output: ../generated-samples/csharp/images/default/entra
       input:
         type: object
         properties:
@@ -696,10 +696,58 @@ samples:
         language: csharp
         authType: entra
         capability: generation
-    - output: ../generated-samples/csharp/images/entra/test
+    - output: ../generated-samples/csharp/images/gpt-image-1/entra/
       input:
-        type: reference
-        value: serviceTestsEntra
+        type: object
+        properties: 
+          endpoint: ${AZURE_OPENAI_ENDPOINT}
+          endpointSuffix: "openai/v1"
+          deploymentName: <%= deploymentName %>
+          apiKey: ${AZURE_OPENAI_API_KEY}
+          useTokenCredentials: true
+        tags:
+          modelName: gpt-image-1
+          api: images
+          sdk: openai
+          language: csharp
+          authType: entra
+          capability: generation
+    - output: ../generated-samples/csharp/images/gpt-image-1/entra/test
+      input:
+        type: object
+        properties: 
+          endpoint: ${AZURE_OPENAI_ENDPOINT}
+          endpointSuffix: "openai/v1"
+          deploymentName: gpt-image-1
+          apiKey: ${AZURE_OPENAI_API_KEY}
+          useTokenCredentials: true
+          useEnvVars: true
+    - output: ../generated-samples/csharp/images/dall-e-3/entra
+      input:
+        type: object
+        properties: 
+          endpoint: ${AZURE_OPENAI_ENDPOINT}
+          endpointSuffix: "openai/v1"
+          deploymentName: <%= deploymentName %>
+          apiKey: ${AZURE_OPENAI_API_KEY}
+          useTokenCredentials: true
+        tags:
+          modelName: dall-e-3
+          api: images
+          sdk: openai
+          language: csharp
+          authType: entra
+          capability: generation
+    - output: ../generated-samples/csharp/images/dall-e-3/entra/test
+      input:
+        type: object
+        properties: 
+          endpoint: ${AZURE_OPENAI_ENDPOINT}
+          endpointSuffix: "openai/v1"
+          deploymentName: dall-e-3
+          apiKey: ${AZURE_OPENAI_API_KEY}
+          useTokenCredentials: true
+          useEnvVars: true
     - output: ../generated-samples/csharp/images/keyAuth
       input:
         type: object
