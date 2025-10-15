@@ -682,20 +682,6 @@ samples:
         value: serviceTestsKeyAuth
 - templatePath: ../sample-templates/image-generation/csharp
   variants:
-    - output: ../generated-samples/csharp/images/default/entra
-      input:
-        type: object
-        properties:
-          useTokenCredentials: true
-          endpoint: <%= endpoint %>
-          deploymentName: <%= deploymentName %>
-      tags:
-        modelName: default
-        api: images
-        sdk: openai
-        language: csharp
-        authType: entra
-        capability: generation
     - output: ../generated-samples/csharp/images/gpt-image-1/entra/
       input:
         type: object
