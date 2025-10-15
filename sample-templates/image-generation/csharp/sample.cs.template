@@ -15,7 +15,11 @@ using System.ClientModel;
 #pragma warning disable OPENAI001
 
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
+<% if (deploymentName == "dall-e-3" || deploymentName == "dall-e-2") { %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DALLE_DEPLOYMENT", deploymentName) %>
+<% } else { %>
 <%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_IMAGE_DEPLOYMENT", deploymentName) %>
+<% } %>
 <%if (useTokenCredentials) { %>
 <% } else { %>
 <%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>;
@@ -62,5 +66,4 @@ ImageGenerationOptions options = new()
 GeneratedImage image = client.GenerateImage(prompt, options);
 BinaryData bytes = image.ImageBytes;
 
-using FileStream stream = File.OpenWrite("output.png");
-bytes.ToStream().CopyTo(stream);
+File.WriteAllBytes("output.png", bytes.ToArray());
