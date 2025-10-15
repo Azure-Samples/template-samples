@@ -21,7 +21,9 @@ while IFS= read -r line; do
   # extract path after ❌
   path=$(printf '%s' "$line" | sed -nE 's/^.*❌\s*//p')
   path=$(printf '%s' "$path" | tr -d '\r' | sed 's/[[:space:]]*$//')
-  [ -z "$path" ] && continue
+  if [ -z "$path" ]; then
+    continue
+  fi
 
   printf 'Removing: %s\n' "$path"
   [[ -e "$path" ]] && rm -rf -- "$path"
