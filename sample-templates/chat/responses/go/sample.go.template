@@ -2,6 +2,8 @@ package main
 
 <%= go.includes(
 	"context",
+	{ module: "os", condition: useEnvVars },
+	{ module: "fmt", condition: useEnvVars },
 
 	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
 	{ module: "github.com/openai/openai-go/v3/azure", condition: useTokenCredentials },
