@@ -31,11 +31,14 @@ samples:
           endpoint: <%= endpoint %>
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
+          agentName: <%= agentName %>
+          modelDeploymentName: <%= modelDeploymentName %>
       tags:
         language: python
         sdk: projects
         scenario: workflows
         capability: runWorkflow
+        bypassValidation: true
 # PLACEHOLDER FOR CURL
 - templatePath: ../sample-templates/chat/responses/javascript/
   variants:
@@ -51,6 +54,7 @@ samples:
         language: curl
         sdk: rest
         api: responses
+        bypassValidation: 
 # END PLACEHOLDERS --------------------------------------------
 - templatePath: ../sample-templates/chat/responses/java/
   variants:
@@ -877,6 +881,8 @@ samples:
           endpoint: <%= endpoint %>
           userMessage: <%= userMessage %>
           agentID: <%= agentId %>
+          agentName: <%= agentName %>
+          modelDeploymentName: <%= modelDeploymentName %>
       tags:
         scenario: agents
         sdk: projects

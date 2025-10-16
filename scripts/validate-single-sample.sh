@@ -16,6 +16,16 @@ echo "Language: $LANGUAGE"
 ORIGINAL_DIR=$(pwd)
 cd "$SAMPLE_DIR"
 
+# If the current directory has a `tags.yaml` file with the tag `bypassValidation`,
+# then we skip validation even if requested.
+if [ -f "tags.yaml" ]; then
+    if grep -q "bypassValidation" tags.yaml; then
+        echo "‼️ 'bypassValidation' tag found in tags.yaml. Skipping validation steps."
+        # `exit 0` here is needed to have this entry included in the collection of samples we publish.
+        exit 0
+    fi
+fi
+
 IN_PIPELINE_TEST_DIR=false
 if [ "$MAKE_SERVICE_CALLS" = true ]; then
     TEST_DIR="test"
