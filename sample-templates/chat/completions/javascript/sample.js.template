@@ -13,11 +13,8 @@ const tokenProvider = getBearerTokenProvider(
     'https://cognitiveservices.azure.com/.default');
 <% } %>
 
-<% if (endpointSuffix) { %>
-endpoint = endpoint + "<%= endpointSuffix %>";
-<% } %>
 const openai = new OpenAI({
-    baseURL: endpoint,
+    baseURL: endpoint <% if (endpointSuffix) { %> + "<%= endpointSuffix %>" <% } %>,
     <% if (useTokenCredentials) {%>
     apiKey: tokenProvider
     <% } else { %>
