@@ -16,6 +16,19 @@ echo "Language: $LANGUAGE"
 ORIGINAL_DIR=$(pwd)
 cd "$SAMPLE_DIR"
 
+IN_PIPELINE_TEST_DIR=false
+if [ "$MAKE_SERVICE_CALLS" = true ]; then
+    TEST_DIR="test"
+    if [ -d "$TEST_DIR" ]; then
+        echo ""
+        echo "Service validation requested and detected a '$TEST_DIR' directory. Proceeding to run tests from subdirectory."
+        echo ""
+
+        cd "$TEST_DIR"
+        IN_PIPELINE_TEST_DIR=true
+    fi
+fi
+
 # Execute preBuild steps
 echo ""
 echo "--- PreBuild Steps ---"
@@ -36,31 +49,17 @@ echo "$CONFIG" | jq -r '.buildSteps[]?' | while IFS= read -r step; do
     fi
 done
 
-if [ "$MAKE_SERVICE_CALLS" = true ]; then
-    # Only execute if this directory contains a subdirectory named 'test' or 'tests'
-    if [ -d "test" ] || [ -d "tests" ]; then
-        # change to test directory if it exists
-        if [ -d "test" ]; then
-            cd test
-        elif [ -d "tests" ]; then
-            cd tests
+if [ "$MAKE_SERVICE_CALLS" = true ] && [ "$IN_PIPELINE_TEST_DIR" = true ]; then
+    echo "--- Execution Steps ---"
+    echo "$CONFIG" | jq -r '.executeSteps[]?' | while IFS= read -r step; do
+        if [ -n "$step" ] && [ "$step" != "null" ]; then
+            echo "Executing: $step"
+            eval "$step"
         fi
-        echo ""
-        echo "Service validation requested and detected 'test' directory. Proceeding with execution steps."
-        echo ""
-        echo "--- Execution Steps ---"
-        echo "$CONFIG" | jq -r '.executeSteps[]?' | while IFS= read -r step; do
-            if [ -n "$step" ] && [ "$step" != "null" ]; then
-                echo "Executing: $step"
-                eval "$step"
-            fi
-        done
-        # return to sample directory
-        cd ..
-    else
-        echo "❌ Service validation requested but no 'test' directory found. Skipping execution steps."
-        exit 1
-    fi
+    done
+else
+    echo "⚠️ Service validation is requested but no '$TEST_DIR' directory was found. Skipping validation."
+    exit 1
 fi
 
 # Execute validation steps
