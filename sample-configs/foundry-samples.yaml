@@ -694,13 +694,13 @@ samples:
           deploymentName: <%= deploymentName %>
           apiKey: ${AZURE_OPENAI_API_KEY}
           useTokenCredentials: true
-        tags:
-          modelName: gpt-image-1
-          api: images
-          sdk: openai
-          language: csharp
-          authType: entra
-          capability: generation
+      tags:
+        modelName: gpt-image-1
+        api: images
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: generation
     - output: ../generated-samples/csharp/images/gpt-image-1/entra/test
       input:
         type: object
@@ -719,13 +719,13 @@ samples:
           deploymentName: <%= deploymentName %>
           apiKey: ${AZURE_OPENAI_API_KEY}
           useTokenCredentials: true
-        tags:
-          modelName: dall-e-3
-          api: images
-          sdk: openai
-          language: csharp
-          authType: entra
-          capability: generation
+      tags:
+        modelName: dall-e-3
+        api: images
+        sdk: openai
+        language: csharp
+        authType: entra
+        capability: generation
     - output: ../generated-samples/csharp/images/dall-e-3/entra/test
       input:
         type: object
