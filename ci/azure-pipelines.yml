@@ -35,10 +35,9 @@ variables:
     value: ${{ parameters.templateConfigInput }}
 
 stages:
-- stage: ValidateSamples
-  displayName: 'Generate and Validate Code Samples'
+- stage: GenerateSamples
+  displayName: 'Generate Code Samples'
   jobs:
-
   - job: GenerateSamples
     displayName: 'Generate Code Samples'
     steps:
@@ -56,6 +55,13 @@ stages:
       artifact: GeneratedSamples
       displayName: 'Publish generated samples'
 
+- stage: ValidateSamples
+  displayName: 'Validate Changed Samples'
+  dependsOn: GenerateSamples
+  jobs:
+  - job: ConfigureCredentials
+    displayName: 'Configure Azure OpenAI Credentials'
+    steps:
     - task: AzureCLI@2
       displayName: 'Get Azure OpenAI credentials'
       inputs:
@@ -98,7 +104,6 @@ stages:
 
   - job: PublishConfigs
     displayName: 'Publish build configurations for samples'
-    dependsOn: GenerateSamples
     steps:
     - script: |
         # Publish configs to generated directories
@@ -113,7 +118,6 @@ stages:
 
   - job: DetectChanges
     displayName: 'Detect Changed Samples'
-    dependsOn: GenerateSamples
     steps:
     - checkout: self
       fetchDepth: 0
@@ -189,15 +193,15 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
-    - GenerateSamples
+    - ConfigureCredentials
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UseDotNet@2
@@ -272,15 +276,15 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
-    - GenerateSamples
+    - ConfigureCredentials
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -360,16 +364,15 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
-    - GenerateSamples
+    - ConfigureCredentials
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavaChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
-
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: JavaToolInstaller@0
@@ -446,16 +449,15 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
-    - GenerateSamples
+    - ConfigureCredentials
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
-
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: NodeTool@0
@@ -531,15 +533,15 @@ stages:
     dependsOn: 
     - DetectChanges
     - PublishConfigs
-    - GenerateSamples
+    - ConfigureCredentials
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
 
     steps:
     - checkout: self
@@ -609,9 +611,9 @@ stages:
     - publish: validation-results/
       artifact: GoResults
       condition: always()
-
-  - job: PublishSampleLibrary
-    displayName: 'Publish Sample Library npm package'
+  
+  - job: OutputValidatedSamples
+    displayName: 'Output Validated Samples'
     dependsOn: 
     - DetectChanges
     - ValidateCSharp
@@ -619,8 +621,6 @@ stages:
     - ValidateJava
     - ValidateJavascript
     - ValidateGo
-    # We depend on all validation jobs to finish before publishing,
-    # And we publish regardless of any of them failing or being skipped.
     condition: always()
     variables:
       hasCSharpChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'] ]
@@ -629,12 +629,6 @@ stages:
       hasJavascriptChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasJavascriptChanges'] ]
       hasGoChanges: $[ dependencies.DetectChanges.outputs['detectChanges.hasGoChanges'] ]
     steps:
-    - checkout: self
-    - task: NodeTool@0
-      displayName: 'Install Node.js'
-      inputs:
-        versionSpec: '18.x'
-    
     - download: current
       artifact: GeneratedSamples
       displayName: 'Download generated samples'
@@ -678,7 +672,35 @@ stages:
         ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/JavascriptResults/validation-errors.log"
         ./scripts/remove-unvalidated-samples.sh "$(Pipeline.Workspace)/GoResults/validation-errors.log"
       displayName: 'Remove unvalidated samples'
-        
+    
+    - publish: generated-samples/
+      artifact: ValidatedSamples
+      displayName: 'Publish validated samples'
+      condition: always()
+
+- stage: PublishSamples
+  displayName: 'Publish Validated Samples'
+  dependsOn: ValidateSamples
+  condition: always()
+  jobs:
+  - job: PublishSampleLibrary
+    displayName: 'Publish Sample Library npm package'
+    steps:
+    - checkout: self
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: '18.x'
+    
+    - download: current
+      artifact: ValidatedSamples
+      displayName: 'Download validated samples'
+
+    - script: |
+        mkdir -p ./generated-samples/
+        cp -r "$(Pipeline.Workspace)/ValidatedSamples/"* ./generated-samples/
+        echo "Copied downloaded samples to ./generated-samples/"
+      displayName: 'Copy sample artifacts to workspace'
 
     - script: |
         # Copy generated samples into the npm package

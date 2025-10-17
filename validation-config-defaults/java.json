@@ -7,5 +7,8 @@
   "validateSteps": [
     "mvn checkstyle:check",
     "mvn pmd:pmd"
+  ],
+  "executeSteps": [
+    "mvn exec:java -Dexec.mainClass=\"Sample\""
   ]
 }
