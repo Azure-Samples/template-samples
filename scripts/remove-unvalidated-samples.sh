@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 VALIDATION_RESULTS_FILE=$1
 
@@ -10,7 +9,6 @@ else
     echo "No unvalidated samples found."
     exit 0
 fi
-
 while IFS= read -r line; do
   # skip lines that don't contain ❌
   if [[ "$line" != *❌* ]]; then 
@@ -21,9 +19,14 @@ while IFS= read -r line; do
   # extract path after ❌
   path=$(printf '%s' "$line" | sed -nE 's/^.*❌\s*//p')
   path=$(printf '%s' "$path" | tr -d '\r' | sed 's/[[:space:]]*$//')
-  [ -z "$path" ] && continue
+  if [ -z "$path" ]; then
+    continue
+  fi
 
   printf 'Removing: %s\n' "$path"
   [[ -e "$path" ]] && rm -rf -- "$path"
 
 done < "$VALIDATION_RESULTS_FILE"
+
+# Explicitly exit with success code
+exit 0

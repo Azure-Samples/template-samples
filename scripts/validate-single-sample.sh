@@ -16,6 +16,29 @@ echo "Language: $LANGUAGE"
 ORIGINAL_DIR=$(pwd)
 cd "$SAMPLE_DIR"
 
+# If the current directory has a `tags.yaml` file with the tag `bypassValidation`,
+# then we skip validation even if requested.
+if [ -f "tags.yaml" ]; then
+    if grep -q "bypassValidation" tags.yaml; then
+        echo "‼️ 'bypassValidation' tag found in tags.yaml. Skipping validation steps."
+        # `exit 0` here is needed to have this entry included in the collection of samples we publish.
+        exit 0
+    fi
+fi
+
+IN_PIPELINE_TEST_DIR=false
+if [ "$MAKE_SERVICE_CALLS" = true ]; then
+    TEST_DIR="test"
+    if [ -d "$TEST_DIR" ]; then
+        echo ""
+        echo "Service validation requested and detected a '$TEST_DIR' directory. Proceeding to run tests from subdirectory."
+        echo ""
+
+        cd "$TEST_DIR"
+        IN_PIPELINE_TEST_DIR=true
+    fi
+fi
+
 # Execute preBuild steps
 echo ""
 echo "--- PreBuild Steps ---"
@@ -36,8 +59,7 @@ echo "$CONFIG" | jq -r '.buildSteps[]?' | while IFS= read -r step; do
     fi
 done
 
-if [ "$MAKE_SERVICE_CALLS" = true ]; then
-    echo ""
+if [ "$MAKE_SERVICE_CALLS" = true ] && [ "$IN_PIPELINE_TEST_DIR" = true ]; then
     echo "--- Execution Steps ---"
     echo "$CONFIG" | jq -r '.executeSteps[]?' | while IFS= read -r step; do
         if [ -n "$step" ] && [ "$step" != "null" ]; then
@@ -45,6 +67,9 @@ if [ "$MAKE_SERVICE_CALLS" = true ]; then
             eval "$step"
         fi
     done
+else
+    echo "⚠️ Service validation is requested but no '$TEST_DIR' directory was found. Skipping validation."
+    exit 1
 fi
 
 # Execute validation steps

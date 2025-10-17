@@ -8,7 +8,7 @@
     "dotnet restore"
   ],
   "buildSteps": [
-    "dotnet build"
+    "dotnet build -p:DefaultItemExcludes=\"test/**/*\""
   ],
   "executeSteps": [
     "dotnet run"

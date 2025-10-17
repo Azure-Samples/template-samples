@@ -4,6 +4,7 @@ package main
 	"context",
 	"encoding/base64",
 	"os",
+	{ module: "fmt", condition: useEnvVars },
 	{ module: "github.com/Azure/azure-sdk-for-go/sdk/azidentity", condition: useTokenCredentials },
 	"github.com/openai/openai-go/v2",
 	{ module: "github.com/openai/openai-go/v2/azure", condition: useTokenCredentials },
@@ -12,12 +13,15 @@ package main
 
 func main() {
 	<%= go.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
-	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
+	<%=	go.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_IMAGE_DEPLOYMENT", deploymentName) %>
 	<%	if (useTokenCredentials) { %>
 	<% } else { %>
 	<%= go.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 	<% } %>
 
+	<% if (endpointSuffix) { %>
+	endpoint = endpoint + "<%= endpointSuffix %>"
+	<% } %>
 	<% if (useTokenCredentials) { %>
 	token_credential, err := azidentity.NewDefaultAzureCredential(nil)
 	if err != nil {
