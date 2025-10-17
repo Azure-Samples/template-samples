@@ -1,0 +1,490 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Azure-Samples/template-samples/validation-manifest-schema.json",
+  "title": "Validation Manifest Schema",
+  "description": "Schema for validation manifest that tracks sample validation results, build outcomes, and pipeline metadata",
+  "type": "object",
+  "required": [
+    "version",
+    "timestamp",
+    "pipeline",
+    "language",
+    "validation"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Schema version for compatibility tracking",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when validation was performed"
+    },
+    "pipeline": {
+      "type": "object",
+      "description": "Pipeline execution context and metadata",
+      "required": ["runId", "buildNumber"],
+      "properties": {
+        "runId": {
+          "type": "string",
+          "description": "Unique pipeline run identifier"
+        },
+        "buildNumber": {
+          "type": "string",
+          "description": "Build number or pipeline run number"
+        },
+        "repository": {
+          "type": "object",
+          "description": "Repository information",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Repository name"
+            },
+            "branch": {
+              "type": "string",
+              "description": "Branch being validated"
+            },
+            "commit": {
+              "type": "string",
+              "description": "Commit SHA being validated"
+            }
+          }
+        },
+        "agent": {
+          "type": "object",
+          "description": "Build agent information",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Agent name"
+            },
+            "os": {
+              "type": "string",
+              "description": "Operating system of the agent"
+            }
+          }
+        }
+      }
+    },
+    "language": {
+      "type": "string",
+      "description": "Programming language being validated",
+      "enum": ["csharp", "python", "java", "go", "javascript"]
+    },
+    "configuration": {
+      "type": "object",
+      "description": "Default language configuration used for validation",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "description": "Framework version (e.g., net9.0, 3.11)"
+        },
+        "dependencies": {
+          "type": "object",
+          "description": "Default dependencies and versions",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "buildSteps": {
+          "type": "array",
+          "description": "Default build steps for the language",
+          "items": {
+            "type": "string"
+          }
+        },
+        "validateSteps": {
+          "type": "array",
+          "description": "Default validation steps for the language",
+          "items": {
+            "type": "string"
+          }
+        },
+        "validationLevel": {
+          "type": "string",
+          "description": "Level of validation performed",
+          "enum": ["compile-only", "syntax-check", "full-test", "lint-only"]
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "description": "Validation execution summary and results",
+      "required": ["summary", "samples"],
+      "properties": {
+        "summary": {
+          "type": "object",
+          "description": "Overall validation summary",
+          "required": ["total", "passed", "failed"],
+          "properties": {
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total number of samples validated"
+            },
+            "passed": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of samples that passed validation"
+            },
+            "failed": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of samples that failed validation"
+            },
+            "skipped": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of samples that were skipped"
+            },
+            "duration": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Total validation duration in seconds"
+            }
+          }
+        },
+        "samples": {
+          "type": "array",
+          "description": "Individual sample validation results",
+          "items": {
+            "type": "object",
+            "required": ["name", "path", "status", "timestamp"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Sample scenario name"
+              },
+              "path": {
+                "type": "string",
+                "description": "Relative path to the sample directory"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["passed", "failed", "skipped"],
+                "description": "Overall validation status for this sample"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When this sample validation started"
+              },
+              "duration": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Sample validation duration in seconds"
+              },
+              "configuration": {
+                "type": "object",
+                "description": "Resolved configuration used for this sample (merged defaults + overrides)",
+                "properties": {
+                  "buildSteps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "validateSteps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "dependencies": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "validationLevel": {
+                    "type": "string"
+                  }
+                }
+              },
+              "buildSteps": {
+                "type": "array",
+                "description": "Build step execution results",
+                "items": {
+                  "type": "object",
+                  "required": ["command", "status"],
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "description": "Build command that was executed"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["success", "failed", "skipped"],
+                      "description": "Execution status of this build step"
+                    },
+                    "duration": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Step execution duration in seconds"
+                    },
+                    "exitCode": {
+                      "type": "integer",
+                      "description": "Exit code returned by the command"
+                    },
+                    "stdout": {
+                      "type": "string",
+                      "description": "Standard output from the command"
+                    },
+                    "stderr": {
+                      "type": "string",
+                      "description": "Standard error output from the command"
+                    },
+                    "errorDetails": {
+                      "type": "object",
+                      "description": "Structured error information when command fails",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Error type classification"
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Human-readable error message"
+                        },
+                        "location": {
+                          "type": "object",
+                          "description": "Location information for the error",
+                          "properties": {
+                            "file": {
+                              "type": "string"
+                            },
+                            "line": {
+                              "type": "integer"
+                            },
+                            "column": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "validationSteps": {
+                "type": "array",
+                "description": "Validation step execution results",
+                "items": {
+                  "type": "object",
+                  "required": ["command", "status"],
+                  "properties": {
+                    "command": {
+                      "type": "string",
+                      "description": "Validation command that was executed"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["success", "failed", "skipped"],
+                      "description": "Execution status of this validation step"
+                    },
+                    "duration": {
+                      "type": "number",
+                      "minimum": 0,
+                      "description": "Step execution duration in seconds"
+                    },
+                    "exitCode": {
+                      "type": "integer",
+                      "description": "Exit code returned by the command"
+                    },
+                    "stdout": {
+                      "type": "string",
+                      "description": "Standard output from the command"
+                    },
+                    "stderr": {
+                      "type": "string",
+                      "description": "Standard error output from the command"
+                    },
+                    "errorDetails": {
+                      "type": "object",
+                      "description": "Structured error information when command fails",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Error type classification"
+                        },
+                        "message": {
+                          "type": "string",
+                          "description": "Human-readable error message"
+                        },
+                        "location": {
+                          "type": "object",
+                          "description": "Location information for the error",
+                          "properties": {
+                            "file": {
+                              "type": "string"
+                            },
+                            "line": {
+                              "type": "integer"
+                            },
+                            "column": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "artifacts": {
+                "type": "array",
+                "description": "Generated artifacts from validation",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Artifact name"
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Path to the artifact"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "Type of artifact (log, binary, report, etc.)"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Artifact size in bytes"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "history": {
+      "type": "object",
+      "description": "Cumulative data from previous runs for packaging logic",
+      "properties": {
+        "previousRuns": {
+          "type": "array",
+          "description": "Summary of recent validation runs",
+          "items": {
+            "type": "object",
+            "required": ["runId", "timestamp", "passed", "failed"],
+            "properties": {
+              "runId": {
+                "type": "string",
+                "description": "Pipeline run identifier"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When the run occurred"
+              },
+              "passed": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of samples that passed"
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of samples that failed"
+              },
+              "duration": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Total run duration in seconds"
+              }
+            }
+          }
+        },
+        "trends": {
+          "type": "object",
+          "description": "Trend analysis for packaging decisions",
+          "properties": {
+            "successRate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Overall success rate across recent runs"
+            },
+            "averageDuration": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Average validation duration in seconds"
+            },
+            "failingPatterns": {
+              "type": "array",
+              "description": "Commonly failing samples or patterns",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "samplePattern": {
+                    "type": "string",
+                    "description": "Sample name pattern that fails"
+                  },
+                  "frequency": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "How often this pattern fails"
+                  },
+                  "lastFailure": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "When this pattern last failed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for extensibility",
+      "properties": {
+        "generatedBy": {
+          "type": "string",
+          "description": "Tool or system that generated this manifest"
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When this manifest was generated"
+        },
+        "environment": {
+          "type": "object",
+          "description": "Environment information",
+          "properties": {
+            "variables": {
+              "type": "object",
+              "description": "Relevant environment variables",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "tools": {
+              "type": "object",
+              "description": "Tool versions used in validation",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "extensions": {
+          "type": "object",
+          "description": "Reserved for future extensions and custom properties",
+          "additionalProperties": true
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

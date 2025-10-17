@@ -1,0 +1,231 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2024-01-15T14:30:45.123Z",
+  "pipeline": {
+    "runId": "20240115.3",
+    "buildNumber": "123",
+    "repository": {
+      "name": "template-samples",
+      "branch": "main",
+      "commit": "abc123def456789012345678901234567890abcd"
+    },
+    "agent": {
+      "name": "ubuntu-latest",
+      "os": "Linux"
+    }
+  },
+  "language": "csharp",
+  "configuration": {
+    "framework": "net9.0",
+    "dependencies": {
+      "Azure.AI.OpenAI": "latest"
+    },
+    "buildSteps": [
+      "dotnet restore",
+      "dotnet build"
+    ],
+    "validateSteps": [],
+    "validationLevel": "compile-only"
+  },
+  "validation": {
+    "summary": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "skipped": 0,
+      "duration": 45.8
+    },
+    "samples": [
+      {
+        "name": "chat-completion",
+        "path": "generated-samples/csharp/chat-completion",
+        "status": "passed",
+        "timestamp": "2024-01-15T14:30:50.456Z",
+        "duration": 12.3,
+        "configuration": {
+          "buildSteps": [
+            "dotnet restore",
+            "dotnet build"
+          ],
+          "validateSteps": [],
+          "dependencies": {
+            "Azure.AI.OpenAI": "latest"
+          },
+          "validationLevel": "compile-only"
+        },
+        "buildSteps": [
+          {
+            "command": "dotnet restore",
+            "status": "success",
+            "duration": 5.2,
+            "exitCode": 0,
+            "stdout": "  Determining projects to restore...\n  Restored /path/to/project.csproj (in 5.2 sec).",
+            "stderr": ""
+          },
+          {
+            "command": "dotnet build",
+            "status": "success",
+            "duration": 7.1,
+            "exitCode": 0,
+            "stdout": "MSBuild version 17.8.0+b89cb5fde for .NET\n  Build succeeded.\n    0 Warning(s)\n    0 Error(s)",
+            "stderr": ""
+          }
+        ],
+        "validationSteps": [],
+        "artifacts": [
+          {
+            "name": "build-output",
+            "path": "bin/Debug/net9.0/",
+            "type": "binary",
+            "size": 2048576
+          }
+        ]
+      },
+      {
+        "name": "embeddings",
+        "path": "generated-samples/csharp/embeddings",
+        "status": "passed",
+        "timestamp": "2024-01-15T14:31:02.789Z",
+        "duration": 11.8,
+        "configuration": {
+          "buildSteps": [
+            "dotnet restore",
+            "dotnet build"
+          ],
+          "validateSteps": [],
+          "dependencies": {
+            "Azure.AI.OpenAI": "latest"
+          },
+          "validationLevel": "compile-only"
+        },
+        "buildSteps": [
+          {
+            "command": "dotnet restore",
+            "status": "success",
+            "duration": 4.9,
+            "exitCode": 0,
+            "stdout": "  Determining projects to restore...\n  Restored /path/to/project.csproj (in 4.9 sec).",
+            "stderr": ""
+          },
+          {
+            "command": "dotnet build",
+            "status": "success",
+            "duration": 6.9,
+            "exitCode": 0,
+            "stdout": "MSBuild version 17.8.0+b89cb5fde for .NET\n  Build succeeded.\n    0 Warning(s)\n    0 Error(s)",
+            "stderr": ""
+          }
+        ],
+        "validationSteps": [],
+        "artifacts": [
+          {
+            "name": "build-output",
+            "path": "bin/Debug/net9.0/",
+            "type": "binary",
+            "size": 1987456
+          }
+        ]
+      },
+      {
+        "name": "image-generation",
+        "path": "generated-samples/csharp/image-generation",
+        "status": "failed",
+        "timestamp": "2024-01-15T14:31:14.567Z",
+        "duration": 21.7,
+        "configuration": {
+          "buildSteps": [
+            "dotnet restore",
+            "dotnet build"
+          ],
+          "validateSteps": [],
+          "dependencies": {
+            "Azure.AI.OpenAI": "latest"
+          },
+          "validationLevel": "compile-only"
+        },
+        "buildSteps": [
+          {
+            "command": "dotnet restore",
+            "status": "success",
+            "duration": 5.1,
+            "exitCode": 0,
+            "stdout": "  Determining projects to restore...\n  Restored /path/to/project.csproj (in 5.1 sec).",
+            "stderr": ""
+          },
+          {
+            "command": "dotnet build",
+            "status": "failed",
+            "duration": 16.6,
+            "exitCode": 1,
+            "stdout": "MSBuild version 17.8.0+b89cb5fde for .NET",
+            "stderr": "Program.cs(15,34): error CS1002: ; expected [/path/to/project.csproj]\nProgram.cs(15,35): error CS1513: } expected [/path/to/project.csproj]",
+            "errorDetails": {
+              "type": "CompilationError",
+              "message": "Syntax error in generated code",
+              "location": {
+                "file": "Program.cs",
+                "line": 15,
+                "column": 34
+              }
+            }
+          }
+        ],
+        "validationSteps": [],
+        "artifacts": [
+          {
+            "name": "build-log",
+            "path": "build.log",
+            "type": "log",
+            "size": 4567
+          }
+        ]
+      }
+    ]
+  },
+  "history": {
+    "previousRuns": [
+      {
+        "runId": "20240115.2",
+        "timestamp": "2024-01-15T10:15:30.123Z",
+        "passed": 3,
+        "failed": 0,
+        "duration": 38.2
+      },
+      {
+        "runId": "20240115.1",
+        "timestamp": "2024-01-15T08:45:15.456Z",
+        "passed": 2,
+        "failed": 1,
+        "duration": 42.1
+      }
+    ],
+    "trends": {
+      "successRate": 0.83,
+      "averageDuration": 42.0,
+      "failingPatterns": [
+        {
+          "samplePattern": "image-generation",
+          "frequency": 2,
+          "lastFailure": "2024-01-15T14:31:14.567Z"
+        }
+      ]
+    }
+  },
+  "metadata": {
+    "generatedBy": "validate-samples.sh",
+    "generatedAt": "2024-01-15T14:31:36.234Z",
+    "environment": {
+      "variables": {
+        "DOTNET_VERSION": "9.0.0",
+        "BUILD_BUILDNUMBER": "123",
+        "BUILD_SOURCEBRANCHNAME": "main"
+      },
+      "tools": {
+        "dotnet": "9.0.0",
+        "node": "18.17.0",
+        "caleuche": "1.2.3"
+      }
+    },
+    "extensions": {}
+  }
+}
