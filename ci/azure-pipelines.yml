@@ -545,7 +545,7 @@ stages:
     - checkout: self
     - task: GoTool@0
       inputs:
-        version: '1.25.1'
+        version: '1.25.3'
 
     - download: current
       artifact: ChangedGo
