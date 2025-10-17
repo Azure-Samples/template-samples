@@ -31,3 +31,7 @@ input:
     type: string
     required: true
     description: "Model to use for chat completion"
+  - name: endpointSuffix
+    type: string
+    required: false
+    description: "Optional endpoint suffix for Azure OpenAI"

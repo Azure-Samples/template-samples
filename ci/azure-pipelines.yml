@@ -60,9 +60,15 @@ stages:
       displayName: 'Get Azure OpenAI credentials'
       inputs:
         azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+        
+          # Azure DevOps injects these when addSpnToEnvironment: true
+          echo "Using client id: $servicePrincipalId"
+          echo "Tenant id: $tenantId"
+
           # Get endpoint from Azure OpenAI resource
           ENDPOINT=$(az cognitiveservices account show \
             --name $(AZURE_OPENAI_SERVICE) \
@@ -82,6 +88,12 @@ stages:
           echo "##vso[task.setvariable variable=AZURE_OPENAI_ENDPOINT;isOutput=true]$ENDPOINT"
           echo "##vso[task.setvariable variable=AZURE_OPENAI_API_KEY;isOutput=true]$API_KEY"
           echo "##vso[task.setvariable variable=AZURE_OPENAI_DEPLOYMENT;isOutput=true]$DEPLOYMENT"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID;isOutput=true]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID;isOutput=true]$tenantId"
+
+          # (Optional) Prove the connection is valid right now
+          az account show --output table || true
+
       name: 'configureCredentials'
 
   - job: PublishConfigs
@@ -184,6 +196,8 @@ stages:
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
       azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UseDotNet@2
@@ -212,12 +226,33 @@ stages:
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Copy generated configurations to workspace'
 
+    - task: AzureCLI@2
+      displayName: 'Set up Azure credentials for C# samples'
+      inputs:
+        azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Create token file for federated authentication
+          TOKEN_FILE="$(Agent.TempDirectory)/ado-oidc-token"
+          printf '%s' "$idToken" > "$TOKEN_FILE"
+          chmod 600 "$TOKEN_FILE"
+          
+          # Set environment variables for Azure Identity SDK
+          echo "##vso[task.setvariable variable=AZURE_FEDERATED_TOKEN_FILE]$TOKEN_FILE"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+
     - script: |
         chmod +x scripts/*.sh
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        export AZURE_CLIENT_ID=$(AZURE_CLIENT_ID)
+        export AZURE_TENANT_ID=$(AZURE_TENANT_ID)
+        export AZURE_FEDERATED_TOKEN_FILE=$(AZURE_FEDERATED_TOKEN_FILE)
         ./scripts/validate-samples.sh csharp "$(Pipeline.Workspace)/ChangedCSharp/changed_csharp.txt" $(VALIDATE_WITH_SERVICE)
 
       displayName: 'Validate C# samples'
@@ -244,6 +279,8 @@ stages:
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
       azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UsePythonVersion@0
@@ -272,12 +309,38 @@ stages:
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Copy generated configurations to workspace'
 
+    - task: AzureCLI@2
+      displayName: 'Set up Azure credentials for Python samples'
+      inputs:
+        azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Create token file for federated authentication
+          TOKEN_FILE="$(Agent.TempDirectory)/ado-oidc-token"
+          printf '%s' "$idToken" > "$TOKEN_FILE"
+          chmod 600 "$TOKEN_FILE"
+          
+          # Set environment variables for Azure Identity SDK
+          echo "##vso[task.setvariable variable=AZURE_FEDERATED_TOKEN_FILE]$TOKEN_FILE"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+          
+          echo "Azure credentials configured:"
+          echo "Client ID: $servicePrincipalId"
+          echo "Tenant ID: $tenantId"
+          echo "Token file: $TOKEN_FILE"
+
     - script: |
         chmod +x scripts/*.sh
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        export AZURE_CLIENT_ID=$(AZURE_CLIENT_ID)
+        export AZURE_TENANT_ID=$(AZURE_TENANT_ID)
+        export AZURE_FEDERATED_TOKEN_FILE=$(AZURE_FEDERATED_TOKEN_FILE)
         ./scripts/validate-samples.sh python "$(Pipeline.Workspace)/ChangedPython/changed_python.txt" $(VALIDATE_WITH_SERVICE)
 
       displayName: 'Validate Python samples'
@@ -304,6 +367,8 @@ stages:
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
       azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
 
     steps:
     - checkout: self
@@ -335,12 +400,33 @@ stages:
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Copy generated configurations to workspace'
 
+    - task: AzureCLI@2
+      displayName: 'Set up Azure credentials for Java samples'
+      inputs:
+        azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Create token file for federated authentication
+          TOKEN_FILE="$(Agent.TempDirectory)/ado-oidc-token"
+          printf '%s' "$idToken" > "$TOKEN_FILE"
+          chmod 600 "$TOKEN_FILE"
+          
+          # Set environment variables for Azure Identity SDK
+          echo "##vso[task.setvariable variable=AZURE_FEDERATED_TOKEN_FILE]$TOKEN_FILE"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+
     - script: |
         chmod +x scripts/*.sh
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        export AZURE_CLIENT_ID=$(AZURE_CLIENT_ID)
+        export AZURE_TENANT_ID=$(AZURE_TENANT_ID)
+        export AZURE_FEDERATED_TOKEN_FILE=$(AZURE_FEDERATED_TOKEN_FILE)
         ./scripts/validate-samples.sh java "$(Pipeline.Workspace)/ChangedJava/changed_java.txt" $(VALIDATE_WITH_SERVICE)
 
       displayName: 'Validate Java samples'
@@ -367,6 +453,8 @@ stages:
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
       azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
 
     steps:
     - checkout: self
@@ -397,12 +485,33 @@ stages:
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Copy generated configurations to workspace'
 
+    - task: AzureCLI@2
+      displayName: 'Set up Azure credentials for Javascript samples'
+      inputs:
+        azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Create token file for federated authentication
+          TOKEN_FILE="$(Agent.TempDirectory)/ado-oidc-token"
+          printf '%s' "$idToken" > "$TOKEN_FILE"
+          chmod 600 "$TOKEN_FILE"
+          
+          # Set environment variables for Azure Identity SDK
+          echo "##vso[task.setvariable variable=AZURE_FEDERATED_TOKEN_FILE]$TOKEN_FILE"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+
     - script: |
         chmod +x scripts/*.sh
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        export AZURE_CLIENT_ID=$(AZURE_CLIENT_ID)
+        export AZURE_TENANT_ID=$(AZURE_TENANT_ID)
+        export AZURE_FEDERATED_TOKEN_FILE=$(AZURE_FEDERATED_TOKEN_FILE)
         ./scripts/validate-samples.sh javascript "$(Pipeline.Workspace)/ChangedJavascript/changed_javascript.txt" $(VALIDATE_WITH_SERVICE)
 
       displayName: 'Validate Javascript samples'
@@ -429,12 +538,14 @@ stages:
       azureOpenAIEndpoint: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
       azureOpenAIApiKey: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
       azureOpenAIDeployment: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.GenerateSamples.outputs['configureCredentials.AZURE_TENANT_ID'] ]
 
     steps:
     - checkout: self
     - task: GoTool@0
       inputs:
-        version: '1.25.1'
+        version: '1.25.3'
 
     - download: current
       artifact: ChangedGo
@@ -458,12 +569,33 @@ stages:
         cp -r "$(Pipeline.Workspace)/GeneratedConfigs/"* ./generated-samples/
       displayName: 'Copy generated configurations to workspace'
 
+    - task: AzureCLI@2
+      displayName: 'Set up Azure credentials for Go samples'
+      inputs:
+        azureSubscription: $(ARM_SERVICE_CONNECTION_NAME)
+        addSpnToEnvironment: true
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Create token file for federated authentication
+          TOKEN_FILE="$(Agent.TempDirectory)/ado-oidc-token"
+          printf '%s' "$idToken" > "$TOKEN_FILE"
+          chmod 600 "$TOKEN_FILE"
+          
+          # Set environment variables for Azure Identity SDK
+          echo "##vso[task.setvariable variable=AZURE_FEDERATED_TOKEN_FILE]$TOKEN_FILE"
+          echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId"
+          echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+
     - script: |
         chmod +x scripts/*.sh
         # Set environment variables for validation using the mapped variables
         export AZURE_OPENAI_ENDPOINT=$(azureOpenAIEndpoint)
         export AZURE_OPENAI_API_KEY=$(azureOpenAIApiKey)
         export AZURE_OPENAI_DEPLOYMENT=$(azureOpenAIDeployment)
+        export AZURE_CLIENT_ID=$(AZURE_CLIENT_ID)
+        export AZURE_TENANT_ID=$(AZURE_TENANT_ID)
+        export AZURE_FEDERATED_TOKEN_FILE=$(AZURE_FEDERATED_TOKEN_FILE)
         ./scripts/validate-samples.sh go "$(Pipeline.Workspace)/ChangedGo/changed_go.txt" $(VALIDATE_WITH_SERVICE)
 
       displayName: 'Validate Go samples'

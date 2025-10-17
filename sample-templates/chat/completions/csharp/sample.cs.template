@@ -11,13 +11,16 @@ using System.ClientModel;
 
 #pragma warning disable OPENAI001
 
-<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT_NAME", deploymentName) %>
+<%= csharp.valueOrEnvironment(useEnvVars, "deploymentName", "AZURE_OPENAI_DEPLOYMENT", deploymentName) %>
 <%= csharp.valueOrEnvironment(useEnvVars, "endpoint", "AZURE_OPENAI_ENDPOINT", endpoint) %>
 <%if (useTokenCredentials) { %>
 <% } else { %>
 <%= csharp.valueOrEnvironment(useEnvVars, "apiKey", "AZURE_OPENAI_API_KEY", apiKey) %>
 <% } %>
 
+<% if (endpointSuffix) { %>
+endpoint = endpoint + "<%= endpointSuffix %>";
+<% } %>
 <% if (useTokenCredentials) { %>
 BearerTokenPolicy tokenPolicy = new(
     new DefaultAzureCredential(),
