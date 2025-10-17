@@ -197,11 +197,11 @@ stages:
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasCSharpChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UseDotNet@2
@@ -280,11 +280,11 @@ stages:
     condition: eq(dependencies.DetectChanges.outputs['detectChanges.hasPythonChanges'], 'true')
     variables:
       # Map the output variables from GenerateSamples job
-      azureOpenAIEndpoint: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
-      azureOpenAIApiKey: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
-      azureOpenAIDeployment: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
-      servicePrincipalId: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
-      tenantId: $[ stageDependencies.ValidateSamples.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
+      azureOpenAIEndpoint: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_ENDPOINT'] ]
+      azureOpenAIApiKey: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_API_KEY'] ]
+      azureOpenAIDeployment: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_OPENAI_DEPLOYMENT'] ]
+      servicePrincipalId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_CLIENT_ID'] ]
+      tenantId: $[ dependencies.ConfigureCredentials.outputs['configureCredentials.AZURE_TENANT_ID'] ]
     steps:
     - checkout: self
     - task: UsePythonVersion@0
